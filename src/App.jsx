@@ -177,7 +177,7 @@ function App() {
         }
 
         if (!devoteeData.prasadPreference || devoteeData.prasadPreference.length === 0) {
-            errors.prasadPreference = 'Please select at least one prasad preference';
+            errors.prasadPreference = 'Please select at least one Prasadam Preference';
         }
 
         if (!devoteeData.languages || devoteeData.languages.length === 0) {

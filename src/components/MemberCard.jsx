@@ -91,7 +91,7 @@ const MemberCard = ({ member, index, onChange, onRemove, errors = {} }) => {
 
                 {/* Prasadam Preference */}
                 <div className="mt-4">
-                    <label className="form-label">Prasad Preference</label>
+                    <label className="form-label">Prasadam Preference</label>
                     <div className="flex flex-wrap gap-3">
                         {prasadOptions.map((option) => (
                             <label key={option} className="flex items-center space-x-2 cursor-pointer bg-white px-3 py-2 rounded-lg border border-slate-200 hover:border-indigo-300 transition-colors">

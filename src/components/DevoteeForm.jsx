@@ -183,7 +183,7 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
 
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-6">
                     <CheckboxGroup
-                        label="Prasad Preference"
+                        label="Prasadam Preference"
                         required
                         options={prasadOptions}
                         selectedValues={data.prasadPreference || []}
