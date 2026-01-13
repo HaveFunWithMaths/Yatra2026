@@ -25,15 +25,15 @@ const CheckboxGroup = ({
                     {label} {required && <span className="text-red-500">*</span>}
                 </label>
             )}
-            <div className={`grid grid-cols-1 sm:grid-cols-${columns} gap-3`}>
+            <div className={`flex flex-wrap gap-3`}>
                 {options.map((option) => {
                     const isSelected = selectedValues.includes(option);
                     return (
                         <label
                             key={option}
-                            className={`flex items-center space-x-3 cursor-pointer p-3 rounded-xl border transition-all duration-200 ${isSelected
-                                    ? 'bg-indigo-50 border-indigo-200 ring-1 ring-indigo-200'
-                                    : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
+                            className={`flex-1 flex items-center justify-center space-x-3 cursor-pointer p-3 rounded-xl border transition-all duration-200 ${isSelected
+                                ? 'bg-indigo-50 border-indigo-200 ring-1 ring-indigo-200'
+                                : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
                                 }`}
                         >
                             <div

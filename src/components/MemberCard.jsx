@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { InputField, SelectField, ConfirmDialog } from './common';
+import { InputField, SelectField, ConfirmDialog, CheckboxGroup } from './common';
 import { prasadOptions, languageOptions, seatingOptions, chantingOptions, genderOptions } from '../utils/constants';
 
 const MemberCard = ({ member, index, onChange, onRemove, errors = {} }) => {
@@ -91,38 +91,22 @@ const MemberCard = ({ member, index, onChange, onRemove, errors = {} }) => {
 
                 {/* Prasadam Preference */}
                 <div className="mt-4">
-                    <label className="form-label">Prasadam Preference</label>
-                    <div className="flex flex-wrap gap-3">
-                        {prasadOptions.map((option) => (
-                            <label key={option} className="flex items-center space-x-2 cursor-pointer bg-white px-3 py-2 rounded-lg border border-slate-200 hover:border-indigo-300 transition-colors">
-                                <input
-                                    type="checkbox"
-                                    className="form-checkbox w-4 h-4"
-                                    checked={(member.prasadPreference || []).includes(option)}
-                                    onChange={() => handleCheckboxChange('prasadPreference', option)}
-                                />
-                                <span className="text-sm text-slate-700">{option}</span>
-                            </label>
-                        ))}
-                    </div>
+                    <CheckboxGroup
+                        label="Prasadam Preference"
+                        options={prasadOptions}
+                        selectedValues={member.prasadPreference || []}
+                        onChange={(values) => handleInputChange('prasadPreference', values)}
+                    />
                 </div>
 
                 {/* Language */}
                 <div className="mt-4">
-                    <label className="form-label">Languages</label>
-                    <div className="flex flex-wrap gap-3">
-                        {languageOptions.map((option) => (
-                            <label key={option} className="flex items-center space-x-2 cursor-pointer bg-white px-3 py-2 rounded-lg border border-slate-200 hover:border-indigo-300 transition-colors">
-                                <input
-                                    type="checkbox"
-                                    className="form-checkbox w-4 h-4"
-                                    checked={(member.languages || []).includes(option)}
-                                    onChange={() => handleCheckboxChange('languages', option)}
-                                />
-                                <span className="text-sm text-slate-700">{option}</span>
-                            </label>
-                        ))}
-                    </div>
+                    <CheckboxGroup
+                        label="Language you know(Select All)"
+                        options={languageOptions}
+                        selectedValues={member.languages || []}
+                        onChange={(values) => handleInputChange('languages', values)}
+                    />
                 </div>
 
                 {/* Seating Preference */}

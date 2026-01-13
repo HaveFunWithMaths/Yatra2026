@@ -181,7 +181,7 @@ function App() {
         }
 
         if (!devoteeData.languages || devoteeData.languages.length === 0) {
-            errors.languages = 'Please select at least one language';
+            errors.languages = 'Please select at least one Language you know(Select All)';
         }
 
         setDevoteeErrors(errors);

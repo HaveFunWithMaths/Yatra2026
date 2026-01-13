@@ -192,7 +192,7 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                     />
 
                     <CheckboxGroup
-                        label="Languages"
+                        label="Language you know(Select All)"
                         required
                         options={languageOptions}
                         selectedValues={data.languages || []}
