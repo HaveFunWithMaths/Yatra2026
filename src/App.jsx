@@ -246,7 +246,7 @@ function App() {
                                 {/* Hero Image */}
                                 <div className="h-48 md:h-64 overflow-hidden">
                                     <img
-                                        src="/assets/Yatra.webp"
+                                        src="assets/Yatra.webp"
                                         alt="GNH Yatra"
                                         className="w-full h-full object-cover"
                                     />
