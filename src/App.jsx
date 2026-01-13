@@ -1,49 +1,153 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Header from './components/Header';
 import DevoteeForm from './components/DevoteeForm';
 import FamilyForm from './components/FamilyForm';
 import LoadingSpinner from './components/LoadingSpinner';
 import SuccessScreen from './components/SuccessScreen';
+import { STORAGE_KEYS, REQUEST_TIMEOUT } from './utils/constants';
 
 // Replace this with your deployed Google Apps Script URL
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyVSgyNW5wgETneCsgZBOHWPhc_qiApYb0SUcFcE-KAKIuWSFnHasqgpwfXWdzsrmNGIA/exec';
+
+// Helper to load from localStorage
+const loadFromStorage = (key, defaultValue) => {
+    try {
+        const stored = localStorage.getItem(key);
+        return stored ? JSON.parse(stored) : defaultValue;
+    } catch {
+        return defaultValue;
+    }
+};
+
+// Helper to save to localStorage
+const saveToStorage = (key, value) => {
+    try {
+        localStorage.setItem(key, JSON.stringify(value));
+    } catch (e) {
+        console.warn('Failed to save to localStorage:', e);
+    }
+};
+
+// Helper to clear form data from localStorage
+const clearFormStorage = () => {
+    try {
+        localStorage.removeItem(STORAGE_KEYS.DEVOTEE_DATA);
+        localStorage.removeItem(STORAGE_KEYS.FAMILY_MEMBERS);
+        localStorage.removeItem(STORAGE_KEYS.IS_ALONE);
+    } catch (e) {
+        console.warn('Failed to clear localStorage:', e);
+    }
+};
 
 function App() {
     // Form wizard state
     const [currentPage, setCurrentPage] = useState(1); // 1: Devotee, 2: Family, 3: Success
     const [isLoading, setIsLoading] = useState(false);
 
-    // Devotee data
-    const [devoteeData, setDevoteeData] = useState({
-        name: '',
-        age: '',
-        email: '',
-        whatsapp: '',
-        gender: '',
-        prasadPreference: [],
-        languages: []
-    });
+    // Devotee data - load from localStorage on mount
+    const [devoteeData, setDevoteeData] = useState(() =>
+        loadFromStorage(STORAGE_KEYS.DEVOTEE_DATA, {
+            name: '',
+            age: '',
+            email: '',
+            whatsapp: '',
+            gender: '',
+            prasadPreference: [],
+            languages: []
+        })
+    );
 
-    // Alone/Group selection
-    const [isAlone, setIsAlone] = useState(null);
+    // Alone/Group selection - load from localStorage
+    const [isAlone, setIsAlone] = useState(() =>
+        loadFromStorage(STORAGE_KEYS.IS_ALONE, null)
+    );
 
-    // Family members
-    const [familyMembers, setFamilyMembers] = useState([{
-        name: '',
-        age: '',
-        gender: '',
-        phone: '',
-        prasadPreference: [],
-        languages: [],
-        seating: '',
-        chanting: '',
-        inclination: '',
-        spiritualStatus: ''
-    }]);
+    // Family members - load from localStorage
+    const [familyMembers, setFamilyMembers] = useState(() =>
+        loadFromStorage(STORAGE_KEYS.FAMILY_MEMBERS, [{
+            name: '',
+            age: '',
+            gender: '',
+            phone: '',
+            prasadPreference: [],
+            languages: [],
+            seating: '',
+            chanting: '',
+            inclination: '',
+            spiritualStatus: ''
+        }])
+    );
 
     // Validation errors
     const [devoteeErrors, setDevoteeErrors] = useState({});
     const [familyErrors, setFamilyErrors] = useState([{}]);
+
+    // Persist devoteeData to localStorage
+    useEffect(() => {
+        saveToStorage(STORAGE_KEYS.DEVOTEE_DATA, devoteeData);
+    }, [devoteeData]);
+
+    // Persist isAlone to localStorage
+    useEffect(() => {
+        if (isAlone !== null) {
+            saveToStorage(STORAGE_KEYS.IS_ALONE, isAlone);
+        }
+    }, [isAlone]);
+
+    // Persist familyMembers to localStorage
+    useEffect(() => {
+        saveToStorage(STORAGE_KEYS.FAMILY_MEMBERS, familyMembers);
+    }, [familyMembers]);
+
+    // Validate a single devotee field (for onBlur)
+    const validateDevoteeField = useCallback((field) => {
+        const newErrors = { ...devoteeErrors };
+
+        switch (field) {
+            case 'name':
+                if (!devoteeData.name?.trim()) {
+                    newErrors.name = 'Name is required';
+                } else {
+                    delete newErrors.name;
+                }
+                break;
+            case 'age':
+                const age = parseInt(devoteeData.age);
+                if (!devoteeData.age || isNaN(age) || age < 5 || age > 100) {
+                    newErrors.age = 'Age must be between 5 and 100';
+                } else {
+                    delete newErrors.age;
+                }
+                break;
+            case 'email':
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!devoteeData.email || !emailRegex.test(devoteeData.email)) {
+                    newErrors.email = 'Please enter a valid email address';
+                } else {
+                    delete newErrors.email;
+                }
+                break;
+            case 'whatsapp':
+                const whatsappRegex = /^\d{10}$/;
+                if (!devoteeData.whatsapp || !whatsappRegex.test(devoteeData.whatsapp)) {
+                    newErrors.whatsapp = 'Please enter a valid 10-digit WhatsApp number';
+                } else {
+                    delete newErrors.whatsapp;
+                }
+                break;
+            case 'gender':
+                if (!devoteeData.gender) {
+                    newErrors.gender = 'Please select your gender';
+                } else {
+                    delete newErrors.gender;
+                }
+                break;
+            default:
+                break;
+        }
+
+        setDevoteeErrors(newErrors);
+    }, [devoteeData, devoteeErrors]);
 
     // Validate devotee form
     const validateDevotee = () => {
@@ -136,25 +240,36 @@ function App() {
         }
     };
 
-    // Submit to Google Sheets
+    // Submit to Google Sheets with timeout
     const submitToGoogleSheets = async (data) => {
         setIsLoading(true);
 
         try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
+
             const response = await fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors', // Required for Google Apps Script
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(data),
+                signal: controller.signal
             });
 
+            clearTimeout(timeoutId);
+
             // With no-cors, we can't read the response, so we assume success
+            clearFormStorage();
             setCurrentPage(3);
         } catch (error) {
-            console.error('Submission error:', error);
-            alert('There was an error submitting your registration. Please try again.');
+            if (error.name === 'AbortError') {
+                alert('The request took too long. Please check your internet connection and try again.');
+            } else {
+                console.error('Submission error:', error);
+                alert('There was an error submitting your registration. Please try again.');
+            }
         } finally {
             setIsLoading(false);
         }
@@ -172,6 +287,13 @@ function App() {
     const handleBack = () => {
         setCurrentPage(1);
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    // Handle progress indicator click
+    const handleProgressClick = (page) => {
+        if (page === 1 && currentPage === 2) {
+            handleBack();
+        }
     };
 
     // Handle Submit from Page 1 (Alone)
@@ -264,14 +386,19 @@ function App() {
 
                         {/* Form Content */}
                         <div className="p-6 md:p-8">
-                            {/* Progress Indicator */}
+                            {/* Progress Indicator - Clickable */}
                             {currentPage !== 3 && (
                                 <div className="flex items-center justify-center mb-8">
                                     <div className="flex items-center space-x-3">
-                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all duration-300 ${currentPage >= 1 ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-500'
-                                            }`}>
+                                        <button
+                                            onClick={() => handleProgressClick(1)}
+                                            className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all duration-300 ${currentPage >= 1 ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-500'
+                                                } ${currentPage === 2 ? 'cursor-pointer hover:bg-indigo-700' : 'cursor-default'}`}
+                                            disabled={currentPage === 1}
+                                            title={currentPage === 2 ? 'Go back to your details' : ''}
+                                        >
                                             1
-                                        </div>
+                                        </button>
                                         <div className={`w-16 h-1 rounded transition-all duration-300 ${currentPage >= 2 ? 'bg-indigo-600' : 'bg-slate-200'
                                             }`}></div>
                                         <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all duration-300 ${currentPage >= 2 ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-500'
@@ -292,6 +419,7 @@ function App() {
                                     onNext={handleNext}
                                     onSubmit={handleSubmitAlone}
                                     errors={devoteeErrors}
+                                    onBlur={validateDevoteeField}
                                 />
                             )}
 

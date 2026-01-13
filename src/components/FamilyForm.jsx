@@ -16,11 +16,11 @@ const FamilyForm = ({ members, onChange, onAddMember, onRemoveMember, onBack, on
                     <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    Guidelines for Next Section
+                    Guidelines for Contacts Section
                 </h3>
                 <ol className="text-amber-800 space-y-2 ml-6 list-decimal">
                     <li>Please fill all details of friends and relatives who are interested in joining the Yatra.</li>
-                    <li>Select all applicable options for prasad preference and languages.</li>
+                    <li>Select all applicable options for Prasadam Preference and languages.</li>
                     <li>Provide accurate information for seating preferences and chanting status.</li>
                 </ol>
             </div>

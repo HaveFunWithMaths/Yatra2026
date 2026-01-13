@@ -1,22 +1,20 @@
 import React, { useState } from 'react';
+import { InputField, SelectField, CheckboxGroup, UserIcon, EmailIcon, PhoneIcon, ChevronDownIcon, InfoIcon, CalendarIcon, CurrencyIcon, CheckCircleIcon, ClipboardIcon, UsersIcon, CheckIcon } from './common';
+import { prasadOptions, languageOptions, genderOptions } from '../utils/constants';
 
-const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, errors }) => {
+const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, errors, onBlur }) => {
     const [showInfo, setShowInfo] = useState(true);
+    const infoId = 'devotee-info-section';
 
     const handleInputChange = (field, value) => {
         onChange({ ...data, [field]: value });
     };
 
-    const handleCheckboxChange = (field, value) => {
-        const currentValues = data[field] || [];
-        const newValues = currentValues.includes(value)
-            ? currentValues.filter(v => v !== value)
-            : [...currentValues, value];
-        onChange({ ...data, [field]: newValues });
+    const handleFieldBlur = (field) => {
+        if (onBlur) {
+            onBlur(field);
+        }
     };
-
-    const prasadOptions = ['Diabetic', 'North Indian', 'South Indian'];
-    const languageOptions = ['Hindi', 'English', 'Telugu'];
 
     return (
         <div className="animate-fade-in space-y-8">
@@ -25,33 +23,29 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                 <button
                     onClick={() => setShowInfo(!showInfo)}
                     className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-4 flex items-center justify-between text-left group"
+                    aria-expanded={showInfo}
+                    aria-controls={infoId}
                 >
                     <h3 className="text-xl font-bold text-white flex items-center">
                         <span className="mr-2 text-2xl">🙏</span>
                         <span>Hare Krishna dear devotees, PAMHO!</span>
                     </h3>
                     <div className={`bg-white/20 p-1 rounded-full transition-transform duration-300 ${showInfo ? 'rotate-180' : ''}`}>
-                        <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
+                        <ChevronDownIcon className="w-5 h-5 text-white" />
                     </div>
                 </button>
 
                 {showInfo && (
-                    <div className="p-6 space-y-6 text-slate-700 bg-white animate-slide-down">
+                    <div id={infoId} className="p-6 space-y-6 text-slate-700 bg-white animate-slide-down">
                         <p className="font-medium text-indigo-900 bg-indigo-50 p-3 rounded-lg border border-indigo-100 flex items-start">
-                            <svg className="w-5 h-5 mr-2 text-indigo-600 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
+                            <InfoIcon className="w-5 h-5 mr-2 text-indigo-600 mt-0.5" />
                             Please go through the following points before filling the form.
                         </p>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 hover:border-indigo-200 transition-colors">
                                 <h4 className="font-bold text-slate-900 mb-2 flex items-center">
-                                    <svg className="w-5 h-5 mr-2 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    </svg>
+                                    <CalendarIcon className="w-5 h-5 mr-2 text-indigo-600" />
                                     Yatra Dates
                                 </h4>
                                 <div className="space-y-1">
@@ -62,9 +56,7 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
 
                             <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 hover:border-indigo-200 transition-colors">
                                 <h4 className="font-bold text-slate-900 mb-2 flex items-center">
-                                    <svg className="w-5 h-5 mr-2 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
+                                    <CurrencyIcon className="w-5 h-5 mr-2 text-indigo-600" />
                                     Charges
                                 </h4>
                                 <ul className="text-sm space-y-1">
@@ -77,9 +69,7 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
 
                         <div>
                             <h4 className="font-bold text-slate-900 mb-3 flex items-center">
-                                <svg className="w-5 h-5 mr-2 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
+                                <CheckCircleIcon className="w-5 h-5 mr-2 text-indigo-600" />
                                 Criteria
                             </h4>
                             <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2 list-none text-sm">
@@ -91,9 +81,7 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
 
                         <div className="bg-amber-50 p-4 rounded-xl border border-amber-100">
                             <h4 className="font-bold text-amber-900 mb-3 flex items-center">
-                                <svg className="w-5 h-5 mr-2 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                                </svg>
+                                <ClipboardIcon className="w-5 h-5 mr-2 text-amber-600" />
                                 Process
                             </h4>
                             <ol className="list-decimal ml-5 space-y-1 text-sm text-amber-900/80 marker:text-amber-600 marker:font-semibold">
@@ -110,104 +98,74 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
             <div>
                 <h3 className="text-xl font-bold text-slate-800 mb-4 flex items-center">
                     <span className="bg-indigo-100 text-indigo-600 p-2 rounded-lg mr-3">
-                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
+                        <UserIcon className="w-6 h-6" />
                     </span>
                     Personal Details
                 </h3>
 
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {/* Name Field */}
-                        <div className="col-span-2 md:col-span-1">
-                            <label className="form-label">Name <span className="text-red-500">*</span></label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                    </svg>
-                                </div>
-                                <input
-                                    type="text"
-                                    className={`form-input pl-10 ${errors.name ? 'border-red-400 focus:ring-red-500' : ''}`}
-                                    placeholder="Enter your full name"
-                                    value={data.name || ''}
-                                    onChange={(e) => handleInputChange('name', e.target.value)}
-                                />
-                            </div>
-                            {errors.name && <p className="text-red-500 text-sm mt-1 flex items-center"><svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>{errors.name}</p>}
-                        </div>
+                        <InputField
+                            label="Name"
+                            required
+                            icon={UserIcon}
+                            placeholder="Enter your full name"
+                            value={data.name || ''}
+                            onChange={(e) => handleInputChange('name', e.target.value)}
+                            onBlur={() => handleFieldBlur('name')}
+                            error={errors.name}
+                            className="col-span-2 md:col-span-1"
+                        />
 
-                        {/* Age Field */}
-                        <div>
-                            <label className="form-label">Age <span className="text-red-500">*</span></label>
-                            <input
-                                type="number"
-                                className={`form-input ${errors.age ? 'border-red-400 focus:ring-red-500' : ''}`}
-                                placeholder="Age (5-100)"
-                                min="5"
-                                max="100"
-                                value={data.age || ''}
-                                onChange={(e) => handleInputChange('age', e.target.value)}
-                            />
-                            {errors.age && <p className="text-red-500 text-sm mt-1">{errors.age}</p>}
-                        </div>
+                        <InputField
+                            label="Age"
+                            required
+                            type="number"
+                            placeholder="Age (5-100)"
+                            min="5"
+                            max="100"
+                            value={data.age || ''}
+                            onChange={(e) => handleInputChange('age', e.target.value)}
+                            onBlur={() => handleFieldBlur('age')}
+                            error={errors.age}
+                        />
 
-                        {/* Gender Dropdown */}
-                        <div>
-                            <label className="form-label">Gender <span className="text-red-500">*</span></label>
-                            <select
-                                className={`form-select ${errors.gender ? 'border-red-400 focus:ring-red-500' : ''}`}
-                                value={data.gender || ''}
-                                onChange={(e) => handleInputChange('gender', e.target.value)}
-                            >
-                                <option value="">Select Gender</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                            </select>
-                            {errors.gender && <p className="text-red-500 text-sm mt-1">{errors.gender}</p>}
-                        </div>
+                        <SelectField
+                            label="Gender"
+                            required
+                            placeholder="Select Gender"
+                            options={genderOptions}
+                            value={data.gender || ''}
+                            onChange={(e) => handleInputChange('gender', e.target.value)}
+                            onBlur={() => handleFieldBlur('gender')}
+                            error={errors.gender}
+                        />
 
-                        {/* Email Field */}
-                        <div className="col-span-2 md:col-span-1">
-                            <label className="form-label">Email <span className="text-red-500">*</span></label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                    </svg>
-                                </div>
-                                <input
-                                    type="email"
-                                    className={`form-input pl-10 ${errors.email ? 'border-red-400 focus:ring-red-500' : ''}`}
-                                    placeholder="Enter your email"
-                                    value={data.email || ''}
-                                    onChange={(e) => handleInputChange('email', e.target.value)}
-                                />
-                            </div>
-                            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
-                        </div>
+                        <InputField
+                            label="Email"
+                            required
+                            type="email"
+                            icon={EmailIcon}
+                            placeholder="Enter your email"
+                            value={data.email || ''}
+                            onChange={(e) => handleInputChange('email', e.target.value)}
+                            onBlur={() => handleFieldBlur('email')}
+                            error={errors.email}
+                            className="col-span-2 md:col-span-1"
+                        />
 
-                        {/* WhatsApp Field */}
-                        <div className="col-span-2 md:col-span-1">
-                            <label className="form-label">WhatsApp Number <span className="text-red-500">*</span></label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                    </svg>
-                                </div>
-                                <input
-                                    type="tel"
-                                    className={`form-input pl-10 ${errors.whatsapp ? 'border-red-400 focus:ring-red-500' : ''}`}
-                                    placeholder="10-digit number"
-                                    value={data.whatsapp || ''}
-                                    onChange={(e) => handleInputChange('whatsapp', e.target.value)}
-                                />
-                            </div>
-                            {errors.whatsapp && <p className="text-red-500 text-sm mt-1">{errors.whatsapp}</p>}
-                        </div>
+                        <InputField
+                            label="WhatsApp Number"
+                            required
+                            type="tel"
+                            icon={PhoneIcon}
+                            placeholder="10-digit number"
+                            value={data.whatsapp || ''}
+                            onChange={(e) => handleInputChange('whatsapp', e.target.value)}
+                            onBlur={() => handleFieldBlur('whatsapp')}
+                            error={errors.whatsapp}
+                            className="col-span-2 md:col-span-1"
+                        />
                     </div>
                 </div>
             </div>
@@ -224,67 +182,23 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                 </h3>
 
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-6">
-                    {/* Prasad Preference */}
-                    <div>
-                        <label className="form-label mb-2 block">Prasad Preference <span className="text-red-500">*</span></label>
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                            {prasadOptions.map((option) => (
-                                <label
-                                    key={option}
-                                    className={`flex items-center space-x-3 cursor-pointer p-3 rounded-xl border transition-all duration-200 ${(data.prasadPreference || []).includes(option)
-                                            ? 'bg-indigo-50 border-indigo-200 ring-1 ring-indigo-200'
-                                            : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
-                                        }`}
-                                >
-                                    <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${(data.prasadPreference || []).includes(option) ? 'bg-indigo-600 border-indigo-600' : 'bg-white border-slate-300'
-                                        }`}>
-                                        {(data.prasadPreference || []).includes(option) && <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
-                                    </div>
-                                    <input
-                                        type="checkbox"
-                                        className="hidden"
-                                        checked={(data.prasadPreference || []).includes(option)}
-                                        onChange={() => handleCheckboxChange('prasadPreference', option)}
-                                    />
-                                    <span className={`${(data.prasadPreference || []).includes(option) ? 'text-indigo-900 font-medium' : 'text-slate-700'}`}>
-                                        {option}
-                                    </span>
-                                </label>
-                            ))}
-                        </div>
-                        {errors.prasadPreference && <p className="text-red-500 text-sm mt-1">{errors.prasadPreference}</p>}
-                    </div>
+                    <CheckboxGroup
+                        label="Prasad Preference"
+                        required
+                        options={prasadOptions}
+                        selectedValues={data.prasadPreference || []}
+                        onChange={(values) => handleInputChange('prasadPreference', values)}
+                        error={errors.prasadPreference}
+                    />
 
-                    {/* Language Preference */}
-                    <div>
-                        <label className="form-label mb-2 block">Languages <span className="text-red-500">*</span></label>
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                            {languageOptions.map((option) => (
-                                <label
-                                    key={option}
-                                    className={`flex items-center space-x-3 cursor-pointer p-3 rounded-xl border transition-all duration-200 ${(data.languages || []).includes(option)
-                                            ? 'bg-indigo-50 border-indigo-200 ring-1 ring-indigo-200'
-                                            : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
-                                        }`}
-                                >
-                                    <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${(data.languages || []).includes(option) ? 'bg-indigo-600 border-indigo-600' : 'bg-white border-slate-300'
-                                        }`}>
-                                        {(data.languages || []).includes(option) && <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
-                                    </div>
-                                    <input
-                                        type="checkbox"
-                                        className="hidden"
-                                        checked={(data.languages || []).includes(option)}
-                                        onChange={() => handleCheckboxChange('languages', option)}
-                                    />
-                                    <span className={`${(data.languages || []).includes(option) ? 'text-indigo-900 font-medium' : 'text-slate-700'}`}>
-                                        {option}
-                                    </span>
-                                </label>
-                            ))}
-                        </div>
-                        {errors.languages && <p className="text-red-500 text-sm mt-1">{errors.languages}</p>}
-                    </div>
+                    <CheckboxGroup
+                        label="Languages"
+                        required
+                        options={languageOptions}
+                        selectedValues={data.languages || []}
+                        onChange={(values) => handleInputChange('languages', values)}
+                        error={errors.languages}
+                    />
                 </div>
             </div>
 
@@ -292,53 +206,63 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
             <div>
                 <h3 className="text-xl font-bold text-slate-800 mb-4 flex items-center">
                     <span className="bg-amber-100 text-amber-600 p-2 rounded-lg mr-3">
-                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
+                        <UsersIcon className="w-6 h-6" />
                     </span>
                     Who is attending?
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Option: Alone */}
+                    {/* Option: Alone - Horizontal Layout */}
                     <div
                         onClick={() => setIsAlone(true)}
-                        className={`relative p-6 rounded-2xl border-2 cursor-pointer transition-all duration-300 hover:shadow-md ${isAlone === true
-                                ? 'border-indigo-600 bg-indigo-50 ring-2 ring-indigo-200 ring-offset-2'
-                                : 'border-slate-200 bg-white hover:border-indigo-300'
+                        className={`relative p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300 hover:shadow-md ${isAlone === true
+                            ? 'border-indigo-600 bg-indigo-50 ring-2 ring-indigo-200 ring-offset-2'
+                            : 'border-slate-200 bg-white hover:border-indigo-300'
                             }`}
                     >
-                        <div className="flex justify-between items-start">
-                            <div className={`p-3 rounded-xl mb-4 ${isAlone === true ? 'bg-indigo-200 text-indigo-700' : 'bg-slate-100 text-slate-500'}`}>
-                                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                </svg>
+                        <div className="flex items-center gap-4">
+                            <div className={`p-3 rounded-xl shrink-0 ${isAlone === true ? 'bg-indigo-200 text-indigo-700' : 'bg-slate-100 text-slate-500'}`}>
+                                <UserIcon className="w-8 h-8" />
                             </div>
-                            {isAlone === true && <div className="bg-indigo-600 text-white p-1 rounded-full"><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg></div>}
+                            <div className="flex-1">
+                                <div className="flex items-center justify-between">
+                                    <h4 className={`text-lg font-bold ${isAlone === true ? 'text-indigo-900' : 'text-slate-900'}`}>Just Me</h4>
+                                    {isAlone === true && (
+                                        <div className="bg-indigo-600 text-white p-1 rounded-full">
+                                            <CheckIcon className="w-4 h-4" />
+                                        </div>
+                                    )}
+                                </div>
+                                <p className={`text-sm ${isAlone === true ? 'text-indigo-700' : 'text-slate-500'}`}>I am registering only for myself.</p>
+                            </div>
                         </div>
-                        <h4 className={`text-lg font-bold mb-1 ${isAlone === true ? 'text-indigo-900' : 'text-slate-900'}`}>Just Me</h4>
-                        <p className={`text-sm ${isAlone === true ? 'text-indigo-700' : 'text-slate-500'}`}>I am registering only for myself.</p>
                         <input type="radio" className="hidden" />
                     </div>
 
-                    {/* Option: Group */}
+                    {/* Option: Group - Horizontal Layout */}
                     <div
                         onClick={() => setIsAlone(false)}
-                        className={`relative p-6 rounded-2xl border-2 cursor-pointer transition-all duration-300 hover:shadow-md ${isAlone === false
-                                ? 'border-indigo-600 bg-indigo-50 ring-2 ring-indigo-200 ring-offset-2'
-                                : 'border-slate-200 bg-white hover:border-indigo-300'
+                        className={`relative p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300 hover:shadow-md ${isAlone === false
+                            ? 'border-indigo-600 bg-indigo-50 ring-2 ring-indigo-200 ring-offset-2'
+                            : 'border-slate-200 bg-white hover:border-indigo-300'
                             }`}
                     >
-                        <div className="flex justify-between items-start">
-                            <div className={`p-3 rounded-xl mb-4 ${isAlone === false ? 'bg-indigo-200 text-indigo-700' : 'bg-slate-100 text-slate-500'}`}>
-                                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                </svg>
+                        <div className="flex items-center gap-4">
+                            <div className={`p-3 rounded-xl shrink-0 ${isAlone === false ? 'bg-indigo-200 text-indigo-700' : 'bg-slate-100 text-slate-500'}`}>
+                                <UsersIcon className="w-8 h-8" />
                             </div>
-                            {isAlone === false && <div className="bg-indigo-600 text-white p-1 rounded-full"><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg></div>}
+                            <div className="flex-1">
+                                <div className="flex items-center justify-between">
+                                    <h4 className={`text-lg font-bold ${isAlone === false ? 'text-indigo-900' : 'text-slate-900'}`}>Me & Family/Friends</h4>
+                                    {isAlone === false && (
+                                        <div className="bg-indigo-600 text-white p-1 rounded-full">
+                                            <CheckIcon className="w-4 h-4" />
+                                        </div>
+                                    )}
+                                </div>
+                                <p className={`text-sm ${isAlone === false ? 'text-indigo-700' : 'text-slate-500'}`}>I want to add my family members or friends.</p>
+                            </div>
                         </div>
-                        <h4 className={`text-lg font-bold mb-1 ${isAlone === false ? 'text-indigo-900' : 'text-slate-900'}`}>Me & Family/Friends</h4>
-                        <p className={`text-sm ${isAlone === false ? 'text-indigo-700' : 'text-slate-500'}`}>I want to add my family members or friends.</p>
                         <input type="radio" className="hidden" />
                     </div>
                 </div>
