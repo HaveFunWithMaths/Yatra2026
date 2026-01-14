@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { ErrorIcon } from './Icons';
 
 const SelectField = ({
     label,
@@ -9,17 +10,30 @@ const SelectField = ({
     required = false,
     options = [],
     placeholder = 'Select an option',
+    name,
     className = ''
 }) => {
+    const [shouldShake, setShouldShake] = useState(false);
+
+    // Trigger shake animation when error appears
+    useEffect(() => {
+        if (error) {
+            setShouldShake(true);
+            const timer = setTimeout(() => setShouldShake(false), 500);
+            return () => clearTimeout(timer);
+        }
+    }, [error]);
+
     return (
-        <div className={className}>
+        <div className={className} data-field={name || label?.toLowerCase().replace(/\s+/g, '-')}>
             {label && (
                 <label className="form-label">
                     {label} {required && <span className="text-red-500">*</span>}
                 </label>
             )}
             <select
-                className={`form-select ${error ? 'border-red-400 focus:ring-red-500' : ''}`}
+                name={name}
+                className={`form-select ${error ? 'border-red-400 focus:ring-red-500' : ''} ${shouldShake ? 'animate-shake' : ''}`}
                 value={value}
                 onChange={onChange}
                 onBlur={onBlur}
@@ -31,7 +45,12 @@ const SelectField = ({
                     </option>
                 ))}
             </select>
-            {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+            {error && (
+                <p className="text-red-500 text-sm mt-1 flex items-center">
+                    <ErrorIcon className="w-4 h-4 mr-1" />
+                    {error}
+                </p>
+            )}
         </div>
     );
 };

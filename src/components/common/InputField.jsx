@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ErrorIcon } from './Icons';
 
 const InputField = ({
@@ -13,10 +13,23 @@ const InputField = ({
     icon: Icon,
     min,
     max,
+    inputMode,
+    name,
     className = ''
 }) => {
+    const [shouldShake, setShouldShake] = useState(false);
+
+    // Trigger shake animation when error appears
+    useEffect(() => {
+        if (error) {
+            setShouldShake(true);
+            const timer = setTimeout(() => setShouldShake(false), 500);
+            return () => clearTimeout(timer);
+        }
+    }, [error]);
+
     return (
-        <div className={className}>
+        <div className={className} data-field={name || label?.toLowerCase().replace(/\s+/g, '-')}>
             {label && (
                 <label className="form-label">
                     {label} {required && <span className="text-red-500">*</span>}
@@ -30,13 +43,15 @@ const InputField = ({
                 )}
                 <input
                     type={type}
-                    className={`form-input ${Icon ? 'pl-10' : ''} ${error ? 'border-red-400 focus:ring-red-500' : ''}`}
+                    name={name}
+                    className={`form-input ${Icon ? 'pl-10' : ''} ${error ? 'border-red-400 focus:ring-red-500' : ''} ${shouldShake ? 'animate-shake' : ''}`}
                     placeholder={placeholder}
                     value={value}
                     onChange={onChange}
                     onBlur={onBlur}
                     min={min}
                     max={max}
+                    inputMode={inputMode}
                 />
             </div>
             {error && (

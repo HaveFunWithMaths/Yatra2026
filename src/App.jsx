@@ -4,7 +4,19 @@ import DevoteeForm from './components/DevoteeForm';
 import FamilyForm from './components/FamilyForm';
 import LoadingSpinner from './components/LoadingSpinner';
 import SuccessScreen from './components/SuccessScreen';
+import { ScrollToTop, ErrorSummary } from './components/common';
 import { STORAGE_KEYS, REQUEST_TIMEOUT } from './utils/constants';
+
+// Field labels for error summary scroll-to-field
+const FIELD_LABELS = {
+    name: 'Name',
+    age: 'Age',
+    email: 'Email',
+    whatsapp: 'WhatsApp Number',
+    gender: 'Gender',
+    prasadPreference: 'Prasadam Preference',
+    languages: 'Language you know'
+};
 
 // Replace this with your deployed Google Apps Script URL
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyVSgyNW5wgETneCsgZBOHWPhc_qiApYb0SUcFcE-KAKIuWSFnHasqgpwfXWdzsrmNGIA/exec';
@@ -159,7 +171,7 @@ function App() {
 
         const age = parseInt(devoteeData.age);
         if (!devoteeData.age || isNaN(age) || age < 5 || age > 100) {
-            errors.age = 'Age must be between 5 and 100';
+            errors.age = 'Age must be between 5 and 100 years';
         }
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -199,7 +211,7 @@ function App() {
 
             const age = parseInt(member.age);
             if (!member.age || isNaN(age) || age < 1 || age > 100) {
-                memberErrors.age = 'Valid age is required';
+                memberErrors.age = 'Age must be between 1 and 100 years';
             }
 
             if (!member.gender) {
@@ -411,16 +423,21 @@ function App() {
 
                             {/* Page 1: Devotee Form */}
                             {currentPage === 1 && (
-                                <DevoteeForm
-                                    data={devoteeData}
-                                    onChange={setDevoteeData}
-                                    isAlone={isAlone}
-                                    setIsAlone={setIsAlone}
-                                    onNext={handleNext}
-                                    onSubmit={handleSubmitAlone}
-                                    errors={devoteeErrors}
-                                    onBlur={validateDevoteeField}
-                                />
+                                <>
+                                    {Object.keys(devoteeErrors).length > 0 && (
+                                        <ErrorSummary errors={devoteeErrors} fieldLabels={FIELD_LABELS} />
+                                    )}
+                                    <DevoteeForm
+                                        data={devoteeData}
+                                        onChange={setDevoteeData}
+                                        isAlone={isAlone}
+                                        setIsAlone={setIsAlone}
+                                        onNext={handleNext}
+                                        onSubmit={handleSubmitAlone}
+                                        errors={devoteeErrors}
+                                        onBlur={validateDevoteeField}
+                                    />
+                                </>
                             )}
 
                             {/* Page 2: Family Form */}
@@ -447,6 +464,9 @@ function App() {
                     </div>
                 </div>
             </main>
+
+            {/* Scroll to Top Button */}
+            <ScrollToTop />
         </div>
     );
 }

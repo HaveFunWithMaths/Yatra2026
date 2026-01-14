@@ -186,3 +186,136 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%);
 }
+
+/* Shake animation for error fields */
+@keyframes shake {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-4px);
+  }
+
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(4px);
+  }
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* Selection feedback animation */
+@keyframes pulse-scale {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.02);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-selection {
+  animation: pulse-scale 0.3s ease-out;
+}
+
+/* Card hover effects with enhanced shadows */
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px -8px rgba(99, 102, 241, 0.25);
+}
+
+/* Parallax hero container */
+.parallax-hero {
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* Scroll to top button */
+.scroll-to-top {
+  @apply fixed bottom-6 right-6 z-40 w-12 h-12 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-full shadow-lg shadow-indigo-500/30 flex items-center justify-center cursor-pointer transition-all duration-300;
+}
+
+.scroll-to-top:hover {
+  @apply shadow-xl shadow-indigo-500/40 -translate-y-1;
+}
+
+.scroll-to-top.hidden {
+  @apply opacity-0 pointer-events-none translate-y-4;
+}
+
+/* Error summary box */
+.error-summary {
+  @apply bg-red-50 border border-red-200 rounded-xl p-4 mb-6 animate-fade-in;
+}
+
+.error-summary-item {
+  @apply text-red-700 text-sm cursor-pointer hover:text-red-900 hover:underline py-1 flex items-center;
+}
+
+/* Lotus loading animation */
+@keyframes lotus-pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+@keyframes lotus-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.lotus-loader {
+  animation: lotus-pulse 1.5s ease-in-out infinite;
+}
+
+.lotus-loader-ring {
+  animation: lotus-rotate 3s linear infinite;
+}
+
+/* Collapsible card transition */
+.collapsible-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+  opacity: 0;
+}
+
+.collapsible-content.expanded {
+  max-height: 2000px;
+  opacity: 1;
+}

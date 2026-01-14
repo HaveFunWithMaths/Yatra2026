@@ -4,6 +4,7 @@ import { prasadOptions, languageOptions, genderOptions } from '../utils/constant
 
 const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, errors, onBlur }) => {
     const [showInfo, setShowInfo] = useState(true);
+    const [selectionKey, setSelectionKey] = useState(0);
     const infoId = 'devotee-info-section';
 
     const handleInputChange = (field, value) => {
@@ -100,7 +101,7 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                     <span className="bg-indigo-100 text-indigo-600 p-2 rounded-lg mr-3">
                         <UserIcon className="w-6 h-6" />
                     </span>
-                    Personal Details
+                    About You
                 </h3>
 
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-6">
@@ -119,9 +120,11 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
 
                         <InputField
                             label="Age"
+                            name="age"
                             required
                             type="number"
-                            placeholder="Age (5-100)"
+                            inputMode="numeric"
+                            placeholder="Your age (5-100)"
                             min="5"
                             max="100"
                             value={data.age || ''}
@@ -156,10 +159,12 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
 
                         <InputField
                             label="WhatsApp Number"
+                            name="whatsapp"
                             required
                             type="tel"
+                            inputMode="tel"
                             icon={PhoneIcon}
-                            placeholder="10-digit number"
+                            placeholder="e.g., 98765 43210"
                             value={data.whatsapp || ''}
                             onChange={(e) => handleInputChange('whatsapp', e.target.value)}
                             onBlur={() => handleFieldBlur('whatsapp')}
@@ -178,7 +183,7 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z" />
                         </svg>
                     </span>
-                    Preferences
+                    Prasadam & Language Preferences
                 </h3>
 
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-6">
@@ -208,17 +213,18 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                     <span className="bg-amber-100 text-amber-600 p-2 rounded-lg mr-3">
                         <UsersIcon className="w-6 h-6" />
                     </span>
-                    Who is attending?
+                    Who's Coming Along?
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Option: Alone - Horizontal Layout */}
                     <div
-                        onClick={() => setIsAlone(true)}
-                        className={`relative p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300 hover:shadow-md ${isAlone === true
-                            ? 'border-indigo-600 bg-indigo-50 ring-2 ring-indigo-200 ring-offset-2'
+                        onClick={() => { setIsAlone(true); setSelectionKey(k => k + 1); }}
+                        className={`relative p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300 hover:shadow-md card-hover ${isAlone === true
+                            ? 'border-indigo-600 bg-indigo-50 ring-2 ring-indigo-200 ring-offset-2 animate-selection'
                             : 'border-slate-200 bg-white hover:border-indigo-300'
                             }`}
+                        key={`alone-${selectionKey}`}
                     >
                         <div className="flex items-center gap-4">
                             <div className={`p-3 rounded-xl shrink-0 ${isAlone === true ? 'bg-indigo-200 text-indigo-700' : 'bg-slate-100 text-slate-500'}`}>
@@ -241,11 +247,12 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
 
                     {/* Option: Group - Horizontal Layout */}
                     <div
-                        onClick={() => setIsAlone(false)}
-                        className={`relative p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300 hover:shadow-md ${isAlone === false
-                            ? 'border-indigo-600 bg-indigo-50 ring-2 ring-indigo-200 ring-offset-2'
+                        onClick={() => { setIsAlone(false); setSelectionKey(k => k + 1); }}
+                        className={`relative p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300 hover:shadow-md card-hover ${isAlone === false
+                            ? 'border-indigo-600 bg-indigo-50 ring-2 ring-indigo-200 ring-offset-2 animate-selection'
                             : 'border-slate-200 bg-white hover:border-indigo-300'
                             }`}
+                        key={`group-${selectionKey}`}
                     >
                         <div className="flex items-center gap-4">
                             <div className={`p-3 rounded-xl shrink-0 ${isAlone === false ? 'bg-indigo-200 text-indigo-700' : 'bg-slate-100 text-slate-500'}`}>
@@ -276,7 +283,7 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                         className="btn-primary w-full text-lg py-4 shadow-lg shadow-indigo-200 hover:shadow-indigo-300 transform transition-all hover:-translate-y-1"
                         onClick={onSubmit}
                     >
-                        Submit Registration
+                        Submit My Request
                     </button>
                 ) : isAlone === false ? (
                     <button
@@ -284,7 +291,7 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                         className="btn-primary w-full text-lg py-4 shadow-lg shadow-indigo-200 hover:shadow-indigo-300 transform transition-all hover:-translate-y-1"
                         onClick={onNext}
                     >
-                        Next: Add Guests →
+                        Continue to Add Family/Friends →
                     </button>
                 ) : (
                     <button

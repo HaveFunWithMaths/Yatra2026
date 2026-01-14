@@ -11,12 +11,12 @@ const FamilyForm = ({ members, onChange, onAddMember, onRemoveMember, onBack, on
     return (
         <div className="animate-fade-in">
             {/* Guidelines Header */}
-            <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-5 mb-6">
+            <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-5 mb-6 card-hover">
                 <h3 className="text-lg font-semibold text-amber-800 mb-3 flex items-center">
                     <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    Guidelines for Contacts Section
+                    Adding Family & Friends
                 </h3>
                 <ol className="text-amber-800 space-y-2 ml-6 list-decimal">
                     <li>Please fill all details of friends and relatives who are interested in joining the Yatra.</li>
@@ -48,7 +48,7 @@ const FamilyForm = ({ members, onChange, onAddMember, onRemoveMember, onBack, on
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
-                <span>Add Another Member</span>
+                <span>Add Another Person</span>
             </button>
 
             {/* Action Buttons */}
@@ -65,7 +65,7 @@ const FamilyForm = ({ members, onChange, onAddMember, onRemoveMember, onBack, on
                     className="btn-primary flex-1 text-lg"
                     onClick={onSubmit}
                 >
-                    Submit All Registrations
+                    Complete Registration
                 </button>
             </div>
         </div>
