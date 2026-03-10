@@ -31,7 +31,7 @@ const SuccessScreen = () => {
             </h2>
 
             <p className="text-lg text-slate-600 mb-6 max-w-md">
-                Thank you for registering for GNH Community Yatra 2026.
+                Thank you for registering for GNH Community Yatra:Hampi 2026.
                 Your details have been submitted successfully.
             </p>
 

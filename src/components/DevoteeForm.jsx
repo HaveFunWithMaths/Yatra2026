@@ -50,8 +50,8 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                                     Yatra Dates
                                 </h4>
                                 <div className="space-y-1">
-                                    <p className="text-sm flex justify-between"><span className="text-slate-500">Begins:</span> <span className="font-medium">22nd July (Tue) Evening</span></p>
-                                    <p className="text-sm flex justify-between"><span className="text-slate-500">Ends:</span> <span className="font-medium">27th July (Sun) Evening</span></p>
+                                    <p className="text-sm flex justify-between"><span className="text-slate-500">Begins:</span> <span className="font-medium">5th June (Tue) Evening</span></p>
+                                    <p className="text-sm flex justify-between"><span className="text-slate-500">Ends:</span> <span className="font-medium">7th June (Sun) Evening</span></p>
                                 </div>
                             </div>
 

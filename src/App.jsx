@@ -390,7 +390,7 @@ function App() {
                                 {/* Title Overlay */}
                                 <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                                     <h2 className="text-2xl md:text-3xl font-bold drop-shadow-lg">
-                                        Request Form for GNH Community Yatra 2026
+                                        Request Form for GNH Community Yatra:Hampi 2026
                                     </h2>
                                 </div>
                             </div>
