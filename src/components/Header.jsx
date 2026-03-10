@@ -7,7 +7,7 @@ const Header = () => {
                 {/* Logo - Left */}
                 <div className="flex-shrink-0">
                     <img
-                        src="assets/GNHLogo.jpeg"
+                        src="assets/GNHLogo.png"
                         alt="GNH Logo"
                         className="h-12 w-12 rounded-full object-cover border-2 border-white/30 shadow-md"
                     />

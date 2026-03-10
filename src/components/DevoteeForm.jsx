@@ -50,7 +50,7 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                                     Yatra Dates
                                 </h4>
                                 <div className="space-y-1">
-                                    <p className="text-sm flex justify-between"><span className="text-slate-500">Begins:</span> <span className="font-medium">5th June (Tue) Evening</span></p>
+                                    <p className="text-sm flex justify-between"><span className="text-slate-500">Begins:</span> <span className="font-medium">5th June (Fri) Morning</span></p>
                                     <p className="text-sm flex justify-between"><span className="text-slate-500">Ends:</span> <span className="font-medium">7th June (Sun) Evening</span></p>
                                 </div>
                             </div>
@@ -58,7 +58,7 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                             <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 hover:border-indigo-200 transition-colors">
                                 <h4 className="font-bold text-slate-900 mb-2 flex items-center">
                                     <CurrencyIcon className="w-5 h-5 mr-2 text-indigo-600" />
-                                    Charges
+                                    Advance Registration fees
                                 </h4>
                                 <ul className="text-sm space-y-1">
                                     <li className="flex justify-between border-b border-slate-200 pb-1"><span>Adult</span> <span className="font-semibold">₹1000</span></li>
