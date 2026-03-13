@@ -292,6 +292,8 @@ function App() {
         if (validateDevotee()) {
             setCurrentPage(2);
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     };
 
@@ -324,6 +326,8 @@ function App() {
                 }
             };
             submitToGoogleSheets(payload);
+        } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     };
 
@@ -358,6 +362,8 @@ function App() {
                 }))
             };
             submitToGoogleSheets(payload);
+        } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     };
 
