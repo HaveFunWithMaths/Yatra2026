@@ -132,14 +132,14 @@ const MemberCard = ({ member, index, onChange, onRemove, errors = {} }) => {
 
                     {/* Seating Preference */}
                     <div className="mt-4">
-                        <label className="form-label">Seating Preference</label>
-                        <div className="flex flex-wrap gap-3">
+                        <label className="form-label mb-2 block">Seating Preference</label>
+                        <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
                             {seatingOptions.map((option) => (
-                                <label key={option} className="flex items-center space-x-2 cursor-pointer bg-white px-3 py-2 rounded-lg border border-slate-200 hover:border-indigo-300 transition-colors">
+                                <label key={option} className="w-full sm:w-auto flex items-center space-x-2 cursor-pointer bg-white px-3 py-2 rounded-lg border border-slate-200 hover:border-indigo-300 transition-colors">
                                     <input
                                         type="radio"
                                         name={`seating-${index}`}
-                                        className="form-radio w-4 h-4"
+                                        className="form-radio w-4 h-4 text-indigo-600 focus:ring-indigo-500 shrink-0"
                                         checked={member.seating === option}
                                         onChange={() => handleInputChange('seating', option)}
                                     />
@@ -151,14 +151,14 @@ const MemberCard = ({ member, index, onChange, onRemove, errors = {} }) => {
 
                     {/* Chanting Status */}
                     <div className="mt-4">
-                        <label className="form-label">Chanting Status (Rounds)</label>
-                        <div className="flex flex-wrap gap-3">
+                        <label className="form-label mb-2 block">Chanting Status (Rounds)</label>
+                        <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
                             {chantingOptions.map((option) => (
-                                <label key={option} className="flex items-center space-x-2 cursor-pointer bg-white px-3 py-2 rounded-lg border border-slate-200 hover:border-indigo-300 transition-colors">
+                                <label key={option} className="w-full sm:w-auto flex items-center space-x-2 cursor-pointer bg-white px-3 py-2 rounded-lg border border-slate-200 hover:border-indigo-300 transition-colors">
                                     <input
                                         type="radio"
                                         name={`chanting-${index}`}
-                                        className="form-radio w-4 h-4"
+                                        className="form-radio w-4 h-4 text-indigo-600 focus:ring-indigo-500 shrink-0"
                                         checked={member.chanting === option}
                                         onChange={() => handleInputChange('chanting', option)}
                                     />
@@ -170,23 +170,23 @@ const MemberCard = ({ member, index, onChange, onRemove, errors = {} }) => {
 
                     {/* Inclination */}
                     <div className="mt-4">
-                        <label className="form-label">Are they favourably inclined towards Krishna Consciousness?</label>
-                        <div className="flex gap-4">
-                            <label className="flex items-center space-x-2 cursor-pointer bg-white px-4 py-2 rounded-lg border border-slate-200 hover:border-indigo-300 transition-colors">
+                        <label className="form-label mb-2 block">Are they favourably inclined towards Krishna Consciousness?</label>
+                        <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
+                            <label className="w-full sm:w-auto flex items-center space-x-2 cursor-pointer bg-white px-4 py-2 rounded-lg border border-slate-200 hover:border-indigo-300 transition-colors">
                                 <input
                                     type="radio"
                                     name={`inclination-${index}`}
-                                    className="form-radio w-4 h-4"
+                                    className="form-radio w-4 h-4 text-indigo-600 focus:ring-indigo-500 shrink-0"
                                     checked={member.inclination === 'Yes'}
                                     onChange={() => handleInputChange('inclination', 'Yes')}
                                 />
                                 <span className="text-sm text-slate-700">Yes</span>
                             </label>
-                            <label className="flex items-center space-x-2 cursor-pointer bg-white px-4 py-2 rounded-lg border border-slate-200 hover:border-indigo-300 transition-colors">
+                            <label className="w-full sm:w-auto flex items-center space-x-2 cursor-pointer bg-white px-4 py-2 rounded-lg border border-slate-200 hover:border-indigo-300 transition-colors">
                                 <input
                                     type="radio"
                                     name={`inclination-${index}`}
-                                    className="form-radio w-4 h-4"
+                                    className="form-radio w-4 h-4 text-indigo-600 focus:ring-indigo-500 shrink-0"
                                     checked={member.inclination === 'No'}
                                     onChange={() => handleInputChange('inclination', 'No')}
                                 />
@@ -197,7 +197,7 @@ const MemberCard = ({ member, index, onChange, onRemove, errors = {} }) => {
 
                     {/* Spiritual Status */}
                     <div className="mt-4">
-                        <label className="form-label">One line detail about their spiritual status</label>
+                        <label className="form-label mb-2 block">One line detail about their spiritual status</label>
                         <textarea
                             className="form-input min-h-[80px] resize-none"
                             placeholder="E.g., Regular temple visitor, new to KC..."

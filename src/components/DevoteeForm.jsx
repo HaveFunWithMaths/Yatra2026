@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { InputField, SelectField, CheckboxGroup, UserIcon, EmailIcon, PhoneIcon, ChevronDownIcon, InfoIcon, CalendarIcon, CurrencyIcon, CheckCircleIcon, ClipboardIcon, UsersIcon, CheckIcon } from './common';
 import { prasadOptions, languageOptions, genderOptions } from '../utils/constants';
 
-const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, errors, onBlur }) => {
+const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, errors, onBlur, isAutopopulated, isFetchingData }) => {
     const [showInfo, setShowInfo] = useState(true);
     const [selectionKey, setSelectionKey] = useState(0);
     const infoId = 'devotee-info-section';
@@ -106,6 +106,33 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
 
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="col-span-2 md:col-span-1 relative">
+                            <InputField
+                                label="WhatsApp Number"
+                                name="whatsapp"
+                                required
+                                type="tel"
+                                inputMode="tel"
+                                icon={PhoneIcon}
+                                placeholder="e.g., 98765 43210"
+                                value={data.whatsapp || ''}
+                                onChange={(e) => handleInputChange('whatsapp', e.target.value)}
+                                onBlur={() => handleFieldBlur('whatsapp')}
+                                error={errors.whatsapp}
+                            />
+                            {isFetchingData && (
+                                <div className="absolute right-3 top-[38px]">
+                                    <div className="animate-spin h-5 w-5 border-2 border-indigo-600 border-t-transparent rounded-full"></div>
+                                </div>
+                            )}
+                            {isAutopopulated && (
+                                <p className="text-xs text-green-600 font-medium mt-1.5 flex items-center absolute -bottom-5">
+                                    <CheckCircleIcon className="w-4 h-4 mr-1" />
+                                    Record found and fields autopopulated
+                                </p>
+                            )}
+                        </div>
+
                         <InputField
                             label="Name"
                             required
@@ -154,22 +181,7 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                             onChange={(e) => handleInputChange('email', e.target.value)}
                             onBlur={() => handleFieldBlur('email')}
                             error={errors.email}
-                            className="col-span-2 md:col-span-1"
-                        />
-
-                        <InputField
-                            label="WhatsApp Number"
-                            name="whatsapp"
-                            required
-                            type="tel"
-                            inputMode="tel"
-                            icon={PhoneIcon}
-                            placeholder="e.g., 98765 43210"
-                            value={data.whatsapp || ''}
-                            onChange={(e) => handleInputChange('whatsapp', e.target.value)}
-                            onBlur={() => handleFieldBlur('whatsapp')}
-                            error={errors.whatsapp}
-                            className="col-span-2 md:col-span-1"
+                            className="col-span-2 md:col-span-2"
                         />
                     </div>
                 </div>
@@ -219,27 +231,33 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Option: Alone - Horizontal Layout */}
                     <div
-                        onClick={() => { setIsAlone(true); setSelectionKey(k => k + 1); }}
-                        className={`relative p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300 hover:shadow-md card-hover ${isAlone === true
-                            ? 'border-indigo-600 bg-indigo-50 ring-2 ring-indigo-200 ring-offset-2 animate-selection'
-                            : 'border-slate-200 bg-white hover:border-indigo-300'
-                            }`}
+                        onClick={() => { if (!isAutopopulated) { setIsAlone(true); setSelectionKey(k => k + 1); } }}
+                        className={`relative p-5 rounded-2xl border-2 transition-all duration-300 ${isAutopopulated 
+                            ? 'opacity-50 cursor-not-allowed border-slate-200 bg-slate-50' 
+                            : 'cursor-pointer hover:shadow-md card-hover ' + (isAlone === true
+                                ? 'border-indigo-600 bg-indigo-50 ring-2 ring-indigo-200 ring-offset-2 animate-selection'
+                                : 'border-slate-200 bg-white hover:border-indigo-300'
+                            )}`}
                         key={`alone-${selectionKey}`}
+                        title={isAutopopulated ? "Already registered, please update or add family." : undefined}
                     >
                         <div className="flex items-center gap-4">
-                            <div className={`p-3 rounded-xl shrink-0 ${isAlone === true ? 'bg-indigo-200 text-indigo-700' : 'bg-slate-100 text-slate-500'}`}>
+                            <div className={`p-3 rounded-xl shrink-0 ${isAlone === true && !isAutopopulated ? 'bg-indigo-200 text-indigo-700' : 'bg-slate-100 text-slate-500'}`}>
                                 <UserIcon className="w-8 h-8" />
                             </div>
                             <div className="flex-1">
                                 <div className="flex items-center justify-between">
-                                    <h4 className={`text-lg font-bold ${isAlone === true ? 'text-indigo-900' : 'text-slate-900'}`}>Just Me</h4>
-                                    {isAlone === true && (
+                                    <h4 className={`text-lg font-bold ${isAlone === true && !isAutopopulated ? 'text-indigo-900' : 'text-slate-900'}`}>Just Me</h4>
+                                    {isAlone === true && !isAutopopulated && (
                                         <div className="bg-indigo-600 text-white p-1 rounded-full">
                                             <CheckIcon className="w-4 h-4" />
                                         </div>
                                     )}
                                 </div>
-                                <p className={`text-sm ${isAlone === true ? 'text-indigo-700' : 'text-slate-500'}`}>I am registering only for myself.</p>
+                                <p className={`text-sm ${isAlone === true && !isAutopopulated ? 'text-indigo-700' : 'text-slate-500'}`}>I am registering only for myself.</p>
+                                {isAutopopulated && (
+                                    <p className="text-xs text-amber-600 font-semibold mt-1">Not available when updating records</p>
+                                )}
                             </div>
                         </div>
                         <input type="radio" className="hidden" />
@@ -283,7 +301,7 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                         className="btn-primary w-full text-lg py-4 shadow-lg shadow-indigo-200 hover:shadow-indigo-300 transform transition-all hover:-translate-y-1"
                         onClick={onSubmit}
                     >
-                        Submit My Request
+                        Proceed to Payment
                     </button>
                 ) : isAlone === false ? (
                     <button

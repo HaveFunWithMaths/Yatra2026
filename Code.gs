@@ -31,28 +31,49 @@
  */
 
 /**
+ * Write debug logs to a 'Debug' sheet in the spreadsheet
+ * This is more reliable than console.log for web app executions
+ */
+function logToSheet(message) {
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    let debugSheet = ss.getSheetByName('Debug');
+    if (!debugSheet) {
+      debugSheet = ss.insertSheet('Debug');
+      debugSheet.appendRow(['Timestamp', 'Message']);
+      debugSheet.getRange('1:1').setFontWeight('bold');
+    }
+    const timestamp = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+    debugSheet.appendRow([timestamp, String(message)]);
+  } catch (logErr) {
+    // If even logging fails, silently ignore
+  }
+}
+
+/**
  * Handle POST requests from the React form
  */
 function doPost(e) {
   try {
-    console.log('[doPost] Request received');
-    console.log('[doPost] postData contentType:', e.postData?.type);
-    console.log('[doPost] postData length:', e.postData?.contents?.length);
+    logToSheet('[doPost] Request received');
+    logToSheet('[doPost] postData contentType: ' + (e.postData ? e.postData.type : 'N/A'));
+    logToSheet('[doPost] postData length: ' + (e.postData && e.postData.contents ? e.postData.contents.length : 'N/A'));
     
     // Parse the incoming JSON data
     const data = JSON.parse(e.postData.contents);
     
-    console.log('[doPost] Parsed data keys:', Object.keys(data));
-    console.log('[doPost] Has paymentFile:', !!data.paymentFile);
+    logToSheet('[doPost] Parsed data keys: ' + Object.keys(data).join(', '));
+    logToSheet('[doPost] Has paymentFile: ' + !!(data.paymentFile));
     if (data.paymentFile) {
-      console.log('[doPost] paymentFile keys:', Object.keys(data.paymentFile));
-      console.log('[doPost] paymentFile.name:', data.paymentFile.name);
-      console.log('[doPost] paymentFile.mimeType:', data.paymentFile.mimeType);
-      console.log('[doPost] paymentFile.data length:', data.paymentFile.data?.length);
+      logToSheet('[doPost] paymentFile.name: ' + data.paymentFile.name);
+      logToSheet('[doPost] paymentFile.mimeType: ' + data.paymentFile.mimeType);
+      logToSheet('[doPost] paymentFile.data length: ' + (data.paymentFile.data ? data.paymentFile.data.length : 'NO DATA'));
     }
     
     // Process the submission
     const result = processSubmission(data);
+    
+    logToSheet('[doPost] processSubmission completed, result: ' + JSON.stringify(result));
     
     // Return success response
     return ContentService
@@ -60,9 +81,9 @@ function doPost(e) {
       .setMimeType(ContentService.MimeType.JSON);
       
   } catch (error) {
-    // Log error and return error response
-    console.error('[doPost] Error processing submission:', error);
-    console.error('[doPost] Error stack:', error.stack);
+    // Log error to sheet for debugging
+    logToSheet('[doPost] ERROR: ' + error.toString());
+    logToSheet('[doPost] ERROR stack: ' + error.stack);
     return ContentService
       .createTextOutput(JSON.stringify({ success: false, error: error.toString() }))
       .setMimeType(ContentService.MimeType.JSON);
@@ -87,65 +108,86 @@ function processSubmission(data) {
   // Handle File Upload to Drive
   let paymentLink = '';
   if (data.paymentFile && data.paymentFile.data) {
-    console.log('[processSubmission] Starting file upload to Drive');
-    console.log('[processSubmission] File name:', data.paymentFile.name);
-    console.log('[processSubmission] File mimeType:', data.paymentFile.mimeType);
-    console.log('[processSubmission] File data length:', data.paymentFile.data.length);
+    logToSheet('[upload] Starting file upload to Drive');
+    logToSheet('[upload] File name: ' + data.paymentFile.name);
+    logToSheet('[upload] File mimeType: ' + data.paymentFile.mimeType);
+    logToSheet('[upload] File data length: ' + data.paymentFile.data.length);
     try {
-      console.log('[processSubmission] Looking for folder "GNH Yatra Payments"');
+      logToSheet('[upload] Looking for folder "GNH Yatra Payments"');
       const folderIterator = DriveApp.getFoldersByName("GNH Yatra Payments");
       let folder;
       if (folderIterator.hasNext()) {
         folder = folderIterator.next();
-        console.log('[processSubmission] Found existing folder, id:', folder.getId());
+        logToSheet('[upload] Found existing folder, id: ' + folder.getId());
       } else {
         folder = DriveApp.createFolder("GNH Yatra Payments");
-        console.log('[processSubmission] Created new folder, id:', folder.getId());
+        logToSheet('[upload] Created new folder, id: ' + folder.getId());
         try {
           folder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-          console.log('[processSubmission] Folder sharing set successfully');
+          logToSheet('[upload] Folder sharing set successfully');
         } catch (shareErr) {
-          console.warn('[processSubmission] Could not set folder sharing:', shareErr);
+          logToSheet('[upload] WARNING: Could not set folder sharing: ' + shareErr);
         }
       }
       
-      console.log('[processSubmission] Decoding base64 data...');
-      const decodedBytes = Utilities.base64Decode(data.paymentFile.data);
-      console.log('[processSubmission] Decoded bytes length:', decodedBytes.length);
+      logToSheet('[upload] Decoding base64 data...');
+      var decodedBytes = Utilities.base64Decode(data.paymentFile.data);
+      logToSheet('[upload] Decoded bytes length: ' + decodedBytes.length);
       
-      const blob = Utilities.newBlob(
+      var blob = Utilities.newBlob(
         decodedBytes, 
         data.paymentFile.mimeType || 'application/octet-stream', 
         data.paymentFile.name || 'Payment_Screenshot'
       );
-      console.log('[processSubmission] Blob created, size:', blob.getBytes().length);
+      logToSheet('[upload] Blob created successfully');
       
-      const file = folder.createFile(blob);
+      var file = folder.createFile(blob);
       paymentLink = file.getUrl();
-      console.log('[processSubmission] File uploaded successfully, URL:', paymentLink);
-    } catch (e) {
-      console.error('[processSubmission] Error uploading file to Drive:', e);
-      console.error('[processSubmission] Error stack:', e.stack);
-      paymentLink = 'Upload Failed';
+      logToSheet('[upload] File uploaded successfully, URL: ' + paymentLink);
+    } catch (uploadErr) {
+      logToSheet('[upload] ERROR: ' + uploadErr.toString());
+      logToSheet('[upload] ERROR stack: ' + uploadErr.stack);
+      paymentLink = 'Upload Failed: ' + uploadErr.toString();
     }
   } else {
-    console.log('[processSubmission] No paymentFile in data, skipping upload');
+    logToSheet('[upload] No paymentFile in data or no data property, skipping upload');
+    if (data.paymentFile) {
+      logToSheet('[upload] paymentFile exists but data is: ' + (data.paymentFile.data ? 'has value' : 'falsy'));
+    }
   }
 
   // Check if devotee phone number already exists
   let phoneExists = false;
+  let existingRowIndex = -1;
   const dataRange = sheet.getDataRange();
   const values = dataRange.getValues();
   for (let i = 1; i < values.length; i++) {
     // Column E is index 4 (0-based)
     if (String(values[i][4]).trim() === String(devotee.whatsapp).trim()) {
       phoneExists = true;
+      existingRowIndex = i + 1; // 1-based indexing for row number
       break;
     }
   }
   
   let rowsAdded = 0;
   let mergeEndRow = startRow - 1;
+
+  if (phoneExists) {
+    // Update existing devotee information
+    sheet.getRange(existingRowIndex, 1).setValue(devotee.name);
+    sheet.getRange(existingRowIndex, 2).setValue(devotee.name);
+    sheet.getRange(existingRowIndex, 3).setValue(devotee.age);
+    sheet.getRange(existingRowIndex, 4).setValue(devotee.email);
+    sheet.getRange(existingRowIndex, 5).setValue(devotee.whatsapp);
+    sheet.getRange(existingRowIndex, 6).setValue(devotee.gender);
+    sheet.getRange(existingRowIndex, 7).setValue(devotee.prasadPreference);
+    sheet.getRange(existingRowIndex, 8).setValue(devotee.languages);
+    sheet.getRange(existingRowIndex, 13).setValue(timestamp);
+    if (paymentLink) {
+        sheet.getRange(existingRowIndex, 14).setValue(paymentLink);
+    }
+  }
 
   if (isAlone) {
     if (!phoneExists) {
@@ -232,15 +274,21 @@ function processSubmission(data) {
 }
 
 /**
- * Merge Column A (Devotee Name) for a range of rows
+ * Merge Column A (Devotee Name) and Column N (Payment Link) for a range of rows
  */
 function mergeDevoteeColumn(sheet, startRow, endRow) {
   if (startRow < endRow) {
-    const range = sheet.getRange(startRow, 1, endRow - startRow + 1, 1);
-    range.merge();
-    range.setVerticalAlignment('middle');
-    range.setFontWeight('bold');
-    range.setBackground('#f3f4f6');
+    // Merge Column A (Devotee Name)
+    const rangeA = sheet.getRange(startRow, 1, endRow - startRow + 1, 1);
+    rangeA.merge();
+    rangeA.setVerticalAlignment('middle');
+    rangeA.setFontWeight('bold');
+    rangeA.setBackground('#f3f4f6');
+    
+    // Merge Column N (Payment Link, index 14)
+    const rangeN = sheet.getRange(startRow, 14, endRow - startRow + 1, 1);
+    rangeN.merge();
+    rangeN.setVerticalAlignment('middle');
   }
 }
 
@@ -347,14 +395,134 @@ function testSubmission() {
 }
 
 /**
- * Handle GET requests (optional - for testing)
+ * TEST FUNCTION - Run this MANUALLY from Apps Script editor to:
+ * 1. Trigger DriveApp authorization (Google will ask you to grant permission)
+ * 2. Verify that Drive upload actually works
+ * 
+ * Steps: Click the ▶ Run button with this function selected.
+ * If it asks for authorization, click "Review Permissions" and "Allow".
+ */
+function testDriveUpload() {
+  logToSheet('[testDriveUpload] Starting Drive upload test...');
+  
+  try {
+    // Step 1: Test folder access
+    logToSheet('[testDriveUpload] Step 1: Testing DriveApp access...');
+    const folderIterator = DriveApp.getFoldersByName('GNH Yatra Payments');
+    let folder;
+    if (folderIterator.hasNext()) {
+      folder = folderIterator.next();
+      logToSheet('[testDriveUpload] Found existing folder: ' + folder.getName() + ' (id: ' + folder.getId() + ')');
+    } else {
+      folder = DriveApp.createFolder('GNH Yatra Payments');
+      logToSheet('[testDriveUpload] Created new folder: ' + folder.getId());
+      folder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    }
+    
+    // Step 2: Create a tiny test file
+    logToSheet('[testDriveUpload] Step 2: Creating test file...');
+    const testBlob = Utilities.newBlob('This is a test file from GNH Yatra', 'text/plain', 'test_upload.txt');
+    const testFile = folder.createFile(testBlob);
+    logToSheet('[testDriveUpload] Test file created! URL: ' + testFile.getUrl());
+    
+    // Step 3: Clean up test file
+    testFile.setTrashed(true);
+    logToSheet('[testDriveUpload] Test file cleaned up');
+    
+    logToSheet('[testDriveUpload] ✅ SUCCESS! Drive upload is working correctly.');
+    console.log('✅ Drive upload test PASSED! Check the Debug sheet for details.');
+    
+  } catch (err) {
+    logToSheet('[testDriveUpload] ❌ FAILED: ' + err.toString());
+    logToSheet('[testDriveUpload] Error stack: ' + err.stack);
+    console.log('❌ Drive upload test FAILED: ' + err.toString());
+    console.log('You may need to authorize Drive permissions. Go to: Run > Review Permissions');
+  }
+}
+
+/**
+ * Handle GET requests (optional - for testing and fetching existing devotee data)
  */
 function doGet(e) {
-  return ContentService
-    .createTextOutput(JSON.stringify({ 
-      status: 'OK', 
-      message: 'GNH Yatra 2026 Registration API is running',
-      timestamp: new Date().toISOString()
-    }))
-    .setMimeType(ContentService.MimeType.JSON);
+  try {
+    if (e.parameter.action === 'getDevotee') {
+      const whatsapp = e.parameter.whatsapp;
+      if (!whatsapp) {
+        return ContentService.createTextOutput(JSON.stringify({ error: 'WhatsApp number not provided' })).setMimeType(ContentService.MimeType.JSON);
+      }
+      
+      const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+      const dataRange = sheet.getDataRange();
+      const values = dataRange.getValues();
+      
+      let devoteeData = null;
+      let familyMembers = [];
+      let devoteeNames = new Set();
+      
+      // PASS 1: Find all devotee entries with this WhatsApp number
+      for (let i = 1; i < values.length; i++) {
+        const row = values[i];
+        if (String(row[4]).trim() === String(whatsapp).trim()) {
+          // Found the devotee! We take the first complete record we find.
+          if (!devoteeData) {
+            devoteeData = {
+              name: row[0] || '',
+              age: row[2] || '',
+              email: row[3] || '',
+              whatsapp: row[4] || '',
+              gender: row[5] || '',
+              prasadPreference: row[6] ? String(row[6]).split(',').map(s=>s.trim()) : [],
+              languages: row[7] ? String(row[7]).split(',').map(s=>s.trim()) : []
+            };
+          }
+          if (row[0]) {
+            devoteeNames.add(String(row[0]).trim());
+          }
+        }
+      }
+      
+      // PASS 2: Find all family members linked to these Devotee Names
+      if (devoteeNames.size > 0) {
+        for (let i = 1; i < values.length; i++) {
+          const row = values[i];
+          const currentDevoteeName = String(row[0]).trim();
+          if (devoteeNames.has(currentDevoteeName)) {
+            const individualName = String(row[1]).trim();
+            // A member is a family member if they have a distinct individual name
+            if (individualName && individualName !== currentDevoteeName) {
+              familyMembers.push({
+                name: individualName,
+                age: row[2] || '',
+                phone: row[4] || '',
+                gender: row[5] || '',
+                prasadPreference: row[6] ? String(row[6]).split(',').map(s=>s.trim()) : [],
+                languages: row[7] ? String(row[7]).split(',').map(s=>s.trim()) : [],
+                seating: row[8] || '',
+                chanting: row[9] || '',
+                inclination: row[10] || '',
+                spiritualStatus: row[11] || ''
+              });
+            }
+          }
+        }
+      }
+      
+      return ContentService.createTextOutput(JSON.stringify({ 
+        success: true,
+        devotee: devoteeData,
+        family: familyMembers 
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    return ContentService
+      .createTextOutput(JSON.stringify({ 
+        status: 'OK', 
+        message: 'GNH Yatra 2026 Registration API is running',
+        timestamp: new Date().toISOString()
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ error: err.toString() })).setMimeType(ContentService.MimeType.JSON);
+  }
 }
+

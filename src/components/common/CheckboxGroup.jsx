@@ -25,19 +25,19 @@ const CheckboxGroup = ({
                     {label} {required && <span className="text-red-500">*</span>}
                 </label>
             )}
-            <div className={`flex flex-wrap gap-3`}>
+            <div className={`flex flex-col sm:flex-row sm:flex-wrap gap-3`}>
                 {options.map((option) => {
                     const isSelected = selectedValues.includes(option);
                     return (
                         <label
                             key={option}
-                            className={`flex-1 flex items-center justify-center space-x-3 cursor-pointer p-3 rounded-xl border transition-all duration-200 ${isSelected
+                            className={`w-full sm:flex-1 flex items-center justify-start space-x-3 cursor-pointer p-3 rounded-xl border transition-all duration-200 ${isSelected
                                 ? 'bg-indigo-50 border-indigo-200 ring-1 ring-indigo-200'
                                 : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
                                 }`}
                         >
                             <div
-                                className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isSelected ? 'bg-indigo-600 border-indigo-600' : 'bg-white border-slate-300'
+                                className={`w-5 h-5 rounded border flex items-center justify-center transition-colors shrink-0 ${isSelected ? 'bg-indigo-600 border-indigo-600' : 'bg-white border-slate-300'
                                     }`}
                             >
                                 {isSelected && <CheckIcon className="w-3.5 h-3.5 text-white" />}

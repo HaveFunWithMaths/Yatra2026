@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import MemberCard from './MemberCard';
 
-const FamilyForm = ({ members, onChange, onAddMember, onRemoveMember, onBack, onSubmit, errors }) => {
+const FamilyForm = ({ members, existingMembers, onChange, onAddMember, onRemoveMember, onBack, onSubmit, errors }) => {
     const [addError, setAddError] = useState('');
 
     const handleMemberChange = (index, updatedMember) => {
@@ -40,6 +40,29 @@ const FamilyForm = ({ members, onChange, onAddMember, onRemoveMember, onBack, on
                     <li>Provide accurate information for seating preferences and chanting status.</li>
                 </ol>
             </div>
+
+            {/* Already Registered Members */}
+            {existingMembers && existingMembers.length > 0 && (
+                <div className="bg-white p-5 rounded-2xl shadow-sm border border-green-100 mb-6 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-16 h-16 bg-green-50 rounded-bl-full -z-10"></div>
+                    <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                        <span className="bg-green-100 text-green-600 p-2 rounded-lg mr-3">
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </span>
+                        Already Registered Family & Friends
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                        {existingMembers.map((em, idx) => (
+                            <div key={`existing-${idx}`} className="bg-slate-50 border border-slate-100 rounded-lg p-3 flex items-center justify-between">
+                                <span className="font-semibold text-slate-700 truncate mr-2" title={em.name}>{em.name}</span>
+                                <span className="text-sm bg-slate-200 text-slate-600 py-1 px-2 rounded-md whitespace-nowrap">Age: {em.age}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             {/* Member Cards */}
             <div className="space-y-6">
@@ -88,7 +111,7 @@ const FamilyForm = ({ members, onChange, onAddMember, onRemoveMember, onBack, on
                     className="btn-primary flex-1 text-lg"
                     onClick={onSubmit}
                 >
-                    Complete Registration
+                    Proceed to Payment
                 </button>
             </div>
         </div>

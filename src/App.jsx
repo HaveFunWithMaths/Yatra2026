@@ -20,7 +20,7 @@ const FIELD_LABELS = {
 };
 
 // Replace this with your deployed Google Apps Script URL
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxHZN8yEVKTumetKkZYw8URP-UlfZewE2oYlmJMsI21eUhc6ofzpzAxDoQ-OTqd-s7zlQ/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxaTKqDdN5eOAJoPknpHovrzK2qQQYrvbeYm5ShDIH6D4i5B-LMMvaTV1_1bPOMJL_YkA/exec';
 
 // Helper to load from localStorage
 const loadFromStorage = (key, defaultValue) => {
@@ -95,6 +95,12 @@ function App() {
     const [devoteeErrors, setDevoteeErrors] = useState({});
     const [familyErrors, setFamilyErrors] = useState([{}]);
 
+    // Auto-populate state
+    const [isAutopopulated, setIsAutopopulated] = useState(() => loadFromStorage('isAutopopulated', false));
+    const [existingFamilyMembers, setExistingFamilyMembers] = useState(() => loadFromStorage('existingFamilyMembers', []));
+    const [fetchedWhatsapp, setFetchedWhatsapp] = useState('');
+    const [isFetchingData, setIsFetchingData] = useState(false);
+
     // Persist devoteeData to localStorage
     useEffect(() => {
         saveToStorage(STORAGE_KEYS.DEVOTEE_DATA, devoteeData);
@@ -111,6 +117,54 @@ function App() {
     useEffect(() => {
         saveToStorage(STORAGE_KEYS.FAMILY_MEMBERS, familyMembers);
     }, [familyMembers]);
+
+    // Persist auto-populate state
+    useEffect(() => {
+        saveToStorage('isAutopopulated', isAutopopulated);
+        saveToStorage('existingFamilyMembers', existingFamilyMembers);
+    }, [isAutopopulated, existingFamilyMembers]);
+
+    // Auto-populate effect based on WhatsApp number
+    useEffect(() => {
+        const whatsapp = devoteeData?.whatsapp;
+        if (whatsapp && whatsapp.length === 10 && whatsapp !== fetchedWhatsapp) {
+            const fetchData = async () => {
+                setIsFetchingData(true);
+                try {
+                    const url = `${GOOGLE_SCRIPT_URL}?action=getDevotee&whatsapp=${whatsapp}`;
+                    const response = await fetch(url);
+                    const result = await response.json();
+                    if (result.success && result.devotee) {
+                        setDevoteeData(prev => ({ ...prev, ...result.devotee }));
+                        setIsAutopopulated(true);
+                        setExistingFamilyMembers(result.family || []);
+                        if (isAlone === true) {
+                            setIsAlone(false); // Can't be 'Just Me' if already in system with potential family
+                        }
+                        setDevoteeErrors({}); // clear any errors after pulling real data
+                    } else {
+                        // Not found or simple test response
+                        setIsAutopopulated(false);
+                        setExistingFamilyMembers([]);
+                    }
+                } catch (err) {
+                    console.error("Failed to fetch auto-populate data:", err);
+                    setIsAutopopulated(false);
+                    setExistingFamilyMembers([]);
+                } finally {
+                    setFetchedWhatsapp(whatsapp);
+                    setIsFetchingData(false);
+                }
+            };
+            fetchData();
+        } else if (!whatsapp || whatsapp.length < 10) {
+            if (isAutopopulated) {
+                setIsAutopopulated(false);
+                setExistingFamilyMembers([]);
+                setFetchedWhatsapp('');
+            }
+        }
+    }, [devoteeData?.whatsapp, fetchedWhatsapp, isAlone]);
 
     // Validate a single devotee field (for onBlur)
     const validateDevoteeField = useCallback((field) => {
@@ -498,6 +552,8 @@ function App() {
                                         onSubmit={handleNextToPaymentAlone}
                                         errors={devoteeErrors}
                                         onBlur={validateDevoteeField}
+                                        isAutopopulated={isAutopopulated}
+                                        isFetchingData={isFetchingData}
                                     />
                                 </>
                             )}
@@ -506,6 +562,7 @@ function App() {
                             {currentPage === 2 && (
                                 <FamilyForm
                                     members={familyMembers}
+                                    existingMembers={existingFamilyMembers}
                                     onChange={setFamilyMembers}
                                     onAddMember={addFamilyMember}
                                     onRemoveMember={removeFamilyMember}
