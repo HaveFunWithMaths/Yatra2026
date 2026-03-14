@@ -14,4 +14,4 @@ export const STORAGE_KEYS = {
 };
 
 // Request timeout in milliseconds
-export const REQUEST_TIMEOUT = 10000;
+export const REQUEST_TIMEOUT = 30000;

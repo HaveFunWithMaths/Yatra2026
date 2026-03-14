@@ -35,8 +35,21 @@
  */
 function doPost(e) {
   try {
+    console.log('[doPost] Request received');
+    console.log('[doPost] postData contentType:', e.postData?.type);
+    console.log('[doPost] postData length:', e.postData?.contents?.length);
+    
     // Parse the incoming JSON data
     const data = JSON.parse(e.postData.contents);
+    
+    console.log('[doPost] Parsed data keys:', Object.keys(data));
+    console.log('[doPost] Has paymentFile:', !!data.paymentFile);
+    if (data.paymentFile) {
+      console.log('[doPost] paymentFile keys:', Object.keys(data.paymentFile));
+      console.log('[doPost] paymentFile.name:', data.paymentFile.name);
+      console.log('[doPost] paymentFile.mimeType:', data.paymentFile.mimeType);
+      console.log('[doPost] paymentFile.data length:', data.paymentFile.data?.length);
+    }
     
     // Process the submission
     const result = processSubmission(data);
@@ -48,7 +61,8 @@ function doPost(e) {
       
   } catch (error) {
     // Log error and return error response
-    console.error('Error processing submission:', error);
+    console.error('[doPost] Error processing submission:', error);
+    console.error('[doPost] Error stack:', error.stack);
     return ContentService
       .createTextOutput(JSON.stringify({ success: false, error: error.toString() }))
       .setMimeType(ContentService.MimeType.JSON);
@@ -67,58 +81,124 @@ function processSubmission(data) {
   
   // Get the next available row
   const startRow = sheet.getLastRow() + 1;
-  
   const devotee = data.devotee;
   const isAlone = data.alone === true;
   
+  // Handle File Upload to Drive
+  let paymentLink = '';
+  if (data.paymentFile && data.paymentFile.data) {
+    console.log('[processSubmission] Starting file upload to Drive');
+    console.log('[processSubmission] File name:', data.paymentFile.name);
+    console.log('[processSubmission] File mimeType:', data.paymentFile.mimeType);
+    console.log('[processSubmission] File data length:', data.paymentFile.data.length);
+    try {
+      console.log('[processSubmission] Looking for folder "GNH Yatra Payments"');
+      const folderIterator = DriveApp.getFoldersByName("GNH Yatra Payments");
+      let folder;
+      if (folderIterator.hasNext()) {
+        folder = folderIterator.next();
+        console.log('[processSubmission] Found existing folder, id:', folder.getId());
+      } else {
+        folder = DriveApp.createFolder("GNH Yatra Payments");
+        console.log('[processSubmission] Created new folder, id:', folder.getId());
+        try {
+          folder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+          console.log('[processSubmission] Folder sharing set successfully');
+        } catch (shareErr) {
+          console.warn('[processSubmission] Could not set folder sharing:', shareErr);
+        }
+      }
+      
+      console.log('[processSubmission] Decoding base64 data...');
+      const decodedBytes = Utilities.base64Decode(data.paymentFile.data);
+      console.log('[processSubmission] Decoded bytes length:', decodedBytes.length);
+      
+      const blob = Utilities.newBlob(
+        decodedBytes, 
+        data.paymentFile.mimeType || 'application/octet-stream', 
+        data.paymentFile.name || 'Payment_Screenshot'
+      );
+      console.log('[processSubmission] Blob created, size:', blob.getBytes().length);
+      
+      const file = folder.createFile(blob);
+      paymentLink = file.getUrl();
+      console.log('[processSubmission] File uploaded successfully, URL:', paymentLink);
+    } catch (e) {
+      console.error('[processSubmission] Error uploading file to Drive:', e);
+      console.error('[processSubmission] Error stack:', e.stack);
+      paymentLink = 'Upload Failed';
+    }
+  } else {
+    console.log('[processSubmission] No paymentFile in data, skipping upload');
+  }
+
+  // Check if devotee phone number already exists
+  let phoneExists = false;
+  const dataRange = sheet.getDataRange();
+  const values = dataRange.getValues();
+  for (let i = 1; i < values.length; i++) {
+    // Column E is index 4 (0-based)
+    if (String(values[i][4]).trim() === String(devotee.whatsapp).trim()) {
+      phoneExists = true;
+      break;
+    }
+  }
+  
+  let rowsAdded = 0;
+  let mergeEndRow = startRow - 1;
+
   if (isAlone) {
-    // Single devotee submission (attending alone)
-    const row = [
-      devotee.name,           // A: Devotee Name
-      devotee.name,           // B: Individual Name (same as devotee for solo)
-      devotee.age,            // C: Age
-      devotee.email,          // D: Email
-      devotee.whatsapp,       // E: WhatsApp
-      devotee.gender,         // F: Gender
-      devotee.prasadPreference, // G: Prasadam
-      devotee.languages,      // H: Languages
-      '',                     // I: Seating (N/A for devotee alone)
-      '',                     // J: Chanting (N/A for devotee alone)
-      '',                     // K: Inclination (N/A for devotee alone)
-      '',                     // L: One Liner (N/A for devotee alone)
-      timestamp               // M: Timestamp
-    ];
-    
-    sheet.appendRow(row);
-    
-    return { rowsAdded: 1, startRow: startRow };
-    
+    if (!phoneExists) {
+      const row = [
+        devotee.name,           // A: Devotee Name
+        devotee.name,           // B: Individual Name (same as devotee for solo)
+        devotee.age,            // C: Age
+        devotee.email,          // D: Email
+        devotee.whatsapp,       // E: WhatsApp
+        devotee.gender,         // F: Gender
+        devotee.prasadPreference, // G: Prasadam
+        devotee.languages,      // H: Languages
+        '',                     // I: Seating
+        '',                     // J: Chanting
+        '',                     // K: Inclination
+        '',                     // L: One Liner
+        timestamp,              // M: Timestamp
+        paymentLink             // N: Payment Link
+      ];
+      sheet.appendRow(row);
+      rowsAdded = 1;
+      mergeEndRow = startRow;
+    }
   } else {
     // Group submission (devotee + family members)
     const family = data.family || [];
-    const totalRows = 1 + family.length; // Devotee + family members
+    let currentRow = startRow;
     
-    // First row: Devotee's own data
-    const devoteeRow = [
-      devotee.name,           // A: Devotee Name
-      devotee.name,           // B: Individual Name
-      devotee.age,            // C: Age
-      devotee.email,          // D: Email
-      devotee.whatsapp,       // E: WhatsApp
-      devotee.gender,         // F: Gender
-      devotee.prasadPreference, // G: Prasadam
-      devotee.languages,      // H: Languages
-      '',                     // I: Seating (N/A for main devotee)
-      '',                     // J: Chanting (N/A for main devotee)
-      '',                     // K: Inclination (N/A for main devotee)
-      '',                     // L: One Liner (N/A for main devotee)
-      timestamp               // M: Timestamp
-    ];
-    
-    sheet.appendRow(devoteeRow);
+    // First row: Devotee's own data (if not already exists)
+    if (!phoneExists) {
+      const devoteeRow = [
+        devotee.name,           // A: Devotee Name
+        devotee.name,           // B: Individual Name
+        devotee.age,            // C: Age
+        devotee.email,          // D: Email
+        devotee.whatsapp,       // E: WhatsApp
+        devotee.gender,         // F: Gender
+        devotee.prasadPreference, // G: Prasadam
+        devotee.languages,      // H: Languages
+        '',                     // I: Seating
+        '',                     // J: Chanting
+        '',                     // K: Inclination
+        '',                     // L: One Liner
+        timestamp,              // M: Timestamp
+        paymentLink             // N: Payment Link
+      ];
+      sheet.appendRow(devoteeRow);
+      rowsAdded++;
+      currentRow++;
+    }
     
     // Subsequent rows: Family members
-    family.forEach((member, index) => {
+    family.forEach((member) => {
       const memberRow = [
         devotee.name,         // A: Devotee Name (will be merged)
         member.name,          // B: Individual Name
@@ -132,19 +212,23 @@ function processSubmission(data) {
         member.chanting,      // J: Chanting Status
         member.inclination,   // K: Inclination
         member.spiritualStatus, // L: One Liner
-        timestamp             // M: Timestamp
+        timestamp,            // M: Timestamp
+        paymentLink           // N: Payment Link
       ];
-      
       sheet.appendRow(memberRow);
+      rowsAdded++;
+      currentRow++;
     });
     
-    // Merge Column A for this group
-    if (family.length > 0) {
-      mergeDevoteeColumn(sheet, startRow, startRow + totalRows - 1);
-    }
+    mergeEndRow = currentRow - 1;
     
-    return { rowsAdded: totalRows, startRow: startRow };
+    // Merge Column A for this group
+    if (rowsAdded > 1) {
+      mergeDevoteeColumn(sheet, startRow, mergeEndRow);
+    }
   }
+  
+  return { rowsAdded, startRow };
 }
 
 /**
@@ -180,7 +264,8 @@ function ensureHeaders(sheet) {
       'Chanting',
       'Inclination',
       'Spiritual Status',
-      'Timestamp'
+      'Timestamp',
+      'Payment Link'
     ];
     
     // Set headers in the first row
@@ -210,6 +295,7 @@ function ensureHeaders(sheet) {
     sheet.setColumnWidth(11, 100); // Inclination
     sheet.setColumnWidth(12, 250); // Spiritual Status
     sheet.setColumnWidth(13, 180); // Timestamp
+    sheet.setColumnWidth(14, 250); // Payment Link
   }
 }
 

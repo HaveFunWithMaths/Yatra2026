@@ -62,7 +62,7 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                                 </h4>
                                 <ul className="text-sm space-y-1">
                                     <li className="flex justify-between border-b border-slate-200 pb-1"><span>Adult</span> <span className="font-semibold">₹1000</span></li>
-                                    <li className="flex justify-between border-b border-slate-200 py-1"><span>Child (5-12)</span> <span className="font-semibold">₹600</span></li>
+                                    <li className="flex justify-between border-b border-slate-200 py-1"><span>Student (5-18)</span> <span className="font-semibold">₹500</span></li>
                                     <li className="flex justify-between pt-1"><span>Infant (&lt;5)</span> <span className="font-semibold text-green-600">Free</span></li>
                                 </ul>
                             </div>

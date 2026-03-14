@@ -1,11 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import MemberCard from './MemberCard';
 
 const FamilyForm = ({ members, onChange, onAddMember, onRemoveMember, onBack, onSubmit, errors }) => {
+    const [addError, setAddError] = useState('');
+
     const handleMemberChange = (index, updatedMember) => {
         const newMembers = [...members];
         newMembers[index] = updatedMember;
         onChange(newMembers);
+        if (addError) setAddError('');
+    };
+
+    const handleAddClick = () => {
+        // Check if all current members have their mandatory fields filled
+        for (let i = 0; i < members.length; i++) {
+            const m = members[i];
+            if (!m.name?.trim() || !m.age || !m.gender) {
+                setAddError(`Please fill the mandatory fields (Name, Age, Gender) for person ${i + 1} before adding another.`);
+                return;
+            }
+        }
+        setAddError('');
+        onAddMember();
     };
 
     return (
@@ -39,11 +55,18 @@ const FamilyForm = ({ members, onChange, onAddMember, onRemoveMember, onBack, on
                 ))}
             </div>
 
+            {/* Add Member Error */}
+            {addError && (
+                <div className="mt-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm">
+                    {addError}
+                </div>
+            )}
+
             {/* Add Member Button */}
             <button
                 type="button"
                 className="btn-secondary w-full mt-6 flex items-center justify-center space-x-2"
-                onClick={onAddMember}
+                onClick={handleAddClick}
             >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />

@@ -4,6 +4,7 @@ import DevoteeForm from './components/DevoteeForm';
 import FamilyForm from './components/FamilyForm';
 import LoadingSpinner from './components/LoadingSpinner';
 import SuccessScreen from './components/SuccessScreen';
+import PaymentScreen from './components/PaymentScreen';
 import { ScrollToTop, ErrorSummary } from './components/common';
 import { STORAGE_KEYS, REQUEST_TIMEOUT } from './utils/constants';
 
@@ -19,7 +20,7 @@ const FIELD_LABELS = {
 };
 
 // Replace this with your deployed Google Apps Script URL
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyVSgyNW5wgETneCsgZBOHWPhc_qiApYb0SUcFcE-KAKIuWSFnHasqgpwfXWdzsrmNGIA/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxHZN8yEVKTumetKkZYw8URP-UlfZewE2oYlmJMsI21eUhc6ofzpzAxDoQ-OTqd-s7zlQ/exec';
 
 // Helper to load from localStorage
 const loadFromStorage = (key, defaultValue) => {
@@ -53,7 +54,7 @@ const clearFormStorage = () => {
 
 function App() {
     // Form wizard state
-    const [currentPage, setCurrentPage] = useState(1); // 1: Devotee, 2: Family, 3: Success
+    const [currentPage, setCurrentPage] = useState(1); // 1: Devotee, 2: Family, 3: Payment, 4: Success
     const [isLoading, setIsLoading] = useState(false);
 
     // Devotee data - load from localStorage on mount
@@ -257,29 +258,45 @@ function App() {
         setIsLoading(true);
 
         try {
+            const jsonBody = JSON.stringify(data);
+            console.log('[App] submitToGoogleSheets called');
+            console.log('[App] Payload size:', (jsonBody.length / 1024).toFixed(2), 'KB');
+            console.log('[App] Has paymentFile:', !!data.paymentFile);
+            if (data.paymentFile) {
+                console.log('[App] paymentFile details:', {
+                    name: data.paymentFile.name,
+                    mimeType: data.paymentFile.mimeType,
+                    dataLength: data.paymentFile.data?.length
+                });
+            }
+
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
 
+            console.log('[App] Sending fetch to:', GOOGLE_SCRIPT_URL);
             const response = await fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors', // Required for Google Apps Script
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'text/plain',
                 },
-                body: JSON.stringify(data),
+                body: jsonBody,
                 signal: controller.signal
             });
 
             clearTimeout(timeoutId);
+            console.log('[App] Fetch completed, response type:', response.type, 'status:', response.status);
 
             // With no-cors, we can't read the response, so we assume success
             clearFormStorage();
-            setCurrentPage(3);
+            setCurrentPage(4);
         } catch (error) {
             if (error.name === 'AbortError') {
+                console.error('[App] Request aborted (timeout)');
                 alert('The request took too long. Please check your internet connection and try again.');
             } else {
-                console.error('Submission error:', error);
+                console.error('[App] Submission error:', error);
+                console.error('[App] Error name:', error.name, 'message:', error.message);
                 alert('There was an error submitting your registration. Please try again.');
             }
         } finally {
@@ -290,29 +307,70 @@ function App() {
     // Handle Next button (Page 1 -> Page 2)
     const handleNext = () => {
         if (validateDevotee()) {
-            setCurrentPage(2);
+            if (isAlone) {
+                setCurrentPage(3);
+            } else {
+                setCurrentPage(2);
+            }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     };
 
-    // Handle Back button (Page 2 -> Page 1)
+    // Handle Back button
     const handleBack = () => {
-        setCurrentPage(1);
+        if (currentPage === 2) {
+            setCurrentPage(1);
+        } else if (currentPage === 3) {
+            setCurrentPage(isAlone ? 1 : 2);
+        }
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     // Handle progress indicator click
     const handleProgressClick = (page) => {
-        if (page === 1 && currentPage === 2) {
-            handleBack();
+        if (page === 1 && (currentPage === 2 || currentPage === 3)) {
+            setCurrentPage(1);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else if (page === 2 && currentPage === 3 && !isAlone) {
+            setCurrentPage(2);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     };
 
-    // Handle Submit from Page 1 (Alone)
-    const handleSubmitAlone = () => {
+    // Handle Next from Page 1 (Alone) -> goes to payment
+    const handleNextToPaymentAlone = () => {
         if (validateDevotee()) {
+            setCurrentPage(3);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
+
+    // Handle Next from Page 2 (With Family) -> goes to payment
+    const handleNextToPaymentFamily = () => {
+        const devoteeValid = validateDevotee();
+        const familyValid = validateFamily();
+
+        if (devoteeValid && familyValid) {
+            setCurrentPage(3);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
+
+    const handleFinalSubmit = (paymentFile) => {
+        console.log('[App] handleFinalSubmit called');
+        console.log('[App] paymentFile received:', paymentFile ? {
+            name: paymentFile.name,
+            mimeType: paymentFile.mimeType,
+            dataLength: paymentFile.data?.length
+        } : 'null/undefined');
+
+        if (isAlone) {
             const payload = {
                 alone: true,
                 devotee: {
@@ -323,20 +381,12 @@ function App() {
                     gender: devoteeData.gender,
                     prasadPreference: devoteeData.prasadPreference.join(', '),
                     languages: devoteeData.languages.join(', ')
-                }
+                },
+                paymentFile: paymentFile
             };
+            console.log('[App] Submitting ALONE payload, keys:', Object.keys(payload));
             submitToGoogleSheets(payload);
         } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    };
-
-    // Handle Submit from Page 2 (With Family)
-    const handleSubmitWithFamily = () => {
-        const devoteeValid = validateDevotee();
-        const familyValid = validateFamily();
-
-        if (devoteeValid && familyValid) {
             const payload = {
                 alone: false,
                 devotee: {
@@ -359,11 +409,11 @@ function App() {
                     chanting: member.chanting || '',
                     inclination: member.inclination || '',
                     spiritualStatus: member.spiritualStatus || ''
-                }))
+                })),
+                paymentFile: paymentFile
             };
+            console.log('[App] Submitting FAMILY payload, keys:', Object.keys(payload), 'familyCount:', payload.family.length);
             submitToGoogleSheets(payload);
-        } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     };
 
@@ -381,7 +431,7 @@ function App() {
                     {/* Form Card */}
                     <div className="card">
                         {/* Form Header */}
-                        {currentPage !== 3 && (
+                        {currentPage !== 4 && (
                             <div className="relative">
                                 {/* Hero Image */}
                                 <div className="h-48 md:h-64 overflow-hidden">
@@ -405,23 +455,29 @@ function App() {
                         {/* Form Content */}
                         <div className="p-6 md:p-8">
                             {/* Progress Indicator - Clickable */}
-                            {currentPage !== 3 && (
+                            {currentPage !== 4 && (
                                 <div className="flex items-center justify-center mb-8">
                                     <div className="flex items-center space-x-3">
                                         <button
                                             onClick={() => handleProgressClick(1)}
-                                            className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all duration-300 ${currentPage >= 1 ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-500'
-                                                } ${currentPage === 2 ? 'cursor-pointer hover:bg-indigo-700' : 'cursor-default'}`}
+                                            className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all duration-300 ${currentPage >= 1 ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-500'} ${(currentPage === 2 || currentPage === 3) ? 'cursor-pointer hover:bg-indigo-700' : 'cursor-default'}`}
                                             disabled={currentPage === 1}
-                                            title={currentPage === 2 ? 'Go back to your details' : ''}
+                                            title={(currentPage === 2 || currentPage === 3) ? 'Go back to your details' : ''}
                                         >
                                             1
                                         </button>
-                                        <div className={`w-16 h-1 rounded transition-all duration-300 ${currentPage >= 2 ? 'bg-indigo-600' : 'bg-slate-200'
-                                            }`}></div>
-                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all duration-300 ${currentPage >= 2 ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-500'
-                                            }`}>
+                                        <div className={`w-8 h-1 rounded transition-all duration-300 ${currentPage >= 2 && !isAlone ? 'bg-indigo-600' : 'bg-slate-200'}`}></div>
+                                        <button
+                                            onClick={() => handleProgressClick(2)}
+                                            className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all duration-300 ${(currentPage >= 2 && !isAlone) ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-500'} ${currentPage === 3 && !isAlone ? 'cursor-pointer hover:bg-indigo-700' : 'cursor-default'} ${isAlone ? 'opacity-50' : ''}`}
+                                            disabled={currentPage < 2 || isAlone || currentPage === 2}
+                                            title={isAlone ? 'Skipped for alone' : (currentPage === 3 ? 'Go back to family details' : '')}
+                                        >
                                             2
+                                        </button>
+                                        <div className={`w-8 h-1 rounded transition-all duration-300 ${currentPage >= 3 ? 'bg-indigo-600' : 'bg-slate-200'}`}></div>
+                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all duration-300 ${currentPage >= 3 ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-500'}`}>
+                                            3
                                         </div>
                                     </div>
                                 </div>
@@ -439,7 +495,7 @@ function App() {
                                         isAlone={isAlone}
                                         setIsAlone={setIsAlone}
                                         onNext={handleNext}
-                                        onSubmit={handleSubmitAlone}
+                                        onSubmit={handleNextToPaymentAlone}
                                         errors={devoteeErrors}
                                         onBlur={validateDevoteeField}
                                     />
@@ -454,13 +510,22 @@ function App() {
                                     onAddMember={addFamilyMember}
                                     onRemoveMember={removeFamilyMember}
                                     onBack={handleBack}
-                                    onSubmit={handleSubmitWithFamily}
+                                    onSubmit={handleNextToPaymentFamily}
                                     errors={familyErrors}
                                 />
                             )}
 
-                            {/* Page 3: Success */}
-                            {currentPage === 3 && <SuccessScreen />}
+                            {/* Page 3: Payment Form */}
+                            {currentPage === 3 && (
+                                <PaymentScreen
+                                    onBack={handleBack}
+                                    onSubmit={handleFinalSubmit}
+                                    isUploading={isLoading}
+                                />
+                            )}
+
+                            {/* Page 4: Success */}
+                            {currentPage === 4 && <SuccessScreen />}
                         </div>
                     </div>
 
