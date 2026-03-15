@@ -86,9 +86,9 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                                 Process
                             </h4>
                             <ol className="list-decimal ml-5 space-y-1 text-sm text-amber-900/80 marker:text-amber-600 marker:font-semibold">
-                                <li>Fill this form for family/friends</li>
-                                <li>Committee confirms acceptance</li>
-                                <li>Confirmation via token advance</li>
+                                <li>Fill this form for yourself and family/friends</li>
+                                <li>Complete the payment for Advance registration</li>
+                                <li>Join the Whatsapp Group via link shared in the payment confirmation page</li>
                             </ol>
                         </div>
                     </div>

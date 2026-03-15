@@ -35,7 +35,7 @@ const LoadingSpinner = () => {
                 </div>
 
                 <div className="text-center">
-                    <p className="text-slate-700 font-semibold text-lg">Submitting your seva...</p>
+                    <p className="text-slate-700 font-semibold text-lg">Submitting your Registration...</p>
                     <p className="text-indigo-500 text-sm mt-1">Hare Krishna 🙏</p>
                 </div>
             </div>

@@ -20,7 +20,7 @@ const FIELD_LABELS = {
 };
 
 // Replace this with your deployed Google Apps Script URL
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw6sXzDnDO7R3jGSQqZkqVqqyDkpmktGwkYNx_IWybT-UqetckfSU3VTCAHEoC11G-1Wg/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz6Ul1p6jDgWhmBwAUwKYqH-n54Z_xotUZwW00YyyqgiHn_PC5Bj4yqSyCiaSz8ATcZHA/exec';
 
 // Helper to load from localStorage
 const loadFromStorage = (key, defaultValue) => {
@@ -265,8 +265,8 @@ function App() {
             }
 
             const age = parseInt(member.age);
-            if (!member.age || isNaN(age) || age < 1 || age > 100) {
-                memberErrors.age = 'Age must be between 1 and 100 years';
+            if (!member.age || isNaN(age) || age < 0 || age > 100) {
+                memberErrors.age = 'Age must be between 0 and 100 years';
             }
 
             if (!member.gender) {
@@ -500,7 +500,7 @@ function App() {
                                 {/* Title Overlay */}
                                 <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                                     <h2 className="text-2xl md:text-3xl font-bold drop-shadow-lg">
-                                        Request Form for GNH Community Yatra:Hampi 2026
+                                        Registration Form for GNH Community Yatra:Hampi 2026
                                     </h2>
                                 </div>
                             </div>

@@ -80,8 +80,8 @@ const MemberCard = ({ member, index, onChange, onRemove, errors = {} }) => {
                             required
                             type="number"
                             inputMode="numeric"
-                            placeholder="Age (1-100)"
-                            min="1"
+                            placeholder="Age (0-100)"
+                            min="0"
                             max="100"
                             value={member.age || ''}
                             onChange={(e) => handleInputChange('age', e.target.value)}

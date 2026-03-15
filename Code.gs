@@ -144,8 +144,8 @@ function processSubmission(data) {
       logToSheet('[upload] Blob created successfully');
       
       var file = folder.createFile(blob);
-      paymentLink = file.getUrl();
-      logToSheet('[upload] File uploaded successfully, URL: ' + paymentLink);
+      paymentLink = `=HYPERLINK("${file.getUrl()}", "Payment Link")`;
+      logToSheet('[upload] File uploaded successfully, URL: ' + file.getUrl());
     } catch (uploadErr) {
       logToSheet('[upload] ERROR: ' + uploadErr.toString());
       logToSheet('[upload] ERROR stack: ' + uploadErr.stack);
@@ -182,7 +182,7 @@ function processSubmission(data) {
     sheet.getRange(existingRowIndex, 3).setValue(devotee.name);
     sheet.getRange(existingRowIndex, 4).setValue(devotee.age);
     sheet.getRange(existingRowIndex, 5).setValue(devotee.email);
-    sheet.getRange(existingRowIndex, 6).setValue(''); // Individual phone blank for main
+    sheet.getRange(existingRowIndex, 6).setValue(devotee.whatsapp); // Individual phone same as WhatsApp
     sheet.getRange(existingRowIndex, 7).setValue(devotee.gender);
     sheet.getRange(existingRowIndex, 8).setValue(devotee.prasadPreference);
     sheet.getRange(existingRowIndex, 9).setValue(devotee.languages);
@@ -200,7 +200,7 @@ function processSubmission(data) {
         devotee.name,           // C: Individual Name (same as devotee for solo)
         devotee.age,            // D: Age
         devotee.email,          // E: Email
-        '',                     // F: Individual Phone
+        devotee.whatsapp,       // F: Individual Phone
         devotee.gender,         // G: Gender
         devotee.prasadPreference, // H: Prasadam
         devotee.languages,      // I: Languages
@@ -228,7 +228,7 @@ function processSubmission(data) {
         devotee.name,           // C: Individual Name
         devotee.age,            // D: Age
         devotee.email,          // E: Email
-        '',                     // F: Individual Phone
+        devotee.whatsapp,       // F: Individual Phone
         devotee.gender,         // G: Gender
         devotee.prasadPreference, // H: Prasadam
         devotee.languages,      // I: Languages
@@ -274,6 +274,11 @@ function processSubmission(data) {
     if (rowsAdded > 1) {
       mergeDevoteeColumn(sheet, startRow, mergeEndRow);
     }
+  }
+  
+  // Add Box Outline to sheet which makes it easy to Read.
+  if (rowsAdded > 0) {
+    sheet.getRange(startRow, 1, rowsAdded, 15).setBorder(true, true, true, true, true, true);
   }
   
   return { rowsAdded, startRow };

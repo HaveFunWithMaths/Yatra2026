@@ -3,7 +3,7 @@
 export const prasadOptions = ['Diabetic', 'North Indian', 'South Indian'];
 export const languageOptions = ['Hindi', 'English', 'Telugu'];
 export const seatingOptions = ['Needs chair', 'Can sit below'];
-export const chantingOptions = ['1+', '4+', '8+', '16'];
+export const chantingOptions = ['0', '1+', '4+', '8+', '16'];
 export const genderOptions = ['Male', 'Female'];
 
 // LocalStorage keys
