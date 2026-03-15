@@ -20,7 +20,7 @@ const FIELD_LABELS = {
 };
 
 // Replace this with your deployed Google Apps Script URL
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxaTKqDdN5eOAJoPknpHovrzK2qQQYrvbeYm5ShDIH6D4i5B-LMMvaTV1_1bPOMJL_YkA/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw6sXzDnDO7R3jGSQqZkqVqqyDkpmktGwkYNx_IWybT-UqetckfSU3VTCAHEoC11G-1Wg/exec';
 
 // Helper to load from localStorage
 const loadFromStorage = (key, defaultValue) => {

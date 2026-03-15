@@ -16,18 +16,20 @@
  * 
  * COLUMN MAPPING:
  * A: Devotee Name (Main User) - MERGED for group submissions
- * B: Individual Name
- * C: Age
- * D: Email (Devotee only)
- * E: WhatsApp (Devotee only)
- * F: Gender
- * G: Prasadam (comma-separated)
- * H: Languages (comma-separated)
- * I: Seating Preference (Family only)
- * J: Chanting Status (Family only)
- * K: Inclination (Family only)
- * L: One Liner / Spiritual Status (Family only)
- * M: Submission Timestamp
+ * B: WhatsApp Number - MERGED for group submissions
+ * C: Individual Name
+ * D: Age
+ * E: Email (Devotee only)
+ * F: Individual Phone
+ * G: Gender
+ * H: Prasadam (comma-separated)
+ * I: Languages (comma-separated)
+ * J: Seating Preference (Family only)
+ * K: Chanting Status (Family only)
+ * L: Inclination (Family only)
+ * M: One Liner / Spiritual Status (Family only)
+ * N: Submission Timestamp
+ * O: Payment Link
  */
 
 /**
@@ -162,8 +164,8 @@ function processSubmission(data) {
   const dataRange = sheet.getDataRange();
   const values = dataRange.getValues();
   for (let i = 1; i < values.length; i++) {
-    // Column E is index 4 (0-based)
-    if (String(values[i][4]).trim() === String(devotee.whatsapp).trim()) {
+    // Column B is index 1 (0-based)
+    if (String(values[i][1]).trim() === String(devotee.whatsapp).trim()) {
       phoneExists = true;
       existingRowIndex = i + 1; // 1-based indexing for row number
       break;
@@ -176,16 +178,17 @@ function processSubmission(data) {
   if (phoneExists) {
     // Update existing devotee information
     sheet.getRange(existingRowIndex, 1).setValue(devotee.name);
-    sheet.getRange(existingRowIndex, 2).setValue(devotee.name);
-    sheet.getRange(existingRowIndex, 3).setValue(devotee.age);
-    sheet.getRange(existingRowIndex, 4).setValue(devotee.email);
-    sheet.getRange(existingRowIndex, 5).setValue(devotee.whatsapp);
-    sheet.getRange(existingRowIndex, 6).setValue(devotee.gender);
-    sheet.getRange(existingRowIndex, 7).setValue(devotee.prasadPreference);
-    sheet.getRange(existingRowIndex, 8).setValue(devotee.languages);
-    sheet.getRange(existingRowIndex, 13).setValue(timestamp);
+    sheet.getRange(existingRowIndex, 2).setValue(devotee.whatsapp);
+    sheet.getRange(existingRowIndex, 3).setValue(devotee.name);
+    sheet.getRange(existingRowIndex, 4).setValue(devotee.age);
+    sheet.getRange(existingRowIndex, 5).setValue(devotee.email);
+    sheet.getRange(existingRowIndex, 6).setValue(''); // Individual phone blank for main
+    sheet.getRange(existingRowIndex, 7).setValue(devotee.gender);
+    sheet.getRange(existingRowIndex, 8).setValue(devotee.prasadPreference);
+    sheet.getRange(existingRowIndex, 9).setValue(devotee.languages);
+    sheet.getRange(existingRowIndex, 14).setValue(timestamp);
     if (paymentLink) {
-        sheet.getRange(existingRowIndex, 14).setValue(paymentLink);
+        sheet.getRange(existingRowIndex, 15).setValue(paymentLink);
     }
   }
 
@@ -193,19 +196,20 @@ function processSubmission(data) {
     if (!phoneExists) {
       const row = [
         devotee.name,           // A: Devotee Name
-        devotee.name,           // B: Individual Name (same as devotee for solo)
-        devotee.age,            // C: Age
-        devotee.email,          // D: Email
-        devotee.whatsapp,       // E: WhatsApp
-        devotee.gender,         // F: Gender
-        devotee.prasadPreference, // G: Prasadam
-        devotee.languages,      // H: Languages
-        '',                     // I: Seating
-        '',                     // J: Chanting
-        '',                     // K: Inclination
-        '',                     // L: One Liner
-        timestamp,              // M: Timestamp
-        paymentLink             // N: Payment Link
+        devotee.whatsapp,       // B: WhatsApp Number
+        devotee.name,           // C: Individual Name (same as devotee for solo)
+        devotee.age,            // D: Age
+        devotee.email,          // E: Email
+        '',                     // F: Individual Phone
+        devotee.gender,         // G: Gender
+        devotee.prasadPreference, // H: Prasadam
+        devotee.languages,      // I: Languages
+        '',                     // J: Seating
+        '',                     // K: Chanting
+        '',                     // L: Inclination
+        '',                     // M: One Liner
+        timestamp,              // N: Timestamp
+        paymentLink             // O: Payment Link
       ];
       sheet.appendRow(row);
       rowsAdded = 1;
@@ -220,19 +224,20 @@ function processSubmission(data) {
     if (!phoneExists) {
       const devoteeRow = [
         devotee.name,           // A: Devotee Name
-        devotee.name,           // B: Individual Name
-        devotee.age,            // C: Age
-        devotee.email,          // D: Email
-        devotee.whatsapp,       // E: WhatsApp
-        devotee.gender,         // F: Gender
-        devotee.prasadPreference, // G: Prasadam
-        devotee.languages,      // H: Languages
-        '',                     // I: Seating
-        '',                     // J: Chanting
-        '',                     // K: Inclination
-        '',                     // L: One Liner
-        timestamp,              // M: Timestamp
-        paymentLink             // N: Payment Link
+        devotee.whatsapp,       // B: WhatsApp Number
+        devotee.name,           // C: Individual Name
+        devotee.age,            // D: Age
+        devotee.email,          // E: Email
+        '',                     // F: Individual Phone
+        devotee.gender,         // G: Gender
+        devotee.prasadPreference, // H: Prasadam
+        devotee.languages,      // I: Languages
+        '',                     // J: Seating
+        '',                     // K: Chanting
+        '',                     // L: Inclination
+        '',                     // M: One Liner
+        timestamp,              // N: Timestamp
+        paymentLink             // O: Payment Link
       ];
       sheet.appendRow(devoteeRow);
       rowsAdded++;
@@ -243,19 +248,20 @@ function processSubmission(data) {
     family.forEach((member) => {
       const memberRow = [
         devotee.name,         // A: Devotee Name (will be merged)
-        member.name,          // B: Individual Name
-        member.age,           // C: Age
-        '',                   // D: Email (blank for family)
-        member.phone || '',   // E: Phone (optional for family)
-        member.gender,        // F: Gender
-        member.prasadPreference, // G: Prasadam
-        member.languages,     // H: Languages
-        member.seating,       // I: Seating Preference
-        member.chanting,      // J: Chanting Status
-        member.inclination,   // K: Inclination
-        member.spiritualStatus, // L: One Liner
-        timestamp,            // M: Timestamp
-        paymentLink           // N: Payment Link
+        devotee.whatsapp,     // B: WhatsApp Number (will be merged)
+        member.name,          // C: Individual Name
+        member.age,           // D: Age
+        '',                   // E: Email (blank for family)
+        member.phone || '',   // F: Individual Phone (optional for family)
+        member.gender,        // G: Gender
+        member.prasadPreference, // H: Prasadam
+        member.languages,     // I: Languages
+        member.seating,       // J: Seating Preference
+        member.chanting,      // K: Chanting Status
+        member.inclination,   // L: Inclination
+        member.spiritualStatus, // M: One Liner
+        timestamp,            // N: Timestamp
+        paymentLink           // O: Payment Link
       ];
       sheet.appendRow(memberRow);
       rowsAdded++;
@@ -274,7 +280,7 @@ function processSubmission(data) {
 }
 
 /**
- * Merge Column A (Devotee Name) and Column N (Payment Link) for a range of rows
+ * Merge Column A (Devotee Name), Column B (WhatsApp Number) and Column O (Payment Link) for a range of rows
  */
 function mergeDevoteeColumn(sheet, startRow, endRow) {
   if (startRow < endRow) {
@@ -285,10 +291,17 @@ function mergeDevoteeColumn(sheet, startRow, endRow) {
     rangeA.setFontWeight('bold');
     rangeA.setBackground('#f3f4f6');
     
-    // Merge Column N (Payment Link, index 14)
-    const rangeN = sheet.getRange(startRow, 14, endRow - startRow + 1, 1);
-    rangeN.merge();
-    rangeN.setVerticalAlignment('middle');
+    // Merge Column B (WhatsApp Number)
+    const rangeB = sheet.getRange(startRow, 2, endRow - startRow + 1, 1);
+    rangeB.merge();
+    rangeB.setVerticalAlignment('middle');
+    rangeB.setFontWeight('bold');
+    rangeB.setBackground('#f3f4f6');
+    
+    // Merge Column O (Payment Link, index 15)
+    const rangeO = sheet.getRange(startRow, 15, endRow - startRow + 1, 1);
+    rangeO.merge();
+    rangeO.setVerticalAlignment('middle');
   }
 }
 
@@ -301,10 +314,11 @@ function ensureHeaders(sheet) {
   if (!firstCell || firstCell !== 'Devotee Name') {
     const headers = [
       'Devotee Name',
+      'WhatsApp Number',
       'Individual Name',
       'Age',
       'Email',
-      'WhatsApp/Phone',
+      'Individual Phone',
       'Gender',
       'Prasadam',
       'Languages',
@@ -330,20 +344,21 @@ function ensureHeaders(sheet) {
     sheet.setFrozenRows(1);
     
     // Set column widths for better readability
-    sheet.setColumnWidth(1, 150);  // Devotee Name
-    sheet.setColumnWidth(2, 150);  // Individual Name
-    sheet.setColumnWidth(3, 60);   // Age
-    sheet.setColumnWidth(4, 200);  // Email
-    sheet.setColumnWidth(5, 120);  // WhatsApp/Phone
-    sheet.setColumnWidth(6, 80);   // Gender
-    sheet.setColumnWidth(7, 180);  // Prasadam
-    sheet.setColumnWidth(8, 150);  // Languages
-    sheet.setColumnWidth(9, 120);  // Seating
-    sheet.setColumnWidth(10, 100); // Chanting
-    sheet.setColumnWidth(11, 100); // Inclination
-    sheet.setColumnWidth(12, 250); // Spiritual Status
-    sheet.setColumnWidth(13, 180); // Timestamp
-    sheet.setColumnWidth(14, 250); // Payment Link
+    sheet.setColumnWidth(1, 150);  // Devotee Name (A)
+    sheet.setColumnWidth(2, 120);  // WhatsApp Number (B)
+    sheet.setColumnWidth(3, 150);  // Individual Name (C)
+    sheet.setColumnWidth(4, 60);   // Age (D)
+    sheet.setColumnWidth(5, 200);  // Email (E)
+    sheet.setColumnWidth(6, 120);  // Individual Phone (F)
+    sheet.setColumnWidth(7, 80);   // Gender (G)
+    sheet.setColumnWidth(8, 180);  // Prasadam (H)
+    sheet.setColumnWidth(9, 150);  // Languages (I)
+    sheet.setColumnWidth(10, 120); // Seating (J)
+    sheet.setColumnWidth(11, 100); // Chanting (K)
+    sheet.setColumnWidth(12, 100); // Inclination (L)
+    sheet.setColumnWidth(13, 250); // Spiritual Status (M)
+    sheet.setColumnWidth(14, 180); // Timestamp (N)
+    sheet.setColumnWidth(15, 250); // Payment Link (O)
   }
 }
 
@@ -462,17 +477,17 @@ function doGet(e) {
       // PASS 1: Find all devotee entries with this WhatsApp number
       for (let i = 1; i < values.length; i++) {
         const row = values[i];
-        if (String(row[4]).trim() === String(whatsapp).trim()) {
+        if (String(row[1]).trim() === String(whatsapp).trim()) { // Checking Column B
           // Found the devotee! We take the first complete record we find.
           if (!devoteeData) {
             devoteeData = {
               name: row[0] || '',
-              age: row[2] || '',
-              email: row[3] || '',
-              whatsapp: row[4] || '',
-              gender: row[5] || '',
-              prasadPreference: row[6] ? String(row[6]).split(',').map(s=>s.trim()) : [],
-              languages: row[7] ? String(row[7]).split(',').map(s=>s.trim()) : []
+              age: row[3] || '',
+              email: row[4] || '',
+              whatsapp: row[1] || '',
+              gender: row[6] || '',
+              prasadPreference: row[7] ? String(row[7]).split(',').map(s=>s.trim()) : [],
+              languages: row[8] ? String(row[8]).split(',').map(s=>s.trim()) : []
             };
           }
           if (row[0]) {
@@ -487,20 +502,20 @@ function doGet(e) {
           const row = values[i];
           const currentDevoteeName = String(row[0]).trim();
           if (devoteeNames.has(currentDevoteeName)) {
-            const individualName = String(row[1]).trim();
+            const individualName = String(row[2]).trim(); // Individual Name is Column C
             // A member is a family member if they have a distinct individual name
             if (individualName && individualName !== currentDevoteeName) {
               familyMembers.push({
                 name: individualName,
-                age: row[2] || '',
-                phone: row[4] || '',
-                gender: row[5] || '',
-                prasadPreference: row[6] ? String(row[6]).split(',').map(s=>s.trim()) : [],
-                languages: row[7] ? String(row[7]).split(',').map(s=>s.trim()) : [],
-                seating: row[8] || '',
-                chanting: row[9] || '',
-                inclination: row[10] || '',
-                spiritualStatus: row[11] || ''
+                age: row[3] || '',
+                phone: row[5] || '', // Individual phone is Column F
+                gender: row[6] || '',
+                prasadPreference: row[7] ? String(row[7]).split(',').map(s=>s.trim()) : [],
+                languages: row[8] ? String(row[8]).split(',').map(s=>s.trim()) : [],
+                seating: row[9] || '',
+                chanting: row[10] || '',
+                inclination: row[11] || '',
+                spiritualStatus: row[12] || ''
               });
             }
           }
