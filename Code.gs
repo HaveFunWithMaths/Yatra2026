@@ -491,9 +491,28 @@ function doGet(e) {
       let familyMembers = [];
       let devoteeNames = new Set();
       
+      // CREATE AN UNMERGED VIEW OF THE DATA
+      // Since Columns A and B are merged, reading the sheet returns empty strings for subsequent rows in the merged range.
+      let lastDevName = '';
+      let lastWa = '';
+      const unmergedValues = values.map((row, idx) => {
+        if (idx === 0) return row; // Header
+        
+        let colA = String(row[0]).trim();
+        let colB = String(row[1]).trim();
+        
+        if (colA) lastDevName = colA; 
+        else colA = lastDevName;
+        
+        if (colB) lastWa = colB;
+        else colB = lastWa;
+        
+        return [colA, colB, ...row.slice(2)];
+      });
+      
       // PASS 1: Find all devotee entries with this WhatsApp number
-      for (let i = 1; i < values.length; i++) {
-        const row = values[i];
+      for (let i = 1; i < unmergedValues.length; i++) {
+        const row = unmergedValues[i];
         if (String(row[1]).trim() === String(whatsapp).trim()) { // Checking Column B
           // Found the devotee! We take the first complete record we find.
           if (!devoteeData) {
@@ -517,8 +536,8 @@ function doGet(e) {
       
       // PASS 2: Find all family members linked to these Devotee Names
       if (devoteeNames.size > 0) {
-        for (let i = 1; i < values.length; i++) {
-          const row = values[i];
+        for (let i = 1; i < unmergedValues.length; i++) {
+          const row = unmergedValues[i];
           const currentDevoteeName = String(row[0]).trim();
           if (devoteeNames.has(currentDevoteeName)) {
             const individualName = String(row[2]).trim(); // Individual Name is Column C
