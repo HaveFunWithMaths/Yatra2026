@@ -308,31 +308,6 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                 </div>
             </div>
 
-            {/* Additional Concerns Section */}
-            <div>
-                <h3 className="text-xl font-bold text-slate-800 mb-4 flex items-center">
-                    <span className="bg-red-100 text-red-600 p-2 rounded-lg mr-3">
-                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </span>
-                    Hard Requirements or Concerns
-                </h3>
-
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-6">
-                    <div>
-                        <p className="text-sm text-slate-500 mb-3">Please share any specific requirements or concerns you may have (Optional).</p>
-                        <textarea
-                            className="w-full form-input resize-none"
-                            rows="3"
-                            placeholder="Enter your concerns here..."
-                            value={data.concerns || ''}
-                            onChange={(e) => handleInputChange('concerns', e.target.value)}
-                        ></textarea>
-                    </div>
-                </div>
-            </div>
-
             {/* Attendance Format Section */}
             <div>
                 <h3 className="text-xl font-bold text-slate-800 mb-4 flex items-center">

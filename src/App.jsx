@@ -137,6 +137,8 @@ function App() {
                     const url = `${GOOGLE_SCRIPT_URL}?action=getDevotee&whatsapp=${whatsapp}`;
                     const response = await fetch(url);
                     const result = await response.json();
+                    console.log('[App] getDevotee result:', result);
+                    console.log('[App] family members returned:', result.family?.length, result.family);
                     if (result.success && result.devotee) {
                         setDevoteeData(prev => ({ ...prev, ...result.devotee }));
                         setIsAutopopulated(true);
@@ -417,6 +419,7 @@ function App() {
     const handleFinalSubmit = (paymentData) => {
         console.log('[App] handleFinalSubmit called');
         const paymentFile = paymentData?.paymentFile;
+        const concerns = paymentData?.concerns || '';
 
         console.log('[App] paymentFile received:', paymentFile ? {
             name: paymentFile.name,
@@ -442,7 +445,7 @@ function App() {
                     accommodation: devoteeData.accommodation,
                     prasadPreference: devoteeData.prasadPreference,
                     languages: devoteeData.languages.join(', '),
-                    concerns: devoteeData.concerns
+                    concerns: concerns
                 },
                 paymentFile: paymentFile
             };
@@ -460,7 +463,7 @@ function App() {
                     accommodation: devoteeData.accommodation,
                     prasadPreference: devoteeData.prasadPreference,
                     languages: devoteeData.languages.join(', '),
-                    concerns: devoteeData.concerns
+                    concerns: concerns
                 },
                 family: familyMembers.map(member => ({
                     name: member.name,
