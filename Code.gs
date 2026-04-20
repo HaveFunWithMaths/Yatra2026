@@ -28,8 +28,10 @@
  * K: Chanting Status (Family only)
  * L: Inclination (Family only)
  * M: One Liner / Spiritual Status (Family only)
- * N: Submission Timestamp
- * O: Payment Link
+ * N: Accommodation
+ * O: Concerns
+ * P: Submission Timestamp
+ * Q: Payment Link
  */
 
 /**
@@ -186,9 +188,11 @@ function processSubmission(data) {
     sheet.getRange(existingRowIndex, 7).setValue(devotee.gender);
     sheet.getRange(existingRowIndex, 8).setValue(devotee.prasadPreference);
     sheet.getRange(existingRowIndex, 9).setValue(devotee.languages);
-    sheet.getRange(existingRowIndex, 14).setValue(timestamp);
+    sheet.getRange(existingRowIndex, 14).setValue(devotee.accommodation || '');
+    sheet.getRange(existingRowIndex, 15).setValue(devotee.concerns || '');
+    sheet.getRange(existingRowIndex, 16).setValue(timestamp);
     if (paymentLink) {
-        sheet.getRange(existingRowIndex, 15).setValue(paymentLink);
+        sheet.getRange(existingRowIndex, 17).setValue(paymentLink);
     }
   }
 
@@ -208,8 +212,10 @@ function processSubmission(data) {
         '',                     // K: Chanting
         '',                     // L: Inclination
         '',                     // M: One Liner
-        timestamp,              // N: Timestamp
-        paymentLink             // O: Payment Link
+        devotee.accommodation || '', // N: Accommodation
+        devotee.concerns || '',      // O: Concerns
+        timestamp,              // P: Timestamp
+        paymentLink             // Q: Payment Link
       ];
       sheet.appendRow(row);
       rowsAdded = 1;
@@ -236,8 +242,10 @@ function processSubmission(data) {
         '',                     // K: Chanting
         '',                     // L: Inclination
         '',                     // M: One Liner
-        timestamp,              // N: Timestamp
-        paymentLink             // O: Payment Link
+        devotee.accommodation || '', // N: Accommodation
+        devotee.concerns || '',      // O: Concerns
+        timestamp,              // P: Timestamp
+        paymentLink             // Q: Payment Link
       ];
       sheet.appendRow(devoteeRow);
       rowsAdded++;
@@ -260,8 +268,10 @@ function processSubmission(data) {
         member.chanting,      // K: Chanting Status
         member.inclination,   // L: Inclination
         member.spiritualStatus, // M: One Liner
-        timestamp,            // N: Timestamp
-        paymentLink           // O: Payment Link
+        devotee.accommodation || '', // N: Accommodation (inherited from main devotee)
+        '',                   // O: Concerns
+        timestamp,            // P: Timestamp
+        paymentLink           // Q: Payment Link
       ];
       sheet.appendRow(memberRow);
       rowsAdded++;
@@ -278,7 +288,7 @@ function processSubmission(data) {
   
   // Add Box Outline to sheet which makes it easy to Read.
   if (rowsAdded > 0) {
-    sheet.getRange(startRow, 1, rowsAdded, 15).setBorder(true, true, true, true, true, true);
+    sheet.getRange(startRow, 1, rowsAdded, 17).setBorder(true, true, true, true, true, true);
   }
   
   return { rowsAdded, startRow };
@@ -303,8 +313,8 @@ function mergeDevoteeColumn(sheet, startRow, endRow) {
     rangeB.setFontWeight('bold');
     rangeB.setBackground('#f3f4f6');
     
-    // Merge Column O (Payment Link, index 15)
-    const rangeO = sheet.getRange(startRow, 15, endRow - startRow + 1, 1);
+    // Merge Column Q (Payment Link, index 17)
+    const rangeO = sheet.getRange(startRow, 17, endRow - startRow + 1, 1);
     rangeO.merge();
     rangeO.setVerticalAlignment('middle');
   }
@@ -331,6 +341,8 @@ function ensureHeaders(sheet) {
       'Chanting',
       'Inclination',
       'Spiritual Status',
+      'Accommodation',
+      'Concerns',
       'Timestamp',
       'Payment Link'
     ];
@@ -362,8 +374,10 @@ function ensureHeaders(sheet) {
     sheet.setColumnWidth(11, 100); // Chanting (K)
     sheet.setColumnWidth(12, 100); // Inclination (L)
     sheet.setColumnWidth(13, 250); // Spiritual Status (M)
-    sheet.setColumnWidth(14, 180); // Timestamp (N)
-    sheet.setColumnWidth(15, 250); // Payment Link (O)
+    sheet.setColumnWidth(14, 150); // Accommodation (N)
+    sheet.setColumnWidth(15, 250); // Concerns (O)
+    sheet.setColumnWidth(16, 180); // Timestamp (P)
+    sheet.setColumnWidth(17, 250); // Payment Link (Q)
   }
 }
 
@@ -492,7 +506,9 @@ function doGet(e) {
               whatsapp: row[1] || '',
               gender: row[6] || '',
               prasadPreference: row[7] ? String(row[7]).split(',').map(s=>s.trim()) : [],
-              languages: row[8] ? String(row[8]).split(',').map(s=>s.trim()) : []
+              languages: row[8] ? String(row[8]).split(',').map(s=>s.trim()) : [],
+              accommodation: row[13] || '',
+              concerns: row[14] || ''
             };
           }
           if (row[0]) {

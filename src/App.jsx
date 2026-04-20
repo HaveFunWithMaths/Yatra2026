@@ -63,8 +63,10 @@ function App() {
             name: '',
             age: '',
             email: '',
+            countryCode: '+91',
             whatsapp: '',
             gender: '',
+            accommodation: '',
             prasadPreference: [],
             languages: []
         })
@@ -209,6 +211,13 @@ function App() {
                     delete newErrors.gender;
                 }
                 break;
+            case 'accommodation':
+                if (!devoteeData.accommodation) {
+                    newErrors.accommodation = 'Please select accommodation preference';
+                } else {
+                    delete newErrors.accommodation;
+                }
+                break;
             default:
                 break;
         }
@@ -241,6 +250,10 @@ function App() {
 
         if (!devoteeData.gender) {
             errors.gender = 'Please select your gender';
+        }
+
+        if (!devoteeData.accommodation) {
+            errors.accommodation = 'Please select accommodation preference';
         }
 
         if (!devoteeData.prasadPreference || devoteeData.prasadPreference.length === 0) {
@@ -416,13 +429,22 @@ function App() {
         }
     };
 
-    const handleFinalSubmit = (paymentFile) => {
+    const handleFinalSubmit = (paymentData) => {
         console.log('[App] handleFinalSubmit called');
+        const paymentFile = paymentData?.paymentFile;
+        const requirements = paymentData?.requirements || '';
+
         console.log('[App] paymentFile received:', paymentFile ? {
             name: paymentFile.name,
             mimeType: paymentFile.mimeType,
             dataLength: paymentFile.data?.length
         } : 'null/undefined');
+
+        const ccDigits = (devoteeData.countryCode || '').replace(/\D/g, '');
+        const isIndian = ccDigits === '91' || ccDigits === '';
+        const finalWhatsapp = isIndian 
+            ? devoteeData.whatsapp 
+            : `'+${ccDigits}${devoteeData.whatsapp}`;
 
         if (isAlone) {
             const payload = {
@@ -431,10 +453,13 @@ function App() {
                     name: devoteeData.name,
                     age: devoteeData.age,
                     email: devoteeData.email,
-                    whatsapp: devoteeData.whatsapp,
+                    whatsapp: finalWhatsapp,
                     gender: devoteeData.gender,
+                    accommodation: devoteeData.accommodation,
                     prasadPreference: devoteeData.prasadPreference.join(', '),
-                    languages: devoteeData.languages.join(', ')
+                    languages: devoteeData.languages.join(', '),
+                    requirements: requirements,
+                    concerns: requirements
                 },
                 paymentFile: paymentFile
             };
@@ -447,10 +472,13 @@ function App() {
                     name: devoteeData.name,
                     age: devoteeData.age,
                     email: devoteeData.email,
-                    whatsapp: devoteeData.whatsapp,
+                    whatsapp: finalWhatsapp,
                     gender: devoteeData.gender,
+                    accommodation: devoteeData.accommodation,
                     prasadPreference: devoteeData.prasadPreference.join(', '),
-                    languages: devoteeData.languages.join(', ')
+                    languages: devoteeData.languages.join(', '),
+                    requirements: requirements,
+                    concerns: requirements
                 },
                 family: familyMembers.map(member => ({
                     name: member.name,

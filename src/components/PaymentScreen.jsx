@@ -4,6 +4,8 @@ const PaymentScreen = ({ onBack, onSubmit, isUploading }) => {
     const [file, setFile] = useState(null);
     const [preview, setPreview] = useState(null);
     const [fileError, setFileError] = useState('');
+    const [requirements, setRequirements] = useState('');
+    const [copied, setCopied] = useState(false);
 
     const handleFileChange = (e) => {
         const selectedFile = e.target.files[0];
@@ -54,6 +56,12 @@ const PaymentScreen = ({ onBack, onSubmit, isUploading }) => {
         document.getElementById('payment-upload').click();
     };
 
+    const handleCopyUpi = () => {
+        navigator.clipboard.writeText('9840286639@upi');
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
+
     const handleSubmit = () => {
         console.log('[PaymentScreen] Submit clicked, file:', file?.name, 'preview length:', preview?.length);
 
@@ -69,25 +77,41 @@ const PaymentScreen = ({ onBack, onSubmit, isUploading }) => {
         
         console.log('[PaymentScreen] Base64 data extracted, length:', base64Data?.length);
 
-        const paymentFile = {
-            name: file.name,
-            mimeType: file.type,
-            data: base64Data
+        const paymentData = {
+            paymentFile: {
+                name: file.name,
+                mimeType: file.type,
+                data: base64Data
+            },
+            requirements: requirements
         };
 
-        console.log('[PaymentScreen] Calling onSubmit with paymentFile:', {
-            name: paymentFile.name,
-            mimeType: paymentFile.mimeType,
-            dataLength: paymentFile.data?.length
+        console.log('[PaymentScreen] Calling onSubmit with paymentData:', {
+            paymentFileName: paymentData.paymentFile.name,
+            hasRequirements: !!paymentData.requirements
         });
 
-        onSubmit(paymentFile);
+        onSubmit(paymentData);
     };
 
     return (
         <div className="space-y-6 animate-fadeIn">
             <h3 className="text-xl font-semibold text-slate-800 border-b pb-2">Payment Details</h3>
             
+            <div className="bg-white border p-6 rounded-lg space-y-4 shadow-sm">
+                <div>
+                    <h4 className="font-semibold text-slate-700 block mb-1">Hard Requirements or concerns</h4>
+                    <p className="text-sm text-slate-500 mb-3">Please share any specific requirements or concerns you may have (Optional).</p>
+                    <textarea
+                        className="w-full form-input resize-none"
+                        rows="3"
+                        placeholder="Enter your concerns here..."
+                        value={requirements}
+                        onChange={(e) => setRequirements(e.target.value)}
+                    ></textarea>
+                </div>
+            </div>
+
             <div className="bg-slate-50 p-6 rounded-lg space-y-4">
                 <h4 className="font-semibold text-slate-700">Advance Registration fees</h4>
                 <div className="space-y-2 text-slate-600">
@@ -112,7 +136,26 @@ const PaymentScreen = ({ onBack, onSubmit, isUploading }) => {
                     <p><strong>Account Holder:</strong> BHARAT POKALE</p>
                 </div>
                 <div className="mt-4 pt-4 border-t border-slate-200">
-                    <p className="text-slate-600"><strong>UPI Id:</strong> <span className="font-mono text-indigo-600">9840286639@upi</span></p>
+                    <div className="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
+                        <p className="text-slate-600"><strong>UPI Id:</strong> <span className="font-mono text-indigo-600 ml-2 text-lg">9840286639@upi</span></p>
+                        <button 
+                            onClick={handleCopyUpi} 
+                            className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors flex items-center gap-1 border border-transparent hover:border-indigo-100"
+                            title="Copy UPI ID"
+                        >
+                            {copied ? (
+                                <span className="text-green-600 text-sm font-medium flex items-center">
+                                    <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                                    Copied!
+                                </span>
+                            ) : (
+                                <>
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                                    <span className="text-sm font-medium">Copy</span>
+                                </>
+                            )}
+                        </button>
+                    </div>
                 </div>
             </div>
 

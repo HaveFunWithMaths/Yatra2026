@@ -50,8 +50,8 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                                     Yatra Dates
                                 </h4>
                                 <div className="space-y-1">
-                                    <p className="text-sm flex justify-between"><span className="text-slate-500">Begins:</span> <span className="font-medium">5th June (Fri) Morning</span></p>
-                                    <p className="text-sm flex justify-between"><span className="text-slate-500">Ends:</span> <span className="font-medium">7th June (Sun) Evening</span></p>
+                                    <p className="text-sm flex justify-between"><span className="text-slate-500">Begins:</span> <span className="font-medium">2nd July (Thu) Morning</span></p>
+                                    <p className="text-sm flex justify-between"><span className="text-slate-500">Ends:</span> <span className="font-medium">5th July (Sun) Evening</span></p>
                                 </div>
                             </div>
 
@@ -107,19 +107,41 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="col-span-2 md:col-span-1 relative">
-                            <InputField
-                                label="WhatsApp Number"
-                                name="whatsapp"
-                                required
-                                type="tel"
-                                inputMode="tel"
-                                icon={PhoneIcon}
-                                placeholder="e.g., 98765 43210"
-                                value={data.whatsapp || ''}
-                                onChange={(e) => handleInputChange('whatsapp', e.target.value)}
-                                onBlur={() => handleFieldBlur('whatsapp')}
-                                error={errors.whatsapp}
-                            />
+                            <label className="form-label block text-sm font-medium text-slate-700 mb-1">
+                                WhatsApp Number <span className="text-red-500">*</span>
+                            </label>
+                            <div className={`flex rounded-xl shadow-sm border focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500 bg-white ${errors.whatsapp ? 'border-red-400' : 'border-slate-200'}`}>
+                                <input 
+                                    type="text"
+                                    className="w-16 md:w-20 pl-3 py-3 bg-slate-50 border-r border-slate-200 text-slate-700 focus:outline-none rounded-l-xl text-sm font-medium"
+                                    value={data.countryCode || ''}
+                                    placeholder="+91"
+                                    onChange={(e) => handleInputChange('countryCode', e.target.value)}
+                                />
+                                <div className="relative flex-1">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                                        <PhoneIcon className="w-5 h-5" />
+                                    </div>
+                                    <input
+                                        type="tel"
+                                        name="whatsapp"
+                                        inputMode="tel"
+                                        placeholder="e.g., 98765 43210"
+                                        className="w-full py-3 text-sm pl-10 pr-4 bg-transparent outline-none rounded-r-xl"
+                                        value={data.whatsapp || ''}
+                                        onChange={(e) => handleInputChange('whatsapp', e.target.value)}
+                                        onBlur={() => handleFieldBlur('whatsapp')}
+                                    />
+                                </div>
+                            </div>
+                            {errors.whatsapp && (
+                                <p className="text-red-500 text-sm mt-1 flex items-center">
+                                    <svg className="w-4 h-4 mr-1 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    {errors.whatsapp}
+                                </p>
+                            )}
                             {isFetchingData && (
                                 <div className="absolute right-3 top-[38px]">
                                     <div className="animate-spin h-5 w-5 border-2 border-indigo-600 border-t-transparent rounded-full"></div>
@@ -216,6 +238,65 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                         onChange={(values) => handleInputChange('languages', values)}
                         error={errors.languages}
                     />
+                </div>
+            </div>
+
+            {/* Accommodation Section */}
+            <div>
+                <h3 className="text-xl font-bold text-slate-800 mb-4 flex items-center">
+                    <span className="bg-blue-100 text-blue-600 p-2 rounded-lg mr-3">
+                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                        </svg>
+                    </span>
+                    Accommodation Preference
+                </h3>
+
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-6">
+                    <div>
+                        <p className="text-slate-700 font-medium mb-3">Do you want AC for you and your Family/Friends? <span className="text-red-500">*</span></p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div
+                                onClick={() => { handleInputChange('accommodation', 'AC'); handleFieldBlur('accommodation'); }}
+                                className={`relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 hover:shadow-md ${data.accommodation === 'AC' ? 'border-indigo-600 bg-indigo-50 ring-2 ring-indigo-200 ring-offset-1' : 'border-slate-200 bg-white hover:border-indigo-300'}`}
+                            >
+                                <div className="flex items-center gap-3">
+                                    <div className="flex-1">
+                                        <h4 className={`text-base font-bold ${data.accommodation === 'AC' ? 'text-indigo-900' : 'text-slate-800'}`}>AC Room</h4>
+                                    </div>
+                                    {data.accommodation === 'AC' && (
+                                        <div className="bg-indigo-600 text-white p-1 rounded-full"><CheckIcon className="w-4 h-4"/></div>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div
+                                onClick={() => { handleInputChange('accommodation', 'Non AC'); handleFieldBlur('accommodation'); }}
+                                className={`relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 hover:shadow-md ${data.accommodation === 'Non AC' ? 'border-amber-500 bg-amber-50 ring-2 ring-amber-200 ring-offset-1' : 'border-slate-200 bg-white hover:border-amber-300'}`}
+                            >
+                                <div className="flex items-center gap-3">
+                                    <div className="flex-1">
+                                        <h4 className={`text-base font-bold ${data.accommodation === 'Non AC' ? 'text-amber-900' : 'text-slate-800'}`}>Non AC Room</h4>
+                                    </div>
+                                    {data.accommodation === 'Non AC' && (
+                                        <div className="bg-amber-500 text-white p-1 rounded-full"><CheckIcon className="w-4 h-4"/></div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                        {errors.accommodation && (
+                            <p className="text-red-500 text-sm flex items-center mt-2">
+                                <svg className="w-4 h-4 mr-1 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                {errors.accommodation}
+                            </p>
+                        )}
+                    </div>
+                    <div className="bg-indigo-50 border border-indigo-100 p-3 rounded-lg flex items-start text-sm text-indigo-800">
+                        <InfoIcon className="w-5 h-5 mr-2 text-indigo-600 shrink-0 mt-0.5" />
+                        <p>Note: Accommodation costs will increase by around ₹1000 if opted for AC.</p>
+                    </div>
                 </div>
             </div>
 
