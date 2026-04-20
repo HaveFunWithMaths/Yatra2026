@@ -184,7 +184,7 @@ function processSubmission(data) {
     sheet.getRange(existingRowIndex, 3).setValue(devotee.name);
     sheet.getRange(existingRowIndex, 4).setValue(devotee.age);
     sheet.getRange(existingRowIndex, 5).setValue(devotee.email);
-    sheet.getRange(existingRowIndex, 6).setValue(devotee.whatsapp); // Individual phone same as WhatsApp
+    sheet.getRange(existingRowIndex, 6).setValue(''); // Relationship is blank for Devotee
     sheet.getRange(existingRowIndex, 7).setValue(devotee.gender);
     sheet.getRange(existingRowIndex, 8).setValue(devotee.prasadPreference);
     sheet.getRange(existingRowIndex, 9).setValue(devotee.languages);
@@ -204,7 +204,7 @@ function processSubmission(data) {
         devotee.name,           // C: Individual Name (same as devotee for solo)
         devotee.age,            // D: Age
         devotee.email,          // E: Email
-        devotee.whatsapp,       // F: Relationship (Self)
+        '',                     // F: Relationship (Blank for Devotee)
         devotee.gender,         // G: Gender
         devotee.prasadPreference, // H: Prasadam Output
         devotee.languages,      // I: Languages
@@ -234,7 +234,7 @@ function processSubmission(data) {
         devotee.name,           // C: Individual Name
         devotee.age,            // D: Age
         devotee.email,          // E: Email
-        devotee.whatsapp,       // F: Relationship (Self)
+        '',                     // F: Relationship (Blank for Devotee)
         devotee.gender,         // G: Gender
         devotee.prasadPreference, // H: Prasadam Output
         devotee.languages,      // I: Languages
