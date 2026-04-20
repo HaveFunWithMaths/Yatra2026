@@ -22,7 +22,7 @@
  * E: Email (Devotee only)
  * F: Relationship
  * G: Gender
- * H: Prasadam
+ * H: Prasadam Output
  * I: Languages
  * J: Seating Preference (Family only)
  * K: Chanting Status (Family only)
@@ -206,7 +206,7 @@ function processSubmission(data) {
         devotee.email,          // E: Email
         devotee.whatsapp,       // F: Relationship (Self)
         devotee.gender,         // G: Gender
-        devotee.prasadPreference, // H: Prasadam
+        devotee.prasadPreference, // H: Prasadam Output
         devotee.languages,      // I: Languages
         '',                     // J: Seating
         '',                     // K: Chanting
@@ -236,7 +236,7 @@ function processSubmission(data) {
         devotee.email,          // E: Email
         devotee.whatsapp,       // F: Relationship (Self)
         devotee.gender,         // G: Gender
-        devotee.prasadPreference, // H: Prasadam
+        devotee.prasadPreference, // H: Prasadam Output
         devotee.languages,      // I: Languages
         '',                     // J: Seating
         '',                     // K: Chanting
@@ -262,7 +262,7 @@ function processSubmission(data) {
         '',                     // E: Email (blank for family)
         member.relationship || '', // F: Relationship
         member.gender,        // G: Gender
-        member.prasadPreference, // H: Prasadam
+        member.prasadPreference, // H: Prasadam Output
         member.languages,     // I: Languages
         member.seating,       // J: Seating Preference
         member.chanting,      // K: Chanting Status
@@ -335,7 +335,7 @@ function ensureHeaders(sheet) {
       'Email',
       'Relationship',
       'Gender',
-      'Prasadam',
+      'Prasadam Output',
       'Languages',
       'Seating',
       'Chanting',
