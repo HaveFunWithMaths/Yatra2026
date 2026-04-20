@@ -100,23 +100,23 @@ const MemberCard = ({ member, index, onChange, onRemove, errors = {} }) => {
                         />
 
                         <InputField
-                            label="Phone Number"
-                            name={`member-${index}-phone`}
-                            type="tel"
-                            inputMode="tel"
-                            placeholder="e.g., 98765 43210"
-                            value={member.phone || ''}
-                            onChange={(e) => handleInputChange('phone', e.target.value)}
+                            label="Relationship with a devotee"
+                            name={`member-${index}-relationship`}
+                            placeholder="E.g., Spouse, Friend, Son"
+                            value={member.relationship || ''}
+                            onChange={(e) => handleInputChange('relationship', e.target.value)}
                         />
                     </div>
 
                     {/* Prasadam Preference */}
                     <div className="mt-4">
-                        <CheckboxGroup
+                        <SelectField
                             label="Prasadam Preference"
+                            name={`member-${index}-prasad`}
+                            placeholder="Select Prasadam Preference"
                             options={prasadOptions}
-                            selectedValues={member.prasadPreference || []}
-                            onChange={(values) => handleInputChange('prasadPreference', values)}
+                            value={member.prasadPreference || ''}
+                            onChange={(e) => handleInputChange('prasadPreference', e.target.value)}
                         />
                     </div>
 
@@ -132,7 +132,7 @@ const MemberCard = ({ member, index, onChange, onRemove, errors = {} }) => {
 
                     {/* Seating Preference */}
                     <div className="mt-4">
-                        <label className="form-label mb-2 block">Seating Preference</label>
+                        <label className="form-label mb-2 block">Seating Preference (Select chair only if strictly required)</label>
                         <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
                             {seatingOptions.map((option) => (
                                 <label key={option} className="w-full sm:w-auto flex items-center space-x-2 cursor-pointer bg-white px-3 py-2 rounded-lg border border-slate-200 hover:border-indigo-300 transition-colors">
@@ -168,39 +168,14 @@ const MemberCard = ({ member, index, onChange, onRemove, errors = {} }) => {
                         </div>
                     </div>
 
-                    {/* Inclination */}
-                    <div className="mt-4">
-                        <label className="form-label mb-2 block">Are they favourably inclined towards Krishna Consciousness?</label>
-                        <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
-                            <label className="w-full sm:w-auto flex items-center space-x-2 cursor-pointer bg-white px-4 py-2 rounded-lg border border-slate-200 hover:border-indigo-300 transition-colors">
-                                <input
-                                    type="radio"
-                                    name={`inclination-${index}`}
-                                    className="form-radio w-4 h-4 text-indigo-600 focus:ring-indigo-500 shrink-0"
-                                    checked={member.inclination === 'Yes'}
-                                    onChange={() => handleInputChange('inclination', 'Yes')}
-                                />
-                                <span className="text-sm text-slate-700">Yes</span>
-                            </label>
-                            <label className="w-full sm:w-auto flex items-center space-x-2 cursor-pointer bg-white px-4 py-2 rounded-lg border border-slate-200 hover:border-indigo-300 transition-colors">
-                                <input
-                                    type="radio"
-                                    name={`inclination-${index}`}
-                                    className="form-radio w-4 h-4 text-indigo-600 focus:ring-indigo-500 shrink-0"
-                                    checked={member.inclination === 'No'}
-                                    onChange={() => handleInputChange('inclination', 'No')}
-                                />
-                                <span className="text-sm text-slate-700">No</span>
-                            </label>
-                        </div>
-                    </div>
+
 
                     {/* Spiritual Status */}
                     <div className="mt-4">
                         <label className="form-label mb-2 block">One line detail about their spiritual status</label>
                         <textarea
                             className="form-input min-h-[80px] resize-none"
-                            placeholder="E.g., Regular temple visitor, new to KC..."
+                            placeholder="E.g., Attended previous yatra positively, in touch with (devotee name)"
                             value={member.spiritualStatus || ''}
                             onChange={(e) => handleInputChange('spiritualStatus', e.target.value)}
                         />

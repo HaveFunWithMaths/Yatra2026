@@ -20,13 +20,13 @@
  * C: Individual Name
  * D: Age
  * E: Email (Devotee only)
- * F: Individual Phone
+ * F: Relationship
  * G: Gender
- * H: Prasadam (comma-separated)
- * I: Languages (comma-separated)
+ * H: Prasadam
+ * I: Languages
  * J: Seating Preference (Family only)
  * K: Chanting Status (Family only)
- * L: Inclination (Family only)
+ * L: Inclination (Family only) - Deprecated
  * M: One Liner / Spiritual Status (Family only)
  * N: Accommodation
  * O: Concerns
@@ -204,13 +204,13 @@ function processSubmission(data) {
         devotee.name,           // C: Individual Name (same as devotee for solo)
         devotee.age,            // D: Age
         devotee.email,          // E: Email
-        devotee.whatsapp,       // F: Individual Phone
+        devotee.whatsapp,       // F: Relationship (Self)
         devotee.gender,         // G: Gender
         devotee.prasadPreference, // H: Prasadam
         devotee.languages,      // I: Languages
         '',                     // J: Seating
         '',                     // K: Chanting
-        '',                     // L: Inclination
+        '',                     // L: Inclination (Deprecated)
         '',                     // M: One Liner
         devotee.accommodation || '', // N: Accommodation
         devotee.concerns || '',      // O: Concerns
@@ -234,13 +234,13 @@ function processSubmission(data) {
         devotee.name,           // C: Individual Name
         devotee.age,            // D: Age
         devotee.email,          // E: Email
-        devotee.whatsapp,       // F: Individual Phone
+        devotee.whatsapp,       // F: Relationship (Self)
         devotee.gender,         // G: Gender
         devotee.prasadPreference, // H: Prasadam
         devotee.languages,      // I: Languages
         '',                     // J: Seating
         '',                     // K: Chanting
-        '',                     // L: Inclination
+        '',                     // L: Inclination (Deprecated)
         '',                     // M: One Liner
         devotee.accommodation || '', // N: Accommodation
         devotee.concerns || '',      // O: Concerns
@@ -259,14 +259,14 @@ function processSubmission(data) {
         devotee.whatsapp,     // B: WhatsApp Number (will be merged)
         member.name,          // C: Individual Name
         member.age,           // D: Age
-        '',                   // E: Email (blank for family)
-        member.phone || '',   // F: Individual Phone (optional for family)
+        '',                     // E: Email (blank for family)
+        member.relationship || '', // F: Relationship
         member.gender,        // G: Gender
         member.prasadPreference, // H: Prasadam
         member.languages,     // I: Languages
         member.seating,       // J: Seating Preference
         member.chanting,      // K: Chanting Status
-        member.inclination,   // L: Inclination
+        '',                   // L: Inclination (Deprecated)
         member.spiritualStatus, // M: One Liner
         devotee.accommodation || '', // N: Accommodation (inherited from main devotee)
         '',                   // O: Concerns
@@ -333,13 +333,13 @@ function ensureHeaders(sheet) {
       'Individual Name',
       'Age',
       'Email',
-      'Individual Phone',
+      'Relationship',
       'Gender',
       'Prasadam',
       'Languages',
       'Seating',
       'Chanting',
-      'Inclination',
+      'Inclination (Old)',
       'Spiritual Status',
       'Accommodation',
       'Concerns',
@@ -366,13 +366,13 @@ function ensureHeaders(sheet) {
     sheet.setColumnWidth(3, 150);  // Individual Name (C)
     sheet.setColumnWidth(4, 60);   // Age (D)
     sheet.setColumnWidth(5, 200);  // Email (E)
-    sheet.setColumnWidth(6, 120);  // Individual Phone (F)
+    sheet.setColumnWidth(6, 150);  // Relationship (F)
     sheet.setColumnWidth(7, 80);   // Gender (G)
-    sheet.setColumnWidth(8, 180);  // Prasadam (H)
+    sheet.setColumnWidth(8, 150);  // Prasadam (H)
     sheet.setColumnWidth(9, 150);  // Languages (I)
     sheet.setColumnWidth(10, 120); // Seating (J)
     sheet.setColumnWidth(11, 100); // Chanting (K)
-    sheet.setColumnWidth(12, 100); // Inclination (L)
+    sheet.setColumnWidth(12, 100); // Inclination (Old) (L)
     sheet.setColumnWidth(13, 250); // Spiritual Status (M)
     sheet.setColumnWidth(14, 150); // Accommodation (N)
     sheet.setColumnWidth(15, 250); // Concerns (O)
@@ -401,24 +401,22 @@ function testSubmission() {
         name: 'Family Member 1',
         age: '25',
         gender: 'Female',
-        phone: '9876543211',
+        relationship: 'Spouse',
         prasadPreference: 'South Indian',
         languages: 'Telugu',
         seating: 'Can sit below',
         chanting: '4+',
-        inclination: 'Yes',
         spiritualStatus: 'Regular temple visitor'
       },
       {
         name: 'Family Member 2',
         age: '10',
         gender: 'Male',
-        phone: '',
-        prasadPreference: 'North Indian, Diabetic',
+        relationship: 'Son',
+        prasadPreference: 'North Indian',
         languages: 'Hindi',
         seating: 'Needs chair',
         chanting: '1+',
-        inclination: 'Yes',
         spiritualStatus: 'New to KC'
       }
     ]
@@ -505,7 +503,7 @@ function doGet(e) {
               email: row[4] || '',
               whatsapp: row[1] || '',
               gender: row[6] || '',
-              prasadPreference: row[7] ? String(row[7]).split(',').map(s=>s.trim()) : [],
+              prasadPreference: row[7] ? String(row[7]).trim() : '',
               languages: row[8] ? String(row[8]).split(',').map(s=>s.trim()) : [],
               accommodation: row[13] || '',
               concerns: row[14] || ''
@@ -529,13 +527,12 @@ function doGet(e) {
               familyMembers.push({
                 name: individualName,
                 age: row[3] || '',
-                phone: row[5] || '', // Individual phone is Column F
+                relationship: row[5] || '', // Relationship is Column F
                 gender: row[6] || '',
-                prasadPreference: row[7] ? String(row[7]).split(',').map(s=>s.trim()) : [],
+                prasadPreference: row[7] ? String(row[7]).trim() : '',
                 languages: row[8] ? String(row[8]).split(',').map(s=>s.trim()) : [],
                 seating: row[9] || '',
                 chanting: row[10] || '',
-                inclination: row[11] || '',
                 spiritualStatus: row[12] || ''
               });
             }

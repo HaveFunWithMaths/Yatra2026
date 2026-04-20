@@ -97,20 +97,6 @@ const PaymentScreen = ({ onBack, onSubmit, isUploading }) => {
     return (
         <div className="space-y-6 animate-fadeIn">
             <h3 className="text-xl font-semibold text-slate-800 border-b pb-2">Payment Details</h3>
-            
-            <div className="bg-white border p-6 rounded-lg space-y-4 shadow-sm">
-                <div>
-                    <h4 className="font-semibold text-slate-700 block mb-1">Hard Requirements or concerns</h4>
-                    <p className="text-sm text-slate-500 mb-3">Please share any specific requirements or concerns you may have (Optional).</p>
-                    <textarea
-                        className="w-full form-input resize-none"
-                        rows="3"
-                        placeholder="Enter your concerns here..."
-                        value={requirements}
-                        onChange={(e) => setRequirements(e.target.value)}
-                    ></textarea>
-                </div>
-            </div>
 
             <div className="bg-slate-50 p-6 rounded-lg space-y-4">
                 <h4 className="font-semibold text-slate-700">Advance Registration fees</h4>
@@ -123,7 +109,7 @@ const PaymentScreen = ({ onBack, onSubmit, isUploading }) => {
 
             <div className="flex justify-center my-6">
                 <div className="p-4 bg-white shadow-sm border rounded-xl inline-block text-center">
-                    <img src="assets/QR.jpeg" alt="Payment QR Code" className="w-48 h-48 mx-auto object-cover rounded-lg" />
+                    <img src="/assets/QR.jpeg" alt="Payment QR Code" className="w-48 h-48 mx-auto object-cover rounded-lg" />
                     <p className="text-sm text-slate-500 mt-2">Scan to Pay</p>
                 </div>
             </div>

@@ -221,12 +221,13 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                 </h3>
 
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-6">
-                    <CheckboxGroup
+                    <SelectField
                         label="Prasadam Preference"
                         required
+                        placeholder="Select Prasadam Preference"
                         options={prasadOptions}
-                        selectedValues={data.prasadPreference || []}
-                        onChange={(values) => handleInputChange('prasadPreference', values)}
+                        value={data.prasadPreference || ''}
+                        onChange={(e) => handleInputChange('prasadPreference', e.target.value)}
                         error={errors.prasadPreference}
                     />
 
@@ -295,7 +296,39 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                     </div>
                     <div className="bg-indigo-50 border border-indigo-100 p-3 rounded-lg flex items-start text-sm text-indigo-800">
                         <InfoIcon className="w-5 h-5 mr-2 text-indigo-600 shrink-0 mt-0.5" />
-                        <p>Note: Accommodation costs will increase by around ₹1000 if opted for AC.</p>
+                        <div className="space-y-1">
+                            <p className="font-semibold mb-1">Accommodation Estimates:</p>
+                            <ul className="list-decimal pl-5 space-y-1">
+                                <li>2 BED non AC : 1000 to 1300 per day</li>
+                                <li>2 BED AC : 1400 to 1600 per day</li>
+                            </ul>
+                            <p className="text-xs mt-2 italic opacity-80">Above prices are an estimate. Actual prices may have variation of +/- 10 to 15%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Additional Concerns Section */}
+            <div>
+                <h3 className="text-xl font-bold text-slate-800 mb-4 flex items-center">
+                    <span className="bg-red-100 text-red-600 p-2 rounded-lg mr-3">
+                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </span>
+                    Hard Requirements or Concerns
+                </h3>
+
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-6">
+                    <div>
+                        <p className="text-sm text-slate-500 mb-3">Please share any specific requirements or concerns you may have (Optional).</p>
+                        <textarea
+                            className="w-full form-input resize-none"
+                            rows="3"
+                            placeholder="Enter your concerns here..."
+                            value={data.concerns || ''}
+                            onChange={(e) => handleInputChange('concerns', e.target.value)}
+                        ></textarea>
                     </div>
                 </div>
             </div>

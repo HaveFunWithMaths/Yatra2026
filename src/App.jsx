@@ -67,8 +67,9 @@ function App() {
             whatsapp: '',
             gender: '',
             accommodation: '',
-            prasadPreference: [],
-            languages: []
+            prasadPreference: '',
+            languages: [],
+            concerns: ''
         })
     );
 
@@ -83,12 +84,11 @@ function App() {
             name: '',
             age: '',
             gender: '',
-            phone: '',
-            prasadPreference: [],
+            relationship: '',
+            prasadPreference: '',
             languages: [],
             seating: '',
             chanting: '',
-            inclination: '',
             spiritualStatus: ''
         }])
     );
@@ -102,6 +102,7 @@ function App() {
     const [existingFamilyMembers, setExistingFamilyMembers] = useState(() => loadFromStorage('existingFamilyMembers', []));
     const [fetchedWhatsapp, setFetchedWhatsapp] = useState('');
     const [isFetchingData, setIsFetchingData] = useState(false);
+    const [submissionStatus, setSubmissionStatus] = useState('idle'); // 'idle', 'syncing', 'success', 'error'
 
     // Persist devoteeData to localStorage
     useEffect(() => {
@@ -256,8 +257,8 @@ function App() {
             errors.accommodation = 'Please select accommodation preference';
         }
 
-        if (!devoteeData.prasadPreference || devoteeData.prasadPreference.length === 0) {
-            errors.prasadPreference = 'Please select at least one Prasadam Preference';
+        if (!devoteeData.prasadPreference) {
+            errors.prasadPreference = 'Please select a Prasadam Preference';
         }
 
         if (!devoteeData.languages || devoteeData.languages.length === 0) {
@@ -299,12 +300,11 @@ function App() {
             name: '',
             age: '',
             gender: '',
-            phone: '',
-            prasadPreference: [],
+            relationship: '',
+            prasadPreference: '',
             languages: [],
             seating: '',
             chanting: '',
-            inclination: '',
             spiritualStatus: ''
         }]);
         setFamilyErrors([...familyErrors, {}]);
@@ -320,55 +320,40 @@ function App() {
         }
     };
 
-    // Submit to Google Sheets with timeout
+    // Hybrid Submission logic
     const submitToGoogleSheets = async (data) => {
-        setIsLoading(true);
+        setSubmissionStatus('syncing');
+        setCurrentPage(4); // Move to success page immediately (Optimistic UI)
+        setIsLoading(false); // No need for global spinner if success screen handles it
 
         try {
             const jsonBody = JSON.stringify(data);
-            console.log('[App] submitToGoogleSheets called');
-            console.log('[App] Payload size:', (jsonBody.length / 1024).toFixed(2), 'KB');
-            console.log('[App] Has paymentFile:', !!data.paymentFile);
-            if (data.paymentFile) {
-                console.log('[App] paymentFile details:', {
-                    name: data.paymentFile.name,
-                    mimeType: data.paymentFile.mimeType,
-                    dataLength: data.paymentFile.data?.length
-                });
-            }
-
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
-
-            console.log('[App] Sending fetch to:', GOOGLE_SCRIPT_URL);
-            const response = await fetch(GOOGLE_SCRIPT_URL, {
+            
+            // Background sync
+            const requestPromise = fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
-                mode: 'no-cors', // Required for Google Apps Script
-                headers: {
-                    'Content-Type': 'text/plain',
-                },
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain' },
                 body: jsonBody,
-                signal: controller.signal
             });
 
-            clearTimeout(timeoutId);
-            console.log('[App] Fetch completed, response type:', response.type, 'status:', response.status);
+            // We wait for the request to complete in the background to confirm sync
+            await requestPromise;
 
-            // With no-cors, we can't read the response, so we assume success
+            // Success!
+            setSubmissionStatus('success');
             clearFormStorage();
-            setCurrentPage(4);
         } catch (error) {
-            if (error.name === 'AbortError') {
-                console.error('[App] Request aborted (timeout)');
-                alert('The request took too long. Please check your internet connection and try again.');
-            } else {
-                console.error('[App] Submission error:', error);
-                console.error('[App] Error name:', error.name, 'message:', error.message);
-                alert('There was an error submitting your registration. Please try again.');
-            }
-        } finally {
-            setIsLoading(false);
+            console.error('[App] Background submission error:', error);
+            setSubmissionStatus('error');
         }
+    };
+
+    const handleRetry = () => {
+        // Re-submit the last attempted payload (this could be improved by storing lastPayload)
+        // For simplicity, we just go back to payment page so they can click submit again
+        setCurrentPage(3);
+        setSubmissionStatus('idle');
     };
 
     // Handle Next button (Page 1 -> Page 2)
@@ -432,7 +417,6 @@ function App() {
     const handleFinalSubmit = (paymentData) => {
         console.log('[App] handleFinalSubmit called');
         const paymentFile = paymentData?.paymentFile;
-        const requirements = paymentData?.requirements || '';
 
         console.log('[App] paymentFile received:', paymentFile ? {
             name: paymentFile.name,
@@ -456,10 +440,9 @@ function App() {
                     whatsapp: finalWhatsapp,
                     gender: devoteeData.gender,
                     accommodation: devoteeData.accommodation,
-                    prasadPreference: devoteeData.prasadPreference.join(', '),
+                    prasadPreference: devoteeData.prasadPreference,
                     languages: devoteeData.languages.join(', '),
-                    requirements: requirements,
-                    concerns: requirements
+                    concerns: devoteeData.concerns
                 },
                 paymentFile: paymentFile
             };
@@ -475,21 +458,19 @@ function App() {
                     whatsapp: finalWhatsapp,
                     gender: devoteeData.gender,
                     accommodation: devoteeData.accommodation,
-                    prasadPreference: devoteeData.prasadPreference.join(', '),
+                    prasadPreference: devoteeData.prasadPreference,
                     languages: devoteeData.languages.join(', '),
-                    requirements: requirements,
-                    concerns: requirements
+                    concerns: devoteeData.concerns
                 },
                 family: familyMembers.map(member => ({
                     name: member.name,
                     age: member.age,
                     gender: member.gender,
-                    phone: member.phone || '',
-                    prasadPreference: (member.prasadPreference || []).join(', '),
+                    relationship: member.relationship || '',
+                    prasadPreference: member.prasadPreference || '',
                     languages: (member.languages || []).join(', '),
                     seating: member.seating || '',
                     chanting: member.chanting || '',
-                    inclination: member.inclination || '',
                     spiritualStatus: member.spiritualStatus || ''
                 })),
                 paymentFile: paymentFile
@@ -518,7 +499,7 @@ function App() {
                                 {/* Hero Image */}
                                 <div className="h-48 md:h-64 overflow-hidden">
                                     <img
-                                        src="assets/Hampi.jpg"
+                                        src="/assets/Hampi.jpg"
                                         alt="GNH Yatra"
                                         className="w-full h-full object-cover"
                                     />
@@ -610,7 +591,12 @@ function App() {
                             )}
 
                             {/* Page 4: Success */}
-                            {currentPage === 4 && <SuccessScreen />}
+                            {currentPage === 4 && (
+                                <SuccessScreen 
+                                    status={submissionStatus} 
+                                    onRetry={handleRetry}
+                                />
+                            )}
                         </div>
                     </div>
 
