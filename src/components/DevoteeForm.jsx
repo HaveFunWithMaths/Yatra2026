@@ -58,7 +58,7 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                             <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 hover:border-indigo-200 transition-colors">
                                 <h4 className="font-bold text-slate-900 mb-2 flex items-center">
                                     <CurrencyIcon className="w-5 h-5 mr-2 text-indigo-600" />
-                                    Advance Registration fees
+                                    Advance Registration fees (Non Refundable)
                                 </h4>
                                 <ul className="text-sm space-y-1">
                                     <li className="flex justify-between border-b border-slate-200 pb-1"><span>Adult</span> <span className="font-semibold">₹1000</span></li>
@@ -75,7 +75,7 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                             </h4>
                             <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2 list-none text-sm">
                                 <li className="flex items-start"><span className="text-indigo-500 mr-2">•</span>Happy to associate with devotees</li>
-                                <li className="flex items-start"><span className="text-indigo-500 mr-2">•</span>Eager to participate wholeheartedly</li>
+                                <li className="flex items-start"><span className="text-indigo-500 mr-2">•</span>Chant Hare Krishna Mahamantra and hear Spiritual Discourses</li>
                                 <li className="flex items-start md:col-span-2"><span className="text-indigo-500 mr-2">•</span>No blasphemy/criticism of devotees or practices</li>
                             </ul>
                         </div>
@@ -232,7 +232,7 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                     />
 
                     <CheckboxGroup
-                        label="Language you know(Select All)"
+                        label="Languages you can hear and understand (Select All)"
                         required
                         options={languageOptions}
                         selectedValues={data.languages || []}

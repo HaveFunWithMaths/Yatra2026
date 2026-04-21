@@ -99,7 +99,7 @@ const PaymentScreen = ({ onBack, onSubmit, isUploading }) => {
             <h3 className="text-xl font-semibold text-slate-800 border-b pb-2">Payment Details</h3>
 
             <div className="bg-slate-50 p-6 rounded-lg space-y-4">
-                <h4 className="font-semibold text-slate-700">Advance Registration fees</h4>
+                <h4 className="font-semibold text-slate-700">Advance Registration fees (Non Refundable)</h4>
                 <div className="space-y-2 text-slate-600">
                     <p className="flex justify-between max-w-xs"><span>Adult:</span> <span className="font-semibold">₹1000</span></p>
                     <p className="flex justify-between max-w-xs"><span>Student (5-18):</span> <span className="font-semibold">₹500</span></p>

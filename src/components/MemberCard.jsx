@@ -123,7 +123,7 @@ const MemberCard = ({ member, index, onChange, onRemove, errors = {} }) => {
                     {/* Language */}
                     <div className="mt-4">
                         <CheckboxGroup
-                            label="Language you know(Select All)"
+                            label="Languages they can hear and understand (Select All)"
                             options={languageOptions}
                             selectedValues={member.languages || []}
                             onChange={(values) => handleInputChange('languages', values)}

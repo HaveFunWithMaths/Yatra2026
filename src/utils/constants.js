@@ -1,6 +1,6 @@
 // Centralized constants for the Yatra registration form
 
-export const prasadOptions = ['Diabetic', 'North Indian', 'South Indian'];
+export const prasadOptions = ['Normal','Diabetic', 'Non Spicy'];
 export const languageOptions = ['Hindi', 'English', 'Telugu'];
 export const seatingOptions = ['Needs chair', 'Can sit below'];
 export const chantingOptions = ['0', '1+', '4+', '8+', '16'];
