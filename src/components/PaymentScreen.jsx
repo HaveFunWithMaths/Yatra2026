@@ -117,13 +117,13 @@ const PaymentScreen = ({ onBack, onSubmit, isUploading }) => {
             <div className="bg-slate-50 p-6 rounded-lg space-y-4">
                 <h4 className="font-semibold text-slate-700">Bank Account Details</h4>
                 <div className="space-y-2 text-slate-600">
-                    <p><strong>Account Number:</strong> 20038287650</p>
-                    <p><strong>IFSC:</strong> SBIN0001055</p>
-                    <p><strong>Account Holder:</strong> BHARAT POKALE</p>
+                    <p><strong>Account Number:</strong> 9049263575</p>
+                    <p><strong>IFSC:</strong> KKBK0000555</p>
+                    <p><strong>Account Holder:</strong> Gaur Nitai Vaishnava Seva Trust</p>
                 </div>
                 <div className="mt-4 pt-4 border-t border-slate-200">
                     <div className="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
-                        <p className="text-slate-600"><strong>UPI Id:</strong> <span className="font-mono text-indigo-600 ml-2 text-lg">9840286639@upi</span></p>
+                        <p className="text-slate-600"><strong>UPI Id:</strong> <span className="font-mono text-indigo-600 ml-2 text-lg">gnvst@kotak</span></p>
                         <button 
                             onClick={handleCopyUpi} 
                             className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors flex items-center gap-1 border border-transparent hover:border-indigo-100"
