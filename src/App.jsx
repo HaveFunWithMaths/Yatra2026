@@ -498,22 +498,47 @@ function App() {
                     <div className="card">
                         {/* Form Header */}
                         {currentPage !== 4 && (
-                            <div className="relative">
-                                {/* Hero Image */}
-                                <div className="h-48 md:h-64 overflow-hidden">
-                                    <img
-                                        src="/assets/Hampi.jpg"
-                                        alt="GNH Yatra"
-                                        className="w-full h-full object-cover"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                            <div className="flex flex-col">
+                                {/* Hero Image 1 */}
+                                <div className="relative">
+                                    <div className="h-48 md:h-64 overflow-hidden">
+                                        <img
+                                            src="/assets/Hanuman.jpeg"
+                                            alt="GNH Yatra"
+                                            className="w-full h-full object-cover"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                                    </div>
+
+                                    {/* Title Overlay */}
+                                    <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                                        <h2 className="text-2xl md:text-3xl font-bold drop-shadow-lg">
+                                            Registration Form for GNH Community Yatra:Hampi 2026
+                                        </h2>
+                                    </div>
                                 </div>
 
-                                {/* Title Overlay */}
-                                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                                    <h2 className="text-2xl md:text-3xl font-bold drop-shadow-lg">
-                                        Registration Form for GNH Community Yatra:Hampi 2026
-                                    </h2>
+                                {/* Hero Image 2 */}
+                                <div className="h-48 md:h-64 overflow-hidden border-t border-slate-200">
+                                    <img
+                                        src="/assets/Hampi.jpg"
+                                        alt="Hampi"
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
+                                
+                                {/* Image Text */}
+                                <div className="bg-amber-50/70 p-6 md:p-8 border-b border-amber-100">
+                                    <ul className="text-amber-950 space-y-4 list-none text-[15px] leading-relaxed">
+                                        <li className="flex items-start">
+                                            <span className="text-amber-600 mr-3 mt-0.5 text-lg">•</span>
+                                            <span>Walk the sacred paths of <b>Kishkinda</b> where <b>Lord Rama</b> and <b>Lakshmana</b> searched for <b>Mother Sita</b> in <b>Kishkinda Kshetra</b> and offer your obeisances at <b>Anjanadri Hill</b>, the glorious birthplace of <b>Lord Hanuman</b>.</span>
+                                        </li>
+                                        <li className="flex items-start">
+                                            <span className="text-amber-600 mr-3 mt-0.5 text-lg">•</span>
+                                            <span>Experience the profound atmosphere of <b>Malyavanta Hill</b>, where the Lord observed His four-month <b>Chaturmasya</b> stay, and visit <b>Shabari’s cave</b> to witness the power of <b>pure, patient devotion</b>.</span>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                         )}

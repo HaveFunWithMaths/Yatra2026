@@ -73,10 +73,10 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                                 <CheckCircleIcon className="w-5 h-5 mr-2 text-indigo-600" />
                                 Criteria
                             </h4>
-                            <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2 list-none text-sm">
+                            <ul className="space-y-2 list-none text-sm">
                                 <li className="flex items-start"><span className="text-indigo-500 mr-2">•</span>Happy to associate with devotees</li>
                                 <li className="flex items-start"><span className="text-indigo-500 mr-2">•</span>Chant Hare Krishna Mahamantra and hear Spiritual Discourses</li>
-                                <li className="flex items-start md:col-span-2"><span className="text-indigo-500 mr-2">•</span>No blasphemy/criticism of devotees or practices</li>
+                                <li className="flex items-start"><span className="text-indigo-500 mr-2">•</span>No blasphemy/criticism of devotees or practices</li>
                             </ul>
                         </div>
 
@@ -302,7 +302,7 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                                 <li>2 BED non AC : 1000 to 1300 per day</li>
                                 <li>2 BED AC : 1400 to 1600 per day</li>
                             </ul>
-                            <p className="text-xs mt-2 italic opacity-80">Above prices are an estimate. Actual prices may have variation of +/- 10 to 15%</p>
+                            <p className="text-xs mt-2 italic opacity-80">Above prices are an estimate. Actual prices may have variation of ±10-15%</p>
                         </div>
                     </div>
                 </div>
