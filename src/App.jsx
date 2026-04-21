@@ -527,19 +527,19 @@ function App() {
                                     />
                                 </div>
                                 
-                                {/* Image Text */}
-                                <div className="bg-amber-50/70 p-6 md:p-8 border-b border-amber-100">
-                                    <ul className="text-amber-950 space-y-4 list-none text-[15px] leading-relaxed">
-                                        <li className="flex items-start">
-                                            <span className="text-amber-600 mr-3 mt-0.5 text-lg">•</span>
-                                            <span>Walk the sacred paths of <b>Kishkinda</b> where <b>Lord Rama</b> and <b>Lakshmana</b> searched for <b>Mother Sita</b> in <b>Kishkinda Kshetra</b> and offer your obeisances at <b>Anjanadri Hill</b>, the glorious birthplace of <b>Lord Hanuman</b>.</span>
-                                        </li>
-                                        <li className="flex items-start">
-                                            <span className="text-amber-600 mr-3 mt-0.5 text-lg">•</span>
-                                            <span>Experience the profound atmosphere of <b>Malyavanta Hill</b>, where the Lord observed His four-month <b>Chaturmasya</b> stay, and visit <b>Shabari’s cave</b> to witness the power of <b>pure, patient devotion</b>.</span>
-                                        </li>
-                                    </ul>
-                                </div>
+                                {/* Image Text - Only on first page */}
+                                {currentPage === 1 && (
+                                    <div className="bg-amber-50/70 p-6 md:p-8 border-b border-amber-100">
+                                        <div className="text-amber-950 space-y-4 text-[16px] leading-relaxed">
+                                            <p>
+                                                Walk the paths of <b>Kishkinda</b> where <b>Lord Rama</b> searched for <b>Mother Sita</b> & <b>Anjanadri Hill</b>: birthplace of <b>Hanuman</b>.
+                                            </p>
+                                            <p>
+                                                Experience the <b>Lord's</b> 4 month stay at <b>Malyavanta Hill</b> & visit the sacred cave where <b>Shabari</b> offered her pure devotion.
+                                            </p>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         )}
 
