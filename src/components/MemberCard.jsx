@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { InputField, SelectField, ConfirmDialog, CheckboxGroup, ChevronDownIcon } from './common';
-import { prasadOptions, languageOptions, seatingOptions, chantingOptions, genderOptions } from '../utils/constants';
+import { prasadOptions, languageOptions, seatingOptions, chantingOptions, genderOptions, accommodationOptions } from '../utils/constants';
 
 const MemberCard = ({ member, index, onChange, onRemove, errors = {} }) => {
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
@@ -108,15 +108,27 @@ const MemberCard = ({ member, index, onChange, onRemove, errors = {} }) => {
                         />
                     </div>
 
-                    {/* Prasadam Preference */}
-                    <div className="mt-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                         <SelectField
                             label="Prasadam Preference"
                             name={`member-${index}-prasad`}
+                            required
                             placeholder="Select Prasadam Preference"
                             options={prasadOptions}
                             value={member.prasadPreference || ''}
                             onChange={(e) => handleInputChange('prasadPreference', e.target.value)}
+                            error={errors.prasadPreference}
+                        />
+
+                        <SelectField
+                            label="Accommodation Preference"
+                            name={`member-${index}-accommodation`}
+                            required
+                            placeholder="Select AC/Non AC"
+                            options={accommodationOptions}
+                            value={member.accommodation || ''}
+                            onChange={(e) => handleInputChange('accommodation', e.target.value)}
+                            error={errors.accommodation}
                         />
                     </div>
 

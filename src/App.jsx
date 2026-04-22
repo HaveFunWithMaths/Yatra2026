@@ -85,6 +85,7 @@ function App() {
             age: '',
             gender: '',
             relationship: '',
+            accommodation: '',
             prasadPreference: '',
             languages: [],
             seating: '',
@@ -289,6 +290,14 @@ function App() {
                 memberErrors.gender = 'Gender is required';
             }
 
+            if (!member.prasadPreference) {
+                memberErrors.prasadPreference = 'Prasadam preference is required';
+            }
+
+            if (!member.accommodation) {
+                memberErrors.accommodation = 'Accommodation preference is required';
+            }
+
             return memberErrors;
         });
 
@@ -303,6 +312,7 @@ function App() {
             age: '',
             gender: '',
             relationship: '',
+            accommodation: '',
             prasadPreference: '',
             languages: [],
             seating: '',
@@ -470,6 +480,7 @@ function App() {
                     age: member.age,
                     gender: member.gender,
                     relationship: member.relationship || '',
+                    accommodation: member.accommodation || '',
                     prasadPreference: member.prasadPreference || '',
                     languages: (member.languages || []).join(', '),
                     seating: member.seating || '',

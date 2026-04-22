@@ -268,7 +268,7 @@ function processSubmission(data) {
         member.chanting,      // K: Chanting Status
         '',                   // L: Inclination (Deprecated)
         member.spiritualStatus, // M: One Liner
-        devotee.accommodation || '', // N: Accommodation (inherited from main devotee)
+        member.accommodation || devotee.accommodation || '', // N: Accommodation
         '',                   // O: Concerns
         timestamp,            // P: Timestamp
         paymentLink           // Q: Payment Link
@@ -552,7 +552,8 @@ function doGet(e) {
                 languages: row[8] ? String(row[8]).split(',').map(s=>s.trim()) : [],
                 seating: row[9] || '',
                 chanting: row[10] || '',
-                spiritualStatus: row[12] || ''
+                spiritualStatus: row[12] || '',
+                accommodation: row[13] || ''
               });
             }
           }

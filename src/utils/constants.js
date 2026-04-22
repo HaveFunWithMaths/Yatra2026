@@ -5,6 +5,8 @@ export const languageOptions = ['Hindi', 'English', 'Telugu'];
 export const seatingOptions = ['Needs chair', 'Can sit below'];
 export const chantingOptions = ['0', '1+', '4+', '8+', '16'];
 export const genderOptions = ['Male', 'Female'];
+export const accommodationOptions = ['AC', 'Non AC'];
+
 
 // LocalStorage keys
 export const STORAGE_KEYS = {
