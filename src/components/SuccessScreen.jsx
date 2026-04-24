@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const SuccessScreen = ({ status, onRetry }) => {
+    const [copied, setCopied] = useState(false);
     const isSyncing = status === 'syncing';
     const isError = status === 'error';
     const isSuccess = status === 'success' || status === 'idle'; // idle fallback
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText("https://chat.whatsapp.com/FvH2w48R9iW82gbHM9Z4MW");
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
 
     return (
         <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4 animate-slide-up">
@@ -77,10 +84,39 @@ const SuccessScreen = ({ status, onRetry }) => {
                                     </svg>
                                     <span>Join WhatsApp Group</span>
                                 </a>
+
+                                <div className="mt-6 pt-5 border-t border-indigo-200/50">
+                                    <p className="text-xs text-indigo-600 mb-3 font-medium">
+                                        If you are unable to join the WhatsApp in Desktop, copy the below link in your mobile:
+                                    </p>
+                                    <div className="flex items-center space-x-2 bg-white/80 border border-indigo-100 rounded-lg p-2.5 shadow-sm group hover:border-indigo-300 transition-colors">
+                                        <code className="text-[10px] sm:text-xs text-indigo-800 break-all flex-1 font-mono">
+                                            https://chat.whatsapp.com/FvH2w48R9iW82gbHM9Z4MW
+                                        </code>
+                                        <button 
+                                            onClick={handleCopy}
+                                            className={`p-2 rounded-md transition-all duration-200 shrink-0 flex items-center space-x-1 ${
+                                                copied 
+                                                ? 'bg-emerald-100 text-emerald-600' 
+                                                : 'hover:bg-indigo-50 text-indigo-600'
+                                            }`}
+                                            title="Copy link"
+                                        >
+                                            {copied ? (
+                                                <span className="text-[10px] font-bold px-1 animate-in fade-in zoom-in duration-200">Copied!</span>
+                                            ) : (
+                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                                </svg>
+                                            )}
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             )}
 
             {/* Decorative element */}

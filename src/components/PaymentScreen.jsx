@@ -57,7 +57,7 @@ const PaymentScreen = ({ onBack, onSubmit, isUploading }) => {
     };
 
     const handleCopyUpi = () => {
-        navigator.clipboard.writeText('9840286639@upi');
+        navigator.clipboard.writeText('gnvst@kotak');
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
