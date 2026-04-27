@@ -7,7 +7,7 @@ const SuccessScreen = ({ status, onRetry }) => {
     const isSuccess = status === 'success' || status === 'idle'; // idle fallback
 
     const handleCopy = () => {
-        navigator.clipboard.writeText("https://chat.whatsapp.com/FvH2w48R9iW82gbHM9Z4MW");
+        navigator.clipboard.writeText("https://chat.whatsapp.com/EOAcQoBlckoDKpAEB5pKdZ");
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
@@ -74,7 +74,7 @@ const SuccessScreen = ({ status, onRetry }) => {
                                     Please join our official Yatra WhatsApp group for all updates and community coordination.
                                 </p>
                                 <a 
-                                    href="https://chat.whatsapp.com/FvH2w48R9iW82gbHM9Z4MW" 
+                                    href="https://chat.whatsapp.com/EOAcQoBlckoDKpAEB5pKdZ" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
                                     className="inline-flex items-center space-x-2 bg-[#25D366] text-white px-5 py-3 rounded-lg font-bold hover:bg-[#128C7E] transition-colors shadow-md shadow-green-200"
@@ -91,7 +91,7 @@ const SuccessScreen = ({ status, onRetry }) => {
                                     </p>
                                     <div className="flex items-center space-x-2 bg-white/80 border border-indigo-100 rounded-lg p-2.5 shadow-sm group hover:border-indigo-300 transition-colors">
                                         <code className="text-[10px] sm:text-xs text-indigo-800 break-all flex-1 font-mono">
-                                            https://chat.whatsapp.com/FvH2w48R9iW82gbHM9Z4MW
+                                            https://chat.whatsapp.com/EOAcQoBlckoDKpAEB5pKdZ
                                         </code>
                                         <button 
                                             onClick={handleCopy}
