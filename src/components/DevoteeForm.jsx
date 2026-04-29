@@ -68,6 +68,23 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                             </div>
                         </div>
 
+                        <div className="bg-indigo-50 p-4 rounded-xl border border-indigo-100">
+                            <h4 className="font-bold text-indigo-900 mb-2 flex items-center">
+                                <CurrencyIcon className="w-5 h-5 mr-2 text-indigo-600" />
+                                Overall Total Yatra Cost Estimate
+                            </h4>
+                            <p className="text-sm text-indigo-800 mb-2">
+                                Overall Total Yatra cost estimate per devotee (excluding the travel to Hampi from your home) is:
+                            </p>
+                            <ul className="text-sm space-y-1 mb-2 text-indigo-900">
+                                <li className="flex justify-between border-b border-indigo-200 pb-1"><span>Non AC room option</span> <span className="font-semibold">₹5500 to ₹6000</span></li>
+                                <li className="flex justify-between pt-1"><span>AC room option</span> <span className="font-semibold">₹6500 to ₹7000</span></li>
+                            </ul>
+                            <p className="text-xs text-indigo-700 italic mt-2 opacity-90">
+                                Please note: Actual price will be informed once the rooms, prasadam, internal travels etc.. is done..
+                            </p>
+                        </div>
+
                         <div>
                             <h4 className="font-bold text-slate-900 mb-3 flex items-center">
                                 <CheckCircleIcon className="w-5 h-5 mr-2 text-indigo-600" />
