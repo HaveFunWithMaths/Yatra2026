@@ -507,6 +507,7 @@ export default function Dashboard() {
                   {renderSortableHeader('Sl No.', 'globalIndex', '60px', '60px', true, '0')}
                   {renderSortableHeader('Devotee Name', 'Devotee Name', '180px', '180px', true, '60px')}
                   {renderSortableHeader('Indiv. Name', 'Individual Name', '180px', '180px', true, '240px')}
+                  {renderSortableHeader('Age', 'Age')}
                   {renderSortableHeader('Gender', 'Gender')}
                   {renderSortableHeader('WhatsApp', 'WhatsApp Number')}
                   {renderSortableHeader('Relation', 'Relationship')}
@@ -522,7 +523,7 @@ export default function Dashboard() {
               <tbody>
                 {processedData.length === 0 ? (
                   <tr>
-                    <td colSpan="13" className="px-6 py-8 text-center text-slate-500 font-medium border border-slate-300 outline outline-1 outline-slate-300">
+                    <td colSpan="14" className="px-6 py-8 text-center text-slate-500 font-medium border border-slate-300 outline outline-1 outline-slate-300">
                       No matching records found.
                     </td>
                   </tr>
@@ -541,6 +542,9 @@ export default function Dashboard() {
                         )}
                         <td className="px-4 py-3 border border-slate-300 outline outline-1 outline-slate-300 font-medium text-slate-800 whitespace-nowrap sticky left-[240px] z-10 bg-white truncate" style={{ minWidth: '180px', maxWidth: '180px' }} title={row['Individual Name']}>
                           {row['Individual Name']}
+                        </td>
+                        <td className="px-4 py-3 border border-slate-300 outline outline-1 outline-slate-300 text-slate-600 whitespace-nowrap text-center">
+                          {row['Age'] || '-'}
                         </td>
                         <td className="px-4 py-3 border border-slate-300 outline outline-1 outline-slate-300 text-slate-600 whitespace-nowrap">
                           <span className={`px-2 py-1 rounded-full text-xs font-medium ${row['Gender'] === 'Male' ? 'bg-blue-100 text-blue-700' : 'bg-pink-100 text-pink-700'}`}>
