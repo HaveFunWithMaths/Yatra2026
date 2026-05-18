@@ -189,11 +189,7 @@ function processSubmission(data) {
     sheet.getRange(existingRowIndex, 8).setValue(devotee.prasadPreference);
     sheet.getRange(existingRowIndex, 9).setValue(devotee.languages);
     sheet.getRange(existingRowIndex, 14).setValue(devotee.accommodation || '');
-    sheet.getRange(existingRowIndex, 15).setValue(devotee.concerns || '');
-    sheet.getRange(existingRowIndex, 16).setValue(timestamp);
-    if (paymentLink) {
-        sheet.getRange(existingRowIndex, 17).setValue(paymentLink);
-    }
+    // Concerns, Timestamp, and Payment Link for existing devotee remain unchanged.
   }
 
   if (isAlone) {
@@ -269,7 +265,7 @@ function processSubmission(data) {
         '',                   // L: Inclination (Deprecated)
         member.spiritualStatus, // M: One Liner
         member.accommodation || devotee.accommodation || '', // N: Accommodation
-        '',                   // O: Concerns
+        devotee.concerns || '', // O: Concerns
         timestamp,            // P: Timestamp
         paymentLink           // Q: Payment Link
       ];
@@ -295,7 +291,7 @@ function processSubmission(data) {
 }
 
 /**
- * Merge Column A (Devotee Name), Column B (WhatsApp Number) and Column O (Payment Link) for a range of rows
+ * Merge Column A (Devotee Name), Column B (WhatsApp Number), Column O (Concerns), Column P (Timestamp) and Column Q (Payment Link) for a range of rows
  */
 function mergeDevoteeColumn(sheet, startRow, endRow) {
   if (startRow < endRow) {
@@ -312,11 +308,21 @@ function mergeDevoteeColumn(sheet, startRow, endRow) {
     rangeB.setVerticalAlignment('middle');
     rangeB.setFontWeight('bold');
     rangeB.setBackground('#f3f4f6');
-    
-    // Merge Column Q (Payment Link, index 17)
-    const rangeO = sheet.getRange(startRow, 17, endRow - startRow + 1, 1);
+
+    // Merge Column O (Concerns, index 15)
+    const rangeO = sheet.getRange(startRow, 15, endRow - startRow + 1, 1);
     rangeO.merge();
     rangeO.setVerticalAlignment('middle');
+
+    // Merge Column P (Timestamp, index 16)
+    const rangeP = sheet.getRange(startRow, 16, endRow - startRow + 1, 1);
+    rangeP.merge();
+    rangeP.setVerticalAlignment('middle');
+    
+    // Merge Column Q (Payment Link, index 17)
+    const rangeQ = sheet.getRange(startRow, 17, endRow - startRow + 1, 1);
+    rangeQ.merge();
+    rangeQ.setVerticalAlignment('middle');
   }
 }
 
