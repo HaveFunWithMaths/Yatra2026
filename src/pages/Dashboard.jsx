@@ -447,7 +447,7 @@ export default function Dashboard() {
           </div>
 
           {/* Chanting */}
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow lg:col-span-3">
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow md:col-span-2 lg:col-span-3">
             <h3 className="text-lg font-semibold text-slate-700 mb-4">Chanting Rounds</h3>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
