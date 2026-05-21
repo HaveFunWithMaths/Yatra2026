@@ -12,11 +12,25 @@ const COLORS = ['#6366f1', '#ec4899', '#14b8a6', '#f59e0b', '#8b5cf6', '#10b981'
 export default function Dashboard() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  
   // New States
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState(null); // { key, direction: 'asc' | 'desc' }
   const [lastRefreshed, setLastRefreshed] = useState(new Date());
+
+  // Mobile detection
+  const [isMobile, setIsMobile] = useState(false);
+  const [activeChartPage, setActiveChartPage] = useState(0);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
 
   const [metrics, setMetrics] = useState({
     age: [],
@@ -345,109 +359,172 @@ export default function Dashboard() {
           </div>
         </div>
 
+        {/* Mobile Chart Selector */}
+        {isMobile && (
+          <div className="flex flex-col items-center justify-between md:flex-row gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm mb-6">
+            <span className="text-sm font-semibold text-slate-500 uppercase tracking-wider">
+              Viewing Group {activeChartPage + 1} of 3
+            </span>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setActiveChartPage((prev) => (prev > 0 ? prev - 1 : 2))}
+                className="p-2 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 transition-colors font-bold text-lg leading-none"
+                title="Previous Group"
+              >
+                ←
+              </button>
+              <div className="flex bg-slate-100 p-1 rounded-xl gap-1">
+                <button
+                  onClick={() => setActiveChartPage(0)}
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${activeChartPage === 0 ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-800'}`}
+                >
+                  Demographics
+                </button>
+                <button
+                  onClick={() => setActiveChartPage(1)}
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${activeChartPage === 1 ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-800'}`}
+                >
+                  Dining & Seating
+                </button>
+                <button
+                  onClick={() => setActiveChartPage(2)}
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${activeChartPage === 2 ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-800'}`}
+                >
+                  Info & Lodging
+                </button>
+              </div>
+              <button
+                onClick={() => setActiveChartPage((prev) => (prev < 2 ? prev + 1 : 0))}
+                className="p-2 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 transition-colors font-bold text-lg leading-none"
+                title="Next Group"
+              >
+                →
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Charts Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className={`grid ${isMobile ? 'grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'} gap-6`}>
           
           {/* Age Distribution */}
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-            <h3 className="text-lg font-semibold text-slate-700 mb-4">Age Distribution</h3>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={metrics.age} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                  <XAxis dataKey="name" tick={{ fontSize: 12, fill: '#64748b' }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fontSize: 12, fill: '#64748b' }} axisLine={false} tickLine={false} />
-                  <RechartsTooltip cursor={{ fill: '#f8fafc' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
-                  <Bar dataKey="value" fill="#6366f1" radius={[4, 4, 0, 0]}>
-                    <LabelList dataKey="value" position="top" fill="#64748b" fontSize={12} fontWeight="bold" />
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
+          {(!isMobile || activeChartPage === 0) && (
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow relative">
+              <h3 className="text-lg font-semibold text-slate-700 mb-4">Age Distribution</h3>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={metrics.age} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                    <XAxis dataKey="name" tick={{ fontSize: 12, fill: '#64748b' }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fontSize: 12, fill: '#64748b' }} axisLine={false} tickLine={false} />
+                    <RechartsTooltip cursor={{ fill: '#f8fafc' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                    <Bar dataKey="value" fill="#6366f1" radius={[4, 4, 0, 0]}>
+                      <LabelList dataKey="value" position="top" fill="#64748b" fontSize={12} fontWeight="bold" />
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+
             </div>
-          </div>
+          )}
 
           {/* Gender */}
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-            <h3 className="text-lg font-semibold text-slate-700 mb-4">Gender</h3>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie data={metrics.gender} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={5} dataKey="value" labelLine={false} label={renderCustomizedLabel}>
-                    {metrics.gender.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
-                  </Pie>
-                  <RechartsTooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
-                  <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ fontSize: '12px', color: '#64748b' }} />
-                </PieChart>
-              </ResponsiveContainer>
+          {(!isMobile || activeChartPage === 0) && (
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow relative">
+              <h3 className="text-lg font-semibold text-slate-700 mb-4">Gender</h3>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie data={metrics.gender} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={5} dataKey="value" labelLine={false} label={renderCustomizedLabel}>
+                      {metrics.gender.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
+                    </Pie>
+                    <RechartsTooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                    <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ fontSize: '12px', color: '#64748b' }} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+
             </div>
-          </div>
+          )}
 
           {/* Prasadam */}
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-            <h3 className="text-lg font-semibold text-slate-700 mb-4">Prasadam Output</h3>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie data={metrics.prasadam} cx="50%" cy="50%" innerRadius={0} outerRadius={90} dataKey="value" labelLine={false} label={renderCustomizedLabel}>
-                    {metrics.prasadam.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[(index + 2) % COLORS.length]} />)}
-                  </Pie>
-                  <RechartsTooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
-                  <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ fontSize: '12px', color: '#64748b' }} />
-                </PieChart>
-              </ResponsiveContainer>
+          {(!isMobile || activeChartPage === 1) && (
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow relative">
+              <h3 className="text-lg font-semibold text-slate-700 mb-4">Prasadam Output</h3>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie data={metrics.prasadam} cx="50%" cy="50%" innerRadius={0} outerRadius={90} dataKey="value" labelLine={false} label={renderCustomizedLabel}>
+                      {metrics.prasadam.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[(index + 2) % COLORS.length]} />)}
+                    </Pie>
+                    <RechartsTooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                    <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ fontSize: '12px', color: '#64748b' }} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+
             </div>
-          </div>
+          )}
 
           {/* Languages */}
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-            <h3 className="text-lg font-semibold text-slate-700 mb-4">Languages Spoken</h3>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie data={metrics.languages} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={5} dataKey="value" labelLine={false} label={renderCustomizedLabel}>
-                    {metrics.languages.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[(index + 3) % COLORS.length]} />)}
-                  </Pie>
-                  <RechartsTooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
-                  <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ fontSize: '12px', color: '#64748b' }} />
-                </PieChart>
-              </ResponsiveContainer>
+          {(!isMobile || activeChartPage === 2) && (
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow relative">
+              <h3 className="text-lg font-semibold text-slate-700 mb-4">Languages Spoken</h3>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie data={metrics.languages} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={5} dataKey="value" labelLine={false} label={renderCustomizedLabel}>
+                      {metrics.languages.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[(index + 3) % COLORS.length]} />)}
+                    </Pie>
+                    <RechartsTooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                    <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ fontSize: '12px', color: '#64748b' }} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+
             </div>
-          </div>
+          )}
 
           {/* Seating */}
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-            <h3 className="text-lg font-semibold text-slate-700 mb-4">Seating Preference</h3>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie data={metrics.seating} cx="50%" cy="50%" innerRadius={0} outerRadius={90} dataKey="value" labelLine={false} label={renderCustomizedLabel}>
-                    {metrics.seating.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[(index + 4) % COLORS.length]} />)}
-                  </Pie>
-                  <RechartsTooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
-                  <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ fontSize: '12px', color: '#64748b' }} />
-                </PieChart>
-              </ResponsiveContainer>
+          {(!isMobile || activeChartPage === 1) && (
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow relative">
+              <h3 className="text-lg font-semibold text-slate-700 mb-4">Seating Preference</h3>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie data={metrics.seating} cx="50%" cy="50%" innerRadius={0} outerRadius={90} dataKey="value" labelLine={false} label={renderCustomizedLabel}>
+                      {metrics.seating.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[(index + 4) % COLORS.length]} />)}
+                    </Pie>
+                    <RechartsTooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                    <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ fontSize: '12px', color: '#64748b' }} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+
             </div>
-          </div>
+          )}
 
           {/* Accommodation */}
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-            <h3 className="text-lg font-semibold text-slate-700 mb-4">Accommodation</h3>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie data={metrics.accommodation} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={5} dataKey="value" labelLine={false} label={renderCustomizedLabel}>
-                    {metrics.accommodation.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[(index + 5) % COLORS.length]} />)}
-                  </Pie>
-                  <RechartsTooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
-                  <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ fontSize: '12px', color: '#64748b' }} />
-                </PieChart>
-              </ResponsiveContainer>
+          {(!isMobile || activeChartPage === 2) && (
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow relative">
+              <h3 className="text-lg font-semibold text-slate-700 mb-4">Accommodation</h3>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie data={metrics.accommodation} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={5} dataKey="value" labelLine={false} label={renderCustomizedLabel}>
+                      {metrics.accommodation.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[(index + 5) % COLORS.length]} />)}
+                    </Pie>
+                    <RechartsTooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                    <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ fontSize: '12px', color: '#64748b' }} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+
             </div>
-          </div>
+          )}
 
           {/* Chanting */}
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow md:col-span-2 lg:col-span-3">
+          <div className={`bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow relative ${isMobile ? 'col-span-2' : 'md:col-span-2 lg:col-span-3'}`}>
             <h3 className="text-lg font-semibold text-slate-700 mb-4">Chanting Rounds</h3>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
@@ -462,6 +539,7 @@ export default function Dashboard() {
                 </BarChart>
               </ResponsiveContainer>
             </div>
+
           </div>
 
         </div>
