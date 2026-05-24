@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { InputField, SelectField, ConfirmDialog, CheckboxGroup, ChevronDownIcon } from './common';
 import { prasadOptions, languageOptions, seatingOptions, chantingOptions, genderOptions, accommodationOptions } from '../utils/constants';
 
-const MemberCard = ({ member, index, onChange, onRemove, errors = {} }) => {
+const MemberCard = ({ member, index, onChange, onRemove, onDuplicate, isDuplicateDisabled, errors = {} }) => {
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
     const [isExpanded, setIsExpanded] = useState(true);
 
@@ -35,9 +35,9 @@ const MemberCard = ({ member, index, onChange, onRemove, errors = {} }) => {
                     <button
                         type="button"
                         onClick={() => setIsExpanded(!isExpanded)}
-                        className="flex items-center space-x-3 group"
+                        className="flex items-center space-x-3 group text-left"
                     >
-                        <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold shadow-md">
+                        <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold shadow-md shrink-0">
                             {index + 1}
                         </div>
                         <div className="text-left">
@@ -52,13 +52,27 @@ const MemberCard = ({ member, index, onChange, onRemove, errors = {} }) => {
                             <ChevronDownIcon className="w-5 h-5" />
                         </div>
                     </button>
-                    <button
-                        type="button"
-                        className="btn-danger text-sm"
-                        onClick={handleRemoveClick}
-                    >
-                        Remove
-                    </button>
+                    <div className="flex items-center space-x-2">
+                        <button
+                            type="button"
+                            className="px-3 py-1.5 bg-indigo-50 border border-indigo-200 text-indigo-600 font-medium rounded-lg hover:bg-indigo-100 hover:border-indigo-300 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 flex items-center space-x-1 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                            onClick={() => onDuplicate(index)}
+                            disabled={isDuplicateDisabled}
+                            title={isDuplicateDisabled ? "Limit of 25 people reached" : "Duplicate this person's details"}
+                        >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                            </svg>
+                            <span>Duplicate</span>
+                        </button>
+                        <button
+                            type="button"
+                            className="btn-danger text-sm"
+                            onClick={handleRemoveClick}
+                        >
+                            Remove
+                        </button>
+                    </div>
                 </div>
 
                 {/* Collapsible Content */}

@@ -320,6 +320,7 @@ function RegistrationForm() {
 
     // Add new family member
     const addFamilyMember = () => {
+        if (familyMembers.length >= 25) return;
         setFamilyMembers([...familyMembers, {
             name: '',
             age: '',
@@ -333,6 +334,25 @@ function RegistrationForm() {
             spiritualStatus: ''
         }]);
         setFamilyErrors([...familyErrors, {}]);
+    };
+
+    // Duplicate family member
+    const duplicateFamilyMember = (index) => {
+        if (familyMembers.length >= 25) return;
+        const memberToDuplicate = familyMembers[index];
+        const duplicatedMember = {
+            ...memberToDuplicate,
+            languages: [...(memberToDuplicate.languages || [])]
+        };
+        
+        const newMembers = [...familyMembers];
+        newMembers.splice(index + 1, 0, duplicatedMember);
+        
+        const newErrors = [...familyErrors];
+        newErrors.splice(index + 1, 0, {});
+        
+        setFamilyMembers(newMembers);
+        setFamilyErrors(newErrors);
     };
 
     // Remove family member
@@ -627,6 +647,7 @@ function RegistrationForm() {
                                     onChange={setFamilyMembers}
                                     onAddMember={addFamilyMember}
                                     onRemoveMember={removeFamilyMember}
+                                    onDuplicateMember={duplicateFamilyMember}
                                     onBack={handleBack}
                                     onSubmit={handleNextToPaymentFamily}
                                     errors={familyErrors}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import MemberCard from './MemberCard';
 
-const FamilyForm = ({ members, existingMembers, onChange, onAddMember, onRemoveMember, onBack, onSubmit, errors }) => {
+const FamilyForm = ({ members, existingMembers, onChange, onAddMember, onRemoveMember, onDuplicateMember, onBack, onSubmit, errors }) => {
     const [addError, setAddError] = useState('');
 
     const handleMemberChange = (index, updatedMember) => {
@@ -12,6 +12,10 @@ const FamilyForm = ({ members, existingMembers, onChange, onAddMember, onRemoveM
     };
 
     const handleAddClick = () => {
+        if (members.length >= 25) {
+            setAddError('You can add up to 25 family members/friends.');
+            return;
+        }
         // Check if all current members have their mandatory fields filled
         for (let i = 0; i < members.length; i++) {
             const m = members[i];
@@ -73,6 +77,8 @@ const FamilyForm = ({ members, existingMembers, onChange, onAddMember, onRemoveM
                         index={index}
                         onChange={handleMemberChange}
                         onRemove={onRemoveMember}
+                        onDuplicate={onDuplicateMember}
+                        isDuplicateDisabled={members.length >= 25}
                         errors={errors[index] || {}}
                     />
                 ))}
@@ -86,16 +92,25 @@ const FamilyForm = ({ members, existingMembers, onChange, onAddMember, onRemoveM
             )}
 
             {/* Add Member Button */}
-            <button
-                type="button"
-                className="btn-secondary w-full mt-6 flex items-center justify-center space-x-2"
-                onClick={handleAddClick}
-            >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-                <span>Add Another Person</span>
-            </button>
+            {members.length < 25 ? (
+                <button
+                    type="button"
+                    className="btn-secondary w-full mt-6 flex items-center justify-center space-x-2"
+                    onClick={handleAddClick}
+                >
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    <span>Add Another Person ({members.length}/25)</span>
+                </button>
+            ) : (
+                <div className="mt-6 p-4 bg-amber-50 border border-amber-200 text-amber-800 rounded-xl text-center font-medium flex items-center justify-center space-x-2 shadow-sm animate-pulse-soft">
+                    <svg className="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <span>Maximum limit of 25 family members/friends reached.</span>
+                </div>
+            )}
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 mt-8 pt-6 border-t border-slate-200">
