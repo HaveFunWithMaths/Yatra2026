@@ -7,7 +7,7 @@ import React from 'react';
  *   matchedNames - string[] of the names that were found in this room (to highlight)
  */
 export default function RoomCard({ room, matchedNames }) {
-  const { roomNo, hotel, acType, begin, end, devotees, floor, cost, photos } = room;
+  const { roomNo, hotel, acType, begin, end, devotees, floor, cost, roomType, extraBed, daysRented } = room;
   const hasRoomNo = roomNo && roomNo.toString().trim() !== '';
 
   // Normalised matched set for quick lookup
@@ -176,65 +176,100 @@ export default function RoomCard({ room, matchedNames }) {
         </div>
       </div>
 
-      {/* Additional details: Floor, Cost, Photos */}
-      {(floor || cost || photos) && (
-        <div className="px-6 py-4 grid grid-cols-1 sm:grid-cols-3 gap-4 border-b border-slate-100 bg-slate-50/40 animate-fade-in">
-          {floor ? (
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-amber-50 rounded-lg flex items-center justify-center shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                </svg>
-              </div>
-              <div>
-                <p className="text-slate-400 text-xs font-medium uppercase tracking-wider">Floor</p>
-                <p className="text-slate-800 font-semibold text-sm">
-                  {floor}{/^\d+$/.test(floor.trim()) ? getFloorSuffix(floor.trim()) : ''} Floor
-                </p>
-              </div>
+      {/* Additional details: Floor, Cost, Room Type, Extra Bed, Days Rented, Bathroom */}
+      <div className="px-6 py-4 grid grid-cols-2 sm:grid-cols-3 gap-y-4 gap-x-6 border-b border-slate-100 bg-slate-50/40 text-slate-700 animate-fade-in">
+        {/* Floor */}
+        {floor ? (
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 bg-amber-50 rounded-lg flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
             </div>
-          ) : null}
+            <div>
+              <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-wider">Floor</p>
+              <p className="text-slate-800 font-semibold text-xs leading-tight">
+                {floor}{/^\d+$/.test(floor.trim()) ? getFloorSuffix(floor.trim()) : ''} Floor
+              </p>
+            </div>
+          </div>
+        ) : null}
 
-          {cost ? (
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-yellow-50 rounded-lg flex items-center justify-center shrink-0">
-                <span className="text-yellow-600 font-bold text-sm">₹</span>
-              </div>
-              <div>
-                <p className="text-slate-400 text-xs font-medium uppercase tracking-wider">Cost per Day</p>
-                <p className="text-slate-800 font-semibold text-sm">
-                  ₹{isNaN(cost) ? cost : Number(cost).toLocaleString('en-IN')}
-                </p>
-              </div>
+        {/* Room Type */}
+        {roomType ? (
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+              </svg>
             </div>
-          ) : null}
+            <div>
+              <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-wider">Room Type</p>
+              <p className="text-slate-800 font-semibold text-xs leading-tight capitalize">{roomType}</p>
+            </div>
+          </div>
+        ) : null}
 
-          {photos ? (
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-purple-50 rounded-lg flex items-center justify-center shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <div>
-                <p className="text-slate-400 text-xs font-medium uppercase tracking-wider">Room Photos</p>
-                <a
-                  href={photos}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-purple-600 hover:text-purple-800 font-semibold text-sm inline-flex items-center gap-1 hover:underline group"
-                  title="View Room Photos"
-                >
-                  <span>View Photos</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 text-purple-500 group-hover:translate-x-0.5 transition-transform shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-          ) : null}
+        {/* Bathroom */}
+        <div className="flex items-center gap-2.5">
+          <div className="w-7 h-7 bg-sky-50 rounded-lg flex items-center justify-center shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+            </svg>
+          </div>
+          <div>
+            <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-wider">Bathroom</p>
+            <p className="text-slate-800 font-semibold text-xs leading-tight">Western</p>
+          </div>
         </div>
-      )}
+
+        {/* Cost per Day */}
+        {cost ? (
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 bg-emerald-50 rounded-lg flex items-center justify-center shrink-0">
+              <span className="text-emerald-600 font-bold text-xs">₹</span>
+            </div>
+            <div>
+              <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-wider">Cost per Day</p>
+              <p className="text-slate-800 font-semibold text-xs leading-tight">
+                ₹{isNaN(cost) ? cost : Number(cost).toLocaleString('en-IN')}
+              </p>
+            </div>
+          </div>
+        ) : null}
+
+        {/* Days Rented */}
+        {daysRented ? (
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 bg-rose-50 rounded-lg flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-wider">Days Rented</p>
+              <p className="text-slate-800 font-semibold text-xs leading-tight">
+                {daysRented} Day{parseInt(daysRented) !== 1 ? 's' : ''}
+              </p>
+            </div>
+          </div>
+        ) : null}
+
+        {/* Extra Bed */}
+        {extraBed ? (
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 bg-purple-50 rounded-lg flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-wider">Extra Bed</p>
+              <p className="text-slate-800 font-semibold text-xs leading-tight capitalize">{extraBed}</p>
+            </div>
+          </div>
+        ) : null}
+      </div>
 
       {/* Roommates */}
       <div className="px-6 py-4">
@@ -272,14 +307,6 @@ export default function RoomCard({ room, matchedNames }) {
             );
           })}
         </div>
-      </div>
-
-      {/* Lift notice */}
-      <div className="bg-indigo-50/50 px-6 py-2.5 flex items-center gap-2 border-t border-slate-100 text-xs text-indigo-800">
-        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-indigo-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <span><strong>Note:</strong> Devotees can use the lift in the Hotel.</span>
       </div>
     </div>
   );
