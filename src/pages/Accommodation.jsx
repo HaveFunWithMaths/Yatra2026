@@ -120,15 +120,6 @@ function AccommodationContent() {
     window.history.replaceState({}, '', url);
   };
 
-  // Grand total cost across all room results
-  const grandTotalCost = roomResults.reduce((sum, result) => {
-    const costNum = parseFloat(result.room.cost);
-    const daysNum = parseFloat(result.room.daysRented);
-    if (!isNaN(costNum) && !isNaN(daysNum)) {
-      return sum + (costNum * daysNum);
-    }
-    return sum;
-  }, 0);
 
   // Web Share API trigger
   const handleShare = async () => {
@@ -432,18 +423,6 @@ function AccommodationContent() {
                   </div>
                 )}
 
-                {/* Grand Total Cost Summary Box (bottom of the results list) */}
-                {grandTotalCost > 0 && (
-                  <div className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-2xl p-6 shadow-lg shadow-emerald-600/20 border border-emerald-500/20 flex flex-col sm:flex-row justify-between items-center gap-4 animate-fade-in print:border print:border-slate-300 print:text-slate-800 print:from-white print:to-white print:shadow-none">
-                    <div>
-                      <h4 className="text-emerald-100 text-[10px] font-black uppercase tracking-widest leading-none print:text-slate-500">Grand Total Cost</h4>
-                      <p className="text-xs text-emerald-50/80 mt-1.5 print:text-slate-500">Sum of cost per day × rented days for all assigned rooms</p>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-3xl font-black print:text-slate-800">₹{grandTotalCost.toLocaleString('en-IN')}</span>
-                    </div>
-                  </div>
-                )}
               </div>
             )}
           </div>
