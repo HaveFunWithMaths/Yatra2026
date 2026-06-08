@@ -1,0 +1,135 @@
+import React from 'react';
+
+/**
+ * RoomCard
+ * Props:
+ *   room        - { roomNo, hotel, acType, begin, end, devotees: string[] }
+ *   matchedNames - string[] of the names that were found in this room (to highlight)
+ */
+export default function RoomCard({ room, matchedNames }) {
+  const { roomNo, hotel, acType, begin, end, devotees } = room;
+  const hasRoomNo = roomNo && roomNo.toString().trim() !== '';
+
+  // Normalised matched set for quick lookup
+  const matchedSet = new Set((matchedNames || []).map(n => n.trim().toLowerCase()));
+
+  const isAC = (acType || '').toLowerCase().includes('non') === false && (acType || '').trim() !== '';
+  const acLabel = acType?.trim() || 'Not specified';
+
+  return (
+    <div className="bg-white rounded-2xl shadow-lg border border-amber-100 overflow-hidden animate-fade-in hover:shadow-xl transition-all duration-300">
+      {/* Card Header */}
+      <div className={`px-6 py-4 flex items-center justify-between ${hasRoomNo ? 'bg-gradient-to-r from-indigo-600 to-purple-600' : 'bg-gradient-to-r from-amber-500 to-orange-500'}`}>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+          </div>
+          <div>
+            <p className="text-white/70 text-xs font-medium uppercase tracking-wider">Room Number</p>
+            {hasRoomNo ? (
+              <p className="text-white text-2xl font-bold leading-tight">{roomNo}</p>
+            ) : (
+              <p className="text-white text-lg font-semibold leading-tight">To be assigned</p>
+            )}
+          </div>
+        </div>
+        <div className="flex flex-col items-end gap-1">
+          <span className={`px-3 py-1 rounded-full text-xs font-bold ${acType?.toLowerCase().includes('non') ? 'bg-white/20 text-white' : 'bg-yellow-300/90 text-yellow-900'}`}>
+            {acLabel}
+          </span>
+        </div>
+      </div>
+
+      {/* Not-yet-assigned notice */}
+      {!hasRoomNo && (
+        <div className="bg-amber-50 border-b border-amber-100 px-6 py-3 flex items-start gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p className="text-amber-800 text-sm">
+            Room number has not been assigned yet. It will be updated soon — please check back later.
+          </p>
+        </div>
+      )}
+
+      {/* Hotel & Dates */}
+      <div className="px-6 py-4 grid grid-cols-1 sm:grid-cols-3 gap-4 border-b border-slate-100">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-indigo-50 rounded-lg flex items-center justify-center shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+          </div>
+          <div>
+            <p className="text-slate-400 text-xs font-medium uppercase tracking-wider">Hotel</p>
+            <p className="text-slate-800 font-semibold text-sm">{hotel || 'Not specified'}</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-emerald-50 rounded-lg flex items-center justify-center shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div>
+            <p className="text-slate-400 text-xs font-medium uppercase tracking-wider">Check-In</p>
+            <p className="text-slate-800 font-semibold text-sm">{begin || '—'}</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-rose-50 rounded-lg flex items-center justify-center shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div>
+            <p className="text-slate-400 text-xs font-medium uppercase tracking-wider">Check-Out</p>
+            <p className="text-slate-800 font-semibold text-sm">{end || '—'}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Roommates */}
+      <div className="px-6 py-4">
+        <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider mb-3">
+          Roommates ({devotees.filter(Boolean).length})
+        </p>
+        <div className="flex flex-col gap-2">
+          {devotees.filter(d => d && d.trim() !== '').map((name, idx) => {
+            const isYou = matchedSet.has(name.trim().toLowerCase());
+            return (
+              <div
+                key={idx}
+                className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-200 ${isYou
+                  ? 'bg-indigo-50 border border-indigo-200'
+                  : 'bg-slate-50 border border-slate-100'
+                }`}
+              >
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${isYou
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-slate-200 text-slate-600'
+                }`}>
+                  {name.trim().charAt(0).toUpperCase()}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className={`text-sm font-medium truncate ${isYou ? 'text-indigo-800' : 'text-slate-700'}`}>
+                    {name.trim()}
+                  </p>
+                </div>
+                {isYou && (
+                  <span className="text-xs bg-indigo-600 text-white px-2 py-0.5 rounded-full font-semibold shrink-0">
+                    You
+                  </span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
