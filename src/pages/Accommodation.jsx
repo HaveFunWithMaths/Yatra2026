@@ -158,39 +158,33 @@ function AccommodationContent() {
     <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #fdf6ec 0%, #f5f0ff 50%, #ecf0ff 100%)' }}>
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-40 border-b border-amber-100 print:hidden">
-        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center gap-4">
-          <img src="/assets/GNHLogo.png" alt="GNH Logo" className="h-9 w-auto" />
+        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center gap-3">
+          <img src="/assets/GNHLogo.png" alt="GNH Logo" className="h-8 w-auto shrink-0" />
           <div className="min-w-0">
-            <h1 className="text-lg md:text-xl font-black text-slate-800 leading-none">
+            <h1 className="text-base md:text-xl font-black text-slate-800 leading-none">
               GNH Yatra 2026
             </h1>
-            <p className="text-xs text-amber-600 font-bold tracking-wider mt-1 uppercase">Accommodation Lookup</p>
+            <p className="text-[10px] md:text-xs text-amber-600 font-bold tracking-wider mt-0.5 uppercase">Accommodation Lookup</p>
           </div>
-          <a
-            href="/"
-            className="ml-auto text-sm text-indigo-600 hover:text-indigo-800 font-bold hover:underline transition-colors shrink-0"
-          >
-            ← Registration
-          </a>
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-4 pt-10 pb-16 print:pt-4">
+      <main className="max-w-2xl mx-auto px-3 sm:px-4 pt-6 sm:pt-10 pb-16 print:pt-4">
 
         {/* Hero Section */}
-        <div className="text-center mb-10 animate-fade-in print:hidden">
+        <div className="text-center mb-6 sm:mb-10 animate-fade-in print:hidden">
           {/* Logo with Soft Glow Ring Animation */}
-          <div className="w-20 h-20 bg-gradient-to-br from-amber-400 to-orange-500 rounded-3xl flex items-center justify-center mx-auto mb-5 shadow-lg shadow-amber-200/80 animate-pulse-soft border border-white/40">
-            <img src="/assets/GNHLogo.png" alt="GNH Logo" className="w-12 h-12 object-contain filter drop-shadow-md" />
+          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-amber-400 to-orange-500 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-amber-200/80 animate-pulse-soft border border-white/40">
+            <img src="/assets/GNHLogo.png" alt="GNH Logo" className="w-10 h-10 sm:w-12 sm:h-12 object-contain filter drop-shadow-md" />
           </div>
-          <h2 className="text-2xl md:text-3xl font-black text-slate-800 mb-2">Your Accommodation</h2>
-          <p className="text-slate-500 text-xs md:text-sm max-w-sm mx-auto leading-relaxed">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 mb-2">Your Accommodation</h2>
+          <p className="text-slate-500 text-xs md:text-sm max-w-sm mx-auto leading-relaxed px-2">
             Enter the phone number or email you used during registration to view your room assignment.
           </p>
         </div>
 
         {/* Search Card */}
-        <div className="card px-6 py-7 mb-6 animate-slide-up print:hidden">
+        <div className="card px-4 sm:px-6 py-5 sm:py-7 mb-5 animate-slide-up print:hidden">
           <label className="form-label font-bold text-xs uppercase tracking-wider text-slate-500" htmlFor="accom-search-input">
             Phone Number or Email Address
           </label>
@@ -328,12 +322,12 @@ function AccommodationContent() {
             {!notFound && roomResults.length > 0 && (
               <div className="space-y-6">
                 {/* Result Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex flex-col gap-3">
                   <div>
                     <p className="text-[10px] text-slate-500 uppercase tracking-widest font-black">Accommodation for</p>
-                    <h3 className="text-2xl font-black text-slate-800 leading-tight">{devoteeName}'s Group</h3>
+                    <h3 className="text-xl sm:text-2xl font-black text-slate-800 leading-tight">{devoteeName}'s Group</h3>
                   </div>
-                  <div className="flex gap-2 shrink-0 print:hidden">
+                  <div className="flex flex-wrap gap-2 print:hidden">
                     <button
                       onClick={handleShare}
                       className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5 hover:bg-slate-50"
