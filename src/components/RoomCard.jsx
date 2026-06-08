@@ -16,6 +16,24 @@ export default function RoomCard({ room, matchedNames }) {
   const isAC = (acType || '').toLowerCase().includes('non') === false && (acType || '').trim() !== '';
   const acLabel = acType?.trim() || 'Not specified';
 
+  // Helper to resolve Google Maps link for the hotel
+  const getGMapLink = (hotelName) => {
+    if (!hotelName) return null;
+    const name = hotelName.toLowerCase();
+    if (name.includes('amrutha')) {
+      return 'https://maps.app.goo.gl/VHGSHbP9eeJSDBVq7';
+    }
+    if (name.includes('brindavan') || name.includes('vrindavan')) {
+      return 'https://maps.app.goo.gl/kZtu9Z5ZPhjJLTKdA';
+    }
+    if (name.includes('shivananda') || name.includes('sivananda')) {
+      return 'https://maps.app.goo.gl/DqEC39yuJ3Y4P6yi7';
+    }
+    return null;
+  };
+
+  const mapLink = getGMapLink(hotel);
+
   return (
     <div className="bg-white rounded-2xl shadow-lg border border-amber-100 overflow-hidden animate-fade-in hover:shadow-xl transition-all duration-300">
       {/* Card Header */}
@@ -57,14 +75,44 @@ export default function RoomCard({ room, matchedNames }) {
       {/* Hotel & Dates */}
       <div className="px-6 py-4 grid grid-cols-1 sm:grid-cols-3 gap-4 border-b border-slate-100">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-indigo-50 rounded-lg flex items-center justify-center shrink-0">
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-            </svg>
-          </div>
+          {mapLink ? (
+            <a
+              href={mapLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-8 h-8 bg-indigo-50 hover:bg-indigo-100 rounded-lg flex items-center justify-center shrink-0 transition-colors duration-200"
+              title="View on Google Maps"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </a>
+          ) : (
+            <div className="w-8 h-8 bg-indigo-50 rounded-lg flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </div>
+          )}
           <div>
             <p className="text-slate-400 text-xs font-medium uppercase tracking-wider">Hotel</p>
-            <p className="text-slate-800 font-semibold text-sm">{hotel || 'Not specified'}</p>
+            {mapLink ? (
+              <a
+                href={mapLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-indigo-600 hover:text-indigo-800 font-semibold text-sm inline-flex items-center gap-1 hover:underline group transition-all duration-200"
+                title="View on Google Maps"
+              >
+                <span>{hotel || 'Not specified'}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5 text-indigo-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            ) : (
+              <p className="text-slate-800 font-semibold text-sm">{hotel || 'Not specified'}</p>
+            )}
           </div>
         </div>
 
