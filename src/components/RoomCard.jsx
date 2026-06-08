@@ -7,7 +7,7 @@ import React from 'react';
  *   matchedNames - string[] of the names that were found in this room (to highlight)
  */
 export default function RoomCard({ room, matchedNames }) {
-  const { roomNo, hotel, acType, begin, end, devotees } = room;
+  const { roomNo, hotel, acType, begin, end, devotees, floor, cost, photos } = room;
   const hasRoomNo = roomNo && roomNo.toString().trim() !== '';
 
   // Normalised matched set for quick lookup
@@ -33,6 +33,33 @@ export default function RoomCard({ room, matchedNames }) {
   };
 
   const mapLink = getGMapLink(hotel);
+
+  // Helper to resolve distance from the hall
+  const getDistance = (hotelName) => {
+    if (!hotelName) return null;
+    const name = hotelName.toLowerCase();
+    if (name.includes('amrutha')) {
+      return '110 meters';
+    }
+    if (name.includes('brindavan') || name.includes('vrindavan')) {
+      return '90 meters';
+    }
+    if (name.includes('shivananda') || name.includes('sivananda')) {
+      return '350 meters';
+    }
+    return null;
+  };
+
+  const distance = getDistance(hotel);
+
+  const getFloorSuffix = (floorNum) => {
+    const n = parseInt(floorNum);
+    if (isNaN(n)) return '';
+    if (n === 1) return 'st';
+    if (n === 2) return 'nd';
+    if (n === 3) return 'rd';
+    return 'th';
+  };
 
   return (
     <div className="bg-white rounded-2xl shadow-lg border border-amber-100 overflow-hidden animate-fade-in hover:shadow-xl transition-all duration-300">
@@ -113,6 +140,14 @@ export default function RoomCard({ room, matchedNames }) {
             ) : (
               <p className="text-slate-800 font-semibold text-sm">{hotel || 'Not specified'}</p>
             )}
+            {distance && (
+              <p className="text-slate-500 text-xs mt-0.5 flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                </svg>
+                <span>{distance} from Hall</span>
+              </p>
+            )}
           </div>
         </div>
 
@@ -140,6 +175,66 @@ export default function RoomCard({ room, matchedNames }) {
           </div>
         </div>
       </div>
+
+      {/* Additional details: Floor, Cost, Photos */}
+      {(floor || cost || photos) && (
+        <div className="px-6 py-4 grid grid-cols-1 sm:grid-cols-3 gap-4 border-b border-slate-100 bg-slate-50/40 animate-fade-in">
+          {floor ? (
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-amber-50 rounded-lg flex items-center justify-center shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-slate-400 text-xs font-medium uppercase tracking-wider">Floor</p>
+                <p className="text-slate-800 font-semibold text-sm">
+                  {floor}{/^\d+$/.test(floor.trim()) ? getFloorSuffix(floor.trim()) : ''} Floor
+                </p>
+              </div>
+            </div>
+          ) : null}
+
+          {cost ? (
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-yellow-50 rounded-lg flex items-center justify-center shrink-0">
+                <span className="text-yellow-600 font-bold text-sm">₹</span>
+              </div>
+              <div>
+                <p className="text-slate-400 text-xs font-medium uppercase tracking-wider">Cost per Day</p>
+                <p className="text-slate-800 font-semibold text-sm">
+                  ₹{isNaN(cost) ? cost : Number(cost).toLocaleString('en-IN')}
+                </p>
+              </div>
+            </div>
+          ) : null}
+
+          {photos ? (
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-purple-50 rounded-lg flex items-center justify-center shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-slate-400 text-xs font-medium uppercase tracking-wider">Room Photos</p>
+                <a
+                  href={photos}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-purple-600 hover:text-purple-800 font-semibold text-sm inline-flex items-center gap-1 hover:underline group"
+                  title="View Room Photos"
+                >
+                  <span>View Photos</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 text-purple-500 group-hover:translate-x-0.5 transition-transform shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          ) : null}
+        </div>
+      )}
 
       {/* Roommates */}
       <div className="px-6 py-4">
@@ -177,6 +272,14 @@ export default function RoomCard({ room, matchedNames }) {
             );
           })}
         </div>
+      </div>
+
+      {/* Lift notice */}
+      <div className="bg-indigo-50/50 px-6 py-2.5 flex items-center gap-2 border-t border-slate-100 text-xs text-indigo-800">
+        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-indigo-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span><strong>Note:</strong> Devotees can use the lift in the Hotel.</span>
       </div>
     </div>
   );

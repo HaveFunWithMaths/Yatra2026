@@ -109,8 +109,11 @@ function findRooms(accomRows, individualNames) {
           roomNo: (row['Room No'] || row['Room Number'] || row['Room'] || '').toString().trim(),
           hotel: (row['Hotel'] || row['hotel'] || '').trim(),
           acType: (row['AC/Non AC'] || row['AC'] || row['Type'] || '').trim(),
-          begin: (row['Begin'] || row['Check In'] || row['From'] || '').trim(),
-          end: (row['End'] || row['Check Out'] || row['To'] || '').trim(),
+          begin: (row['Check-in'] || row['Check In'] || row['Begin'] || row['From'] || '').trim(),
+          end: (row['Check-out'] || row['Check Out'] || row['End'] || row['To'] || '').trim(),
+          floor: (row['Floor'] || '').toString().trim(),
+          cost: (row['Cost per Room per Day '] || row['Cost per Room per Day'] || row['Cost'] || '').toString().trim(),
+          photos: (row['Photos'] || row['Sample Photos'] || '').toString().trim(),
           devotees: devoteesInRow,
         },
         matchedNames: matched,
@@ -375,6 +378,50 @@ export default function Accommodation() {
                     Found <span className="font-bold">{roomResults.length}</span> room{roomResults.length !== 1 ? 's' : ''} for your group.
                     Your name{roomResults.flatMap(r => r.matchedNames).length > 1 ? 's are' : ' is'} highlighted below.
                   </p>
+                </div>
+
+                {/* Yatra Quick Reference Info */}
+                <div className="bg-white rounded-2xl shadow-md border border-amber-100 p-5 grid grid-cols-1 sm:grid-cols-2 gap-4 animate-fade-in">
+                  <div className="flex items-start gap-3">
+                    <div className="w-9 h-9 bg-emerald-50 rounded-xl flex items-center justify-center shrink-0 mt-0.5">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h4 className="text-slate-800 font-bold text-sm">Yatra Hall Location</h4>
+                      <p className="text-slate-500 text-xs mt-0.5">Main gathering & prasadam hall</p>
+                      <a
+                        href="https://maps.app.goo.gl/SCp7SALucDA5ELLc9"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-indigo-600 hover:text-indigo-800 text-xs font-semibold inline-flex items-center gap-1 hover:underline mt-1.5"
+                      >
+                        Open Hall in Google Maps →
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 border-t sm:border-t-0 sm:border-l border-slate-100 pt-3 sm:pt-0 sm:pl-4">
+                    <div className="w-9 h-9 bg-purple-50 rounded-xl flex items-center justify-center shrink-0 mt-0.5">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h4 className="text-slate-800 font-bold text-sm">Sample Rooms Picture</h4>
+                      <p className="text-slate-500 text-xs mt-0.5">View reference photos of rooms</p>
+                      <a
+                        href="https://docs.google.com/document/d/10lcnCl56xsLGMz2agLA9dk2ZvyEQNVdEm1R25EK28QE/edit?tab=t.0"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-indigo-600 hover:text-indigo-800 text-xs font-semibold inline-flex items-center gap-1 hover:underline mt-1.5"
+                      >
+                        View Sample Photos →
+                      </a>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Room Cards — one per unique room row */}
