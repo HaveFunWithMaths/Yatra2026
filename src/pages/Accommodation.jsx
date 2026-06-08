@@ -169,18 +169,18 @@ function AccommodationContent() {
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-2 sm:px-4 pt-5 sm:pt-10 pb-16 print:pt-4">
+      <main className="max-w-2xl mx-auto px-1 sm:px-4 pt-4 sm:pt-10 pb-16 print:pt-4">
 
         {/* Hero Section */}
-        <div className="text-center mb-5 sm:mb-8 animate-fade-in print:hidden">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 mb-2">Your Accommodation</h2>
-          <p className="text-slate-500 text-xs md:text-sm max-w-sm mx-auto leading-relaxed">
+        <div className="text-center mb-4 sm:mb-8 animate-fade-in print:hidden">
+          <h2 className="text-2xl sm:text-2xl md:text-3xl font-black text-slate-800 mb-2">Your Accommodation</h2>
+          <p className="text-slate-500 text-sm md:text-sm max-w-sm mx-auto leading-relaxed">
             Enter the phone number or email you used during registration to view your room assignment.
           </p>
         </div>
 
         {/* Search Card */}
-        <div className="card px-4 sm:px-6 py-5 sm:py-7 mb-5 animate-slide-up print:hidden">
+        <div className="card px-3 sm:px-6 py-4 sm:py-7 mb-4 animate-slide-up print:hidden">
           <label className="form-label font-bold text-xs uppercase tracking-wider text-slate-500" htmlFor="accom-search-input">
             Phone Number or Email Address
           </label>

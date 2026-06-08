@@ -90,7 +90,7 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
       )}
 
       {/* Hotel & Dates Info Grid */}
-      <div className="px-6 py-5 grid grid-cols-1 sm:grid-cols-3 gap-4 border-b border-slate-100">
+      <div className="px-3 sm:px-5 py-4 grid grid-cols-1 sm:grid-cols-3 gap-3 border-b border-slate-100">
         <div className="flex items-start gap-3">
           <div className="w-9 h-9 bg-indigo-50 rounded-xl flex items-center justify-center shrink-0 mt-0.5 print:bg-slate-100">
             <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -98,8 +98,8 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
             </svg>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Hotel</p>
-            <p className="text-slate-800 font-bold text-sm truncate">{hotel || 'Not specified'}</p>
+            <p className="text-slate-400 text-xs font-bold uppercase tracking-wider">Hotel</p>
+            <p className="text-slate-800 font-bold text-base truncate">{hotel || 'Not specified'}</p>
             {distance && (
               <p className="text-slate-500 text-xs mt-0.5 flex items-center gap-1">
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -133,7 +133,7 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
             </svg>
           </div>
           <div>
-            <p className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Check-In</p>
+            <p className="text-slate-400 text-xs font-bold uppercase tracking-wider">Check-In</p>
             <p className="text-slate-800 font-bold text-sm whitespace-pre-line leading-snug">{begin || '—'}</p>
           </div>
         </div>
@@ -145,14 +145,14 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
             </svg>
           </div>
           <div>
-            <p className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Check-Out</p>
+            <p className="text-slate-400 text-xs font-bold uppercase tracking-wider">Check-Out</p>
             <p className="text-slate-800 font-bold text-sm whitespace-pre-line leading-snug">{end || '—'}</p>
           </div>
         </div>
       </div>
 
       {/* Additional details: Floor, Cost, Room Type, Extra Bed, Days Rented, Bathroom */}
-      <div className="px-6 py-5 grid grid-cols-2 sm:grid-cols-3 gap-y-4 gap-x-6 border-b border-slate-100 bg-slate-50/40 text-slate-700">
+      <div className="px-3 sm:px-5 py-4 grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-4 border-b border-slate-100 bg-slate-50/40 text-slate-700">
         {/* Floor */}
         {floor ? (
           <div className="flex items-center gap-2.5">
@@ -162,8 +162,8 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
               </svg>
             </div>
             <div>
-              <p className="text-slate-400 text-[9px] font-bold uppercase tracking-wider leading-none">Floor</p>
-              <p className="text-slate-800 font-bold text-xs mt-0.5">
+              <p className="text-slate-400 text-xs font-bold uppercase tracking-wider leading-none">Floor</p>
+              <p className="text-slate-800 font-bold text-sm mt-0.5">
                 {floor}{/^\d+$/.test(floor.trim()) ? getFloorSuffix(floor.trim()) : ''} Floor
               </p>
             </div>
@@ -179,8 +179,8 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
               </svg>
             </div>
             <div>
-              <p className="text-slate-400 text-[9px] font-bold uppercase tracking-wider leading-none">Room Type</p>
-              <p className="text-slate-800 font-bold text-xs capitalize mt-0.5">{roomType}</p>
+              <p className="text-slate-400 text-xs font-bold uppercase tracking-wider leading-none">Room Type</p>
+              <p className="text-slate-800 font-bold text-sm capitalize mt-0.5">{roomType}</p>
             </div>
           </div>
         ) : null}
@@ -193,8 +193,8 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
             </svg>
           </div>
           <div>
-            <p className="text-slate-400 text-[9px] font-bold uppercase tracking-wider leading-none">Bathroom</p>
-            <p className="text-slate-800 font-bold text-xs mt-0.5">Western</p>
+            <p className="text-slate-400 text-xs font-bold uppercase tracking-wider leading-none">Bathroom</p>
+            <p className="text-slate-800 font-bold text-sm mt-0.5">Western</p>
           </div>
         </div>
 
@@ -205,8 +205,8 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
               <span className="text-emerald-600 font-extrabold text-xs">₹</span>
             </div>
             <div>
-              <p className="text-slate-400 text-[9px] font-bold uppercase tracking-wider leading-none">Cost per Day</p>
-              <p className="text-slate-800 font-bold text-xs mt-0.5">
+              <p className="text-slate-400 text-xs font-bold uppercase tracking-wider leading-none">Cost per Day</p>
+              <p className="text-slate-800 font-bold text-sm mt-0.5">
                 ₹{isNaN(cost) ? cost : Number(cost).toLocaleString('en-IN')}
               </p>
             </div>
@@ -222,8 +222,8 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
               </svg>
             </div>
             <div>
-              <p className="text-slate-400 text-[9px] font-bold uppercase tracking-wider leading-none">Days Rented</p>
-              <p className="text-slate-800 font-bold text-xs mt-0.5">
+              <p className="text-slate-400 text-xs font-bold uppercase tracking-wider leading-none">Days Rented</p>
+              <p className="text-slate-800 font-bold text-sm mt-0.5">
                 {daysRented} Day{parseInt(daysRented) !== 1 ? 's' : ''}
               </p>
             </div>
@@ -239,16 +239,16 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
               </svg>
             </div>
             <div>
-              <p className="text-slate-400 text-[9px] font-bold uppercase tracking-wider leading-none">Extra Bed</p>
-              <p className="text-slate-800 font-bold text-xs capitalize mt-0.5">{extraBed}</p>
+              <p className="text-slate-400 text-xs font-bold uppercase tracking-wider leading-none">Extra Bed</p>
+              <p className="text-slate-800 font-bold text-sm capitalize mt-0.5">{extraBed}</p>
             </div>
           </div>
         ) : null}
       </div>
 
       {/* Roommates */}
-      <div className="px-6 py-5">
-        <h4 className="text-slate-400 text-[10px] font-bold uppercase tracking-wider mb-3 leading-none">
+      <div className="px-3 sm:px-5 py-4">
+        <h4 className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-3 leading-none">
           Your Roommates · {devotees.filter(Boolean).length} People
         </h4>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
