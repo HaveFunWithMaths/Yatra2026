@@ -111,6 +111,7 @@ function processSubmission(data) {
   
   // Handle File Upload to Drive
   let paymentLink = '';
+  let rawFileUrl = '';
   if (data.paymentFile && data.paymentFile.data) {
     logToSheet('[upload] Starting file upload to Drive');
     logToSheet('[upload] File name: ' + data.paymentFile.name);
@@ -147,6 +148,7 @@ function processSubmission(data) {
       
       var file = folder.createFile(blob);
       paymentLink = `=HYPERLINK("${file.getUrl()}", "Payment Link")`;
+      rawFileUrl = file.getUrl();
       logToSheet('[upload] File uploaded successfully, URL: ' + file.getUrl());
     } catch (uploadErr) {
       logToSheet('[upload] ERROR: ' + uploadErr.toString());
@@ -286,6 +288,9 @@ function processSubmission(data) {
   if (rowsAdded > 0) {
     sheet.getRange(startRow, 1, rowsAdded, 17).setBorder(true, true, true, true, true, true);
   }
+  
+  // Send automated email notification
+  sendRegistrationEmail(data, timestamp, rawFileUrl);
   
   return { rowsAdded, startRow };
 }
@@ -582,6 +587,83 @@ function doGet(e) {
       .setMimeType(ContentService.MimeType.JSON);
   } catch (err) {
     return ContentService.createTextOutput(JSON.stringify({ error: err.toString() })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+/**
+ * Send an automated email notification with registration details
+ */
+function sendRegistrationEmail(data, timestamp, rawFileUrl) {
+  try {
+    const devotee = data.devotee;
+    const isAlone = data.alone === true;
+    const family = data.family || [];
+    
+    let emailBody = '<div style="font-family: Arial, sans-serif; max-width: 600px; color: #333; line-height: 1.6; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">';
+    // Header
+    emailBody += '<div style="background-color: #4f46e5; color: white; padding: 20px; text-align: center;">';
+    emailBody += '<h2 style="margin: 0; font-size: 20px;">GNH Yatra 2026 - New Registration</h2>';
+    emailBody += '</div>';
+    
+    // Main content
+    emailBody += '<div style="padding: 20px;">';
+    emailBody += '<h3 style="color: #4f46e5; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-top: 0;">Devotee (Group Leader) Details</h3>';
+    emailBody += '<table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">';
+    emailBody += `<tr><td style="padding: 6px 0; font-weight: bold; width: 150px;">Name:</td><td style="padding: 6px 0;">${devotee.name}</td></tr>`;
+    emailBody += `<tr><td style="padding: 6px 0; font-weight: bold;">WhatsApp Number:</td><td style="padding: 6px 0;">${devotee.whatsapp}</td></tr>`;
+    emailBody += `<tr><td style="padding: 6px 0; font-weight: bold;">Email:</td><td style="padding: 6px 0;"><a href="mailto:${devotee.email}" style="color: #4f46e5;">${devotee.email}</a></td></tr>`;
+    emailBody += `<tr><td style="padding: 6px 0; font-weight: bold;">Age / Gender:</td><td style="padding: 6px 0;">${devotee.age} / ${devotee.gender}</td></tr>`;
+    emailBody += `<tr><td style="padding: 6px 0; font-weight: bold;">Prasadam:</td><td style="padding: 6px 0;">${devotee.prasadPreference}</td></tr>`;
+    emailBody += `<tr><td style="padding: 6px 0; font-weight: bold;">Languages:</td><td style="padding: 6px 0;">${devotee.languages}</td></tr>`;
+    emailBody += `<tr><td style="padding: 6px 0; font-weight: bold;">Accommodation:</td><td style="padding: 6px 0;">${devotee.accommodation || 'None'}</td></tr>`;
+    emailBody += `<tr><td style="padding: 6px 0; font-weight: bold;">Concerns:</td><td style="padding: 6px 0;">${devotee.concerns || 'None'}</td></tr>`;
+    emailBody += `<tr><td style="padding: 6px 0; font-weight: bold;">Timestamp:</td><td style="padding: 6px 0;">${timestamp}</td></tr>`;
+    if (rawFileUrl) {
+      emailBody += `<tr><td style="padding: 6px 0; font-weight: bold;">Payment Link:</td><td style="padding: 6px 0;"><a href="${rawFileUrl}" style="color: #4f46e5; text-decoration: underline; font-weight: bold;" target="_blank">View Payment Screenshot</a></td></tr>`;
+    } else {
+      emailBody += `<tr><td style="padding: 6px 0; font-weight: bold;">Payment Link:</td><td style="padding: 6px 0; color: #ef4444; font-style: italic;">No payment file uploaded</td></tr>`;
+    }
+    emailBody += '</table>';
+    
+    // Family members
+    if (!isAlone && family.length > 0) {
+      emailBody += '<h3 style="color: #4f46e5; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-top: 20px;">Family / Group Members (' + family.length + ')</h3>';
+      family.forEach((member, index) => {
+        emailBody += `<div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; margin-bottom: 12px;">`;
+        emailBody += `<h4 style="margin: 0 0 8px 0; color: #1e293b;">Member #${index + 1}: ${member.name}</h4>`;
+        emailBody += '<table style="width: 100%; border-collapse: collapse; font-size: 13px;">';
+        emailBody += `<tr><td style="padding: 4px 0; font-weight: bold; width: 150px;">Age / Gender:</td><td style="padding: 4px 0;">${member.age} / ${member.gender}</td></tr>`;
+        emailBody += `<tr><td style="padding: 4px 0; font-weight: bold;">Relationship:</td><td style="padding: 4px 0;">${member.relationship || 'N/A'}</td></tr>`;
+        emailBody += `<tr><td style="padding: 4px 0; font-weight: bold;">Prasadam:</td><td style="padding: 4px 0;">${member.prasadPreference || 'N/A'}</td></tr>`;
+        emailBody += `<tr><td style="padding: 4px 0; font-weight: bold;">Languages:</td><td style="padding: 4px 0;">${member.languages || 'N/A'}</td></tr>`;
+        emailBody += `<tr><td style="padding: 4px 0; font-weight: bold;">Accommodation:</td><td style="padding: 4px 0;">${member.accommodation || 'N/A'}</td></tr>`;
+        emailBody += `<tr><td style="padding: 4px 0; font-weight: bold;">Seating / Chanting:</td><td style="padding: 4px 0;">${member.seating || 'N/A'} / Chants ${member.chanting || '0'} rounds</td></tr>`;
+        emailBody += `<tr><td style="padding: 4px 0; font-weight: bold;">Spiritual Status:</td><td style="padding: 4px 0;">${member.spiritualStatus || 'N/A'}</td></tr>`;
+        emailBody += '</table>';
+        emailBody += '</div>';
+      });
+    }
+    
+    emailBody += '</div>'; // End padding
+    emailBody += '<div style="background-color: #f1f5f9; padding: 12px; text-align: center; font-size: 11px; color: #64748b; border-top: 1px solid #e2e8f0;">';
+    emailBody += 'This is an automated email from the GNH Yatra 2026 Registration Portal.';
+    emailBody += '</div>';
+    emailBody += '</div>'; // End container
+    
+    // Send email to both recipients
+    const recipients = 'nayakgopal1998@gmail.com, krishnakishore.julakanti@gmail.com';
+    const subject = `GNH Yatra 2026: New Registration - ${devotee.name} (${isAlone ? 'Solo' : 'Group of ' + (family.length + 1)})`;
+    
+    logToSheet('[email] Sending registration email to: ' + recipients);
+    MailApp.sendEmail({
+      to: recipients,
+      subject: subject,
+      htmlBody: emailBody
+    });
+    logToSheet('[email] Email sent successfully');
+  } catch (emailErr) {
+    logToSheet('[email] ERROR sending email: ' + emailErr.toString());
+    logToSheet('[email] ERROR stack: ' + emailErr.stack);
   }
 }
 

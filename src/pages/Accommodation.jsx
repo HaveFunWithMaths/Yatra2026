@@ -160,7 +160,7 @@ function AccommodationContent() {
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-1 sm:px-4 pt-4 sm:pt-10 pb-16 print:pt-4">
+      <main className="max-w-2xl mx-auto px-0 sm:px-4 pt-4 sm:pt-10 pb-16 print:pt-4">
 
         {/* Hero Section */}
         <div className="text-center mb-4 sm:mb-8 animate-fade-in print:hidden">
@@ -171,7 +171,7 @@ function AccommodationContent() {
         </div>
 
         {/* Search Card */}
-        <div className="card px-3 sm:px-6 py-4 sm:py-7 mb-4 animate-slide-up print:hidden">
+        <div className="card mx-2 sm:mx-0 px-3 sm:px-6 py-4 sm:py-7 mb-4 animate-slide-up print:hidden">
           <label className="form-label font-bold text-xs uppercase tracking-wider text-slate-500" htmlFor="accom-search-input">
             Phone Number or Email Address
           </label>
@@ -221,7 +221,7 @@ function AccommodationContent() {
 
         {/* Shimmer Loading Skeleton */}
         {loading && (
-          <div className="space-y-6">
+          <div className="space-y-6 mx-2 sm:mx-0">
             <div className="flex justify-between items-center mb-1">
               <div className="w-48 h-6 bg-slate-200 rounded-lg skeleton-shimmer"></div>
               <div className="w-24 h-8 bg-slate-200 rounded-lg skeleton-shimmer"></div>
@@ -253,7 +253,7 @@ function AccommodationContent() {
 
             {/* Not registered */}
             {notFound && (
-              <div className="card px-6 py-8 text-center print:border print:border-slate-300">
+              <div className="card mx-2 sm:mx-0 px-6 py-8 text-center print:border print:border-slate-300">
                 <div className="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -272,7 +272,7 @@ function AccommodationContent() {
 
             {/* Registered but no room yet */}
             {!notFound && noRoomsYet && (
-              <div className="space-y-4">
+              <div className="space-y-4 mx-2 sm:mx-0">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-1">
                   <div>
                     <p className="text-[10px] text-slate-500 uppercase tracking-widest font-black">Found registration for</p>
@@ -309,7 +309,7 @@ function AccommodationContent() {
             {!notFound && roomResults.length > 0 && (
               <div className="space-y-6">
                 {/* Result Header */}
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-3 mx-2 sm:mx-0">
                   <div>
                     <p className="text-[10px] text-slate-500 uppercase tracking-widest font-black">Accommodation for</p>
                     <h3 className="text-xl sm:text-2xl font-black text-slate-800 leading-tight">{devoteeName}'s Group</h3>
@@ -339,7 +339,7 @@ function AccommodationContent() {
                 </div>
 
                 {/* Summary badge */}
-                <div className="bg-indigo-50 border border-indigo-100 rounded-2xl px-4 py-3.5 flex items-start gap-3 print:hidden">
+                <div className="bg-indigo-50 border border-indigo-100 rounded-2xl px-4 py-3.5 flex items-start gap-3 mx-2 sm:mx-0 print:hidden">
                   <div className="w-8 h-8 bg-indigo-600 rounded-xl flex items-center justify-center shrink-0 shadow-md shadow-indigo-600/20 mt-0.5">
                     <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -356,7 +356,7 @@ function AccommodationContent() {
                 </div>
 
                 {/* Yatra Quick Reference Info Box - Warm gold gradient decoration */}
-                <div className="bg-gradient-to-br from-amber-50/90 via-orange-50/50 to-amber-50/30 rounded-2xl shadow-md border border-amber-200/60 p-5 space-y-4 print:border-slate-300">
+                <div className="bg-gradient-to-br from-amber-50/90 via-orange-50/50 to-amber-50/30 rounded-2xl shadow-md border border-amber-200/60 p-5 space-y-4 mx-2 sm:mx-0 print:border-slate-300">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="flex items-start gap-3">
                       <div className="w-10 h-10 bg-emerald-100 rounded-2xl flex items-center justify-center shrink-0 mt-0.5 shadow-sm border border-emerald-200/50">
@@ -414,7 +414,7 @@ function AccommodationContent() {
 
                 {/* General notices — shown below room cards, no icon */}
                 {NOTICES.length > 0 && (
-                  <div className="space-y-1.5">
+                  <div className="space-y-1.5 mx-2 sm:mx-0">
                     {NOTICES.map((notice, nIdx) => (
                       <p key={nIdx} className="text-center text-xs text-slate-400 font-medium">
                         {notice}
@@ -422,6 +422,13 @@ function AccommodationContent() {
                     ))}
                   </div>
                 )}
+
+                {/* Important Warning Notice */}
+                <div className="bg-amber-50 border border-amber-200/80 rounded-2xl p-4 text-center shadow-sm mx-2 sm:mx-0 print:border-slate-300 animate-fade-in">
+                  <p className="text-amber-800 text-sm font-black leading-relaxed">
+                    ⚠️ These details may change. Please recheck this site before checking in.
+                  </p>
+                </div>
 
               </div>
             )}

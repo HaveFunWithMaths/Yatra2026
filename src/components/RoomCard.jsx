@@ -1,6 +1,16 @@
 import React from 'react';
 import { resolveHotelConfig } from '../utils/hotelConfig';
 
+const formatHotelName = (hotelName) => {
+  if (!hotelName) return 'Not specified';
+  const trimmed = hotelName.trim();
+  const lower = trimmed.toLowerCase();
+  if (lower === 'amrutha') return 'Amrutha Residency';
+  if (lower === 'brindavan' || lower === 'vrindavan') return 'Brindavan Residency';
+  if (lower === 'shivananda' || lower === 'sivananda') return 'Hotel Shivananda';
+  return trimmed;
+};
+
 /**
  * RoomCard
  * Props:
@@ -33,7 +43,7 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
 
   return (
     <div
-      className="bg-white rounded-2xl shadow-lg border border-amber-100/70 overflow-hidden animate-fade-in hover:shadow-xl transition-all duration-300 relative print:shadow-none print:border-slate-300"
+      className="bg-white rounded-none sm:rounded-2xl shadow-lg border-y sm:border border-amber-100/70 overflow-hidden animate-fade-in hover:shadow-xl transition-all duration-300 relative print:shadow-none print:border-slate-300"
       style={{ animationDelay: `${index * 150}ms`, animationFillMode: 'both' }}
     >
       {/* Premium Card Header */}
@@ -99,7 +109,7 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-slate-400 text-xs font-bold uppercase tracking-wider">Hotel</p>
-            <p className="text-slate-800 font-bold text-base truncate">{hotel || 'Not specified'}</p>
+            <p className="text-slate-800 font-bold text-base truncate">{formatHotelName(hotel)}</p>
             {distance && (
               <p className="text-slate-500 text-xs mt-0.5 flex items-center gap-1">
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
