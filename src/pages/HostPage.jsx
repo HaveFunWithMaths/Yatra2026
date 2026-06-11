@@ -7,19 +7,19 @@ function HostPage() {
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
   return (
-    <div className="min-h-screen pb-12">
+    <div className="min-h-screen flex flex-col">
       {/* Header */}
       <Header />
 
       {/* Main Content */}
-      <main className="pt-24 px-4 flex items-center justify-center min-h-[calc(100vh-6rem)]">
-        <div className="max-w-xl w-full mx-auto animate-slide-up">
+      <main className="flex-grow pt-20 pb-8 px-4 flex flex-col items-center justify-start sm:justify-center">
+        <div className="max-w-xl w-full mx-auto my-auto animate-slide-up">
           {/* Card */}
           <div className="card shadow-2xl border border-white/40 overflow-hidden bg-white/95 backdrop-blur-md rounded-2xl">
 
             {/* Top Banner Images */}
             <div className="relative">
-              <div className="h-44 md:h-52 overflow-hidden">
+              <div className="h-40 sm:h-44 md:h-52 overflow-hidden">
                 <img
                   src="/assets/Hanuman.jpeg"
                   alt="GNH Yatra Hanuman"
@@ -29,32 +29,32 @@ function HostPage() {
               </div>
 
               {/* Overlay Badge/Title */}
-              <div className="absolute bottom-4 left-6 right-6 text-white">
-                <span className="bg-amber-500/90 text-amber-950 text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full backdrop-blur-sm">
+              <div className="absolute bottom-4 left-4 right-4 sm:left-6 sm:right-6 text-white">
+                <span className="bg-amber-500/90 text-amber-950 text-xs font-bold uppercase tracking-wider px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full backdrop-blur-sm">
                   GNH Community Yatra 2026
                 </span>
-                <h2 className="text-2xl md:text-3xl font-extrabold mt-2 drop-shadow-md">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold mt-1.5 sm:mt-2 drop-shadow-md">
                   Hampi Yatra Registration
                 </h2>
               </div>
             </div>
 
             {/* Content Body */}
-            <div className="p-8 text-center">
-              <div className="flex justify-center mb-6">
-                <div className="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center border border-amber-100 shadow-inner">
-                  <svg className="w-8 h-8 text-amber-600 animate-pulse-soft" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+            <div className="p-6 sm:p-8 text-center">
+              <div className="flex justify-center mb-4 sm:mb-6">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-amber-50 rounded-full flex items-center justify-center border border-amber-100 shadow-inner">
+                  <svg className="w-7 h-7 sm:w-8 sm:h-8 text-amber-600 animate-pulse-soft" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                 </div>
               </div>
 
-              <h3 className="text-xl font-bold text-slate-800 mb-4">
+              <h3 className="text-lg sm:text-xl font-bold text-slate-800 mb-3 sm:mb-4">
                 Hare Krishna! 🙏
               </h3>
 
-              <p className="text-slate-600 text-base md:text-lg leading-relaxed mb-6">
+              <p className="text-slate-600 text-sm sm:text-base md:text-lg leading-relaxed mb-4 sm:mb-6">
                 To register for <span className="font-semibold text-slate-800">GNH Hampi Yatra</span>, please contact
                 <br />
                 <span className="font-bold text-indigo-600">Krishna Kishore Prabhu</span> at{' '}
@@ -63,15 +63,15 @@ function HostPage() {
                   className="inline-flex items-center gap-1.5 font-extrabold text-emerald-600 hover:text-emerald-700 underline decoration-2 underline-offset-4 hover:scale-105 transition-transform duration-200"
                   title="Contact via WhatsApp"
                 >
-                  +91 78938994239
+                  +91 7893894239
                 </a>
               </p>
 
               {/* Action Button */}
-              <div className="mt-8">
+              <div className="mt-6 sm:mt-8">
                 <a
                   href={whatsappUrl}
-                  className="inline-flex items-center justify-center gap-3 w-full sm:w-auto px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg shadow-emerald-600/30 hover:shadow-xl hover:shadow-emerald-600/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
+                  className="inline-flex items-center justify-center gap-2.5 w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg shadow-emerald-600/30 hover:shadow-xl hover:shadow-emerald-600/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
                 >
                   <svg
                     className="w-6 h-6 fill-current"
