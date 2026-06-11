@@ -650,8 +650,8 @@ function sendRegistrationEmail(data, timestamp, rawFileUrl) {
     emailBody += '</div>';
     emailBody += '</div>'; // End container
     
-    // Send email to both recipients
-    const recipients = 'nayakgopal1998@gmail.com, krishnakishore.julakanti@gmail.com';
+    // Send email to all recipients
+    const recipients = 'nayakgopal1998@gmail.com, krishnakishore.julakanti@gmail.com, kondaakash012004@gmail.com, ssvarun100@gmail.com, maheedharcherukuri@gmail.com';
     const subject = `GNH Yatra 2026: New Registration - ${devotee.name} (${isAlone ? 'Solo' : 'Group of ' + (family.length + 1)})`;
     
     logToSheet('[email] Sending registration email to: ' + recipients);
