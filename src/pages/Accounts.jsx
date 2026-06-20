@@ -42,13 +42,13 @@ function AccountsContent() {
       ]);
 
       const regParsed = Papa.parse(regText, { header: true, skipEmptyLines: true });
-      
+
       // Clean Accounts CSV by skipping the first line
       const firstNewlineIndex = accountsRawText.indexOf('\n');
-      const cleanedAccountsText = firstNewlineIndex !== -1 
-        ? accountsRawText.substring(firstNewlineIndex + 1) 
+      const cleanedAccountsText = firstNewlineIndex !== -1
+        ? accountsRawText.substring(firstNewlineIndex + 1)
         : accountsRawText;
-        
+
       const accountsParsed = Papa.parse(cleanedAccountsText, { header: true, skipEmptyLines: true });
 
       const regRows = regParsed.data;
@@ -97,7 +97,7 @@ function AccountsContent() {
 
       setDevoteeName(targetDevoteeName);
       setAccountResults(matchedRows);
-      
+
       // Save valid lookup in localStorage
       localStorage.setItem('gnh_yatra_accom_input', term);
       setSearched(true);
@@ -139,7 +139,7 @@ function AccountsContent() {
     setDevoteeName('');
     setError('');
     localStorage.removeItem('gnh_yatra_accom_input');
-    
+
     // Clear query parameter from browser history
     const url = new URL(window.location);
     url.searchParams.delete('q');
@@ -176,15 +176,19 @@ function AccountsContent() {
 
   return (
     <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #fdf6ec 0%, #f5f0ff 50%, #ecf0ff 100%)' }}>
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-40 border-b border-amber-100 print:hidden">
+      {/* Header — Accounts accent: Emerald/Teal */}
+      <header className="bg-white/85 backdrop-blur-md shadow-sm sticky top-0 z-40 print:hidden" style={{ borderBottom: '1px solid rgba(16,185,129,0.15)' }}>
+        {/* Animated gradient accent line at top */}
+        <div className="h-0.5 bg-gradient-to-r from-emerald-400 via-teal-500 to-emerald-400" style={{ backgroundSize: '200% 100%', animation: 'headerGradient 4s ease infinite' }} />
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-center gap-3">
           <img src="/assets/GNHLogo.png" alt="GNH Logo" className="h-8 w-auto shrink-0" />
           <div className="text-center">
             <h1 className="text-base md:text-xl font-black text-slate-800 leading-none">
               GNH Yatra 2026
             </h1>
-            <p className="text-[10px] md:text-xs text-amber-600 font-bold tracking-wider mt-0.5 uppercase">Accounts Lookup</p>
+            <p className="text-[10px] md:text-xs font-bold tracking-wider mt-0.5 uppercase flex items-center justify-center gap-1" style={{ color: '#059669' }}>
+              <span>💰</span> Accounts Lookup
+            </p>
           </div>
         </div>
       </header>
@@ -194,14 +198,14 @@ function AccountsContent() {
         {/* Hero Section */}
         <div className="text-center mb-4 sm:mb-8 animate-fade-in print:hidden">
           <h2 className="text-2xl sm:text-2xl md:text-3xl font-black text-slate-800 mb-2">Your Accounts</h2>
-          <p className="text-slate-500 text-sm md:text-sm max-w-sm mx-auto leading-relaxed">
+          <p className="text-slate-500 text-base max-w-sm mx-auto leading-relaxed">
             Enter the phone number or email you used during registration to view your payment details.
           </p>
         </div>
 
         {/* Search Card */}
         <div className="card mx-2 sm:mx-0 px-3 sm:px-6 py-4 sm:py-7 mb-4 animate-slide-up print:hidden">
-          <label className="form-label font-bold text-xs uppercase tracking-wider text-slate-500" htmlFor="accom-search-input">
+          <label className="form-label font-bold text-sm uppercase tracking-wider text-slate-500" htmlFor="accom-search-input">
             Phone Number or Email Address
           </label>
           <div className="flex flex-col sm:flex-row gap-3">
@@ -221,7 +225,7 @@ function AccountsContent() {
               id="accom-search-btn"
               onClick={() => handleSearch(input)}
               disabled={loading || !input.trim()}
-              className="btn-primary whitespace-nowrap flex items-center justify-center gap-2 px-5 py-3 sm:py-2"
+              className="btn-primary w-full sm:w-auto whitespace-nowrap flex items-center justify-center gap-2 px-5 py-3 sm:py-2 text-base"
             >
               {loading ? (
                 <>
@@ -239,12 +243,12 @@ function AccountsContent() {
             </button>
           </div>
           {error && (
-            <p className="mt-2.5 text-xs text-red-600 font-bold flex items-center gap-1.5 animate-fade-in">
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="mt-2.5 flex items-center gap-2 bg-red-50 border border-red-200 rounded-lg px-3 py-2 animate-fade-in">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-red-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              {error}
-            </p>
+              <p className="text-sm text-red-600 font-bold">{error}</p>
+            </div>
           )}
         </div>
 
@@ -317,32 +321,36 @@ function AccountsContent() {
                   </div>
                 </div>
 
-                {/* KPI Summary Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mx-2 sm:mx-0 print:border print:border-slate-200 print:rounded-2xl print:p-4">
-                  <div className="bg-gradient-to-br from-indigo-50 to-indigo-100/50 border border-indigo-100 rounded-2xl p-5 shadow-sm">
-                    <p className="text-[10px] text-indigo-600 uppercase tracking-widest font-black">Group Leader</p>
-                    <p className="text-lg font-black text-slate-800 mt-1 truncate" title={devoteeName}>{devoteeName}</p>
+                {/* KPI Summary Cards — Row 1: Group Leader full-width, Row 2: Paid + Pending side-by-side */}
+                <div className="grid grid-cols-2 gap-3 mx-2 sm:mx-0 print:border print:border-slate-200 print:rounded-2xl print:p-4">
+                  {/* Row 1: Group Leader spans both columns */}
+                  <div className="col-span-2 bg-gradient-to-br from-indigo-50 to-indigo-100/50 border border-indigo-100 rounded-2xl p-4 sm:p-5 shadow-sm">
+                    <p className="text-[10px] text-indigo-500 uppercase tracking-widest font-black mb-1">Group Leader</p>
+                    <p className="text-xl sm:text-2xl font-black text-slate-800 truncate leading-tight" title={devoteeName}>{devoteeName}</p>
                   </div>
-                  <div className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-100 rounded-2xl p-5 shadow-sm">
-                    <p className="text-[10px] text-emerald-600 uppercase tracking-widest font-black">Total Paid (1st Inst.)</p>
-                    <p className="text-lg font-black text-slate-800 mt-1">₹{totalPaid.toLocaleString('en-IN')}</p>
+                  {/* Row 2: Paid */}
+                  <div className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-100 rounded-2xl p-4 sm:p-5 shadow-sm">
+                    <p className="text-[10px] text-emerald-600 uppercase tracking-widest font-black mb-1">Total Paid</p>
+                    <p className="text-2xl font-black text-slate-800">₹{totalPaid.toLocaleString('en-IN')}</p>
+                    <p className="text-[10px] text-emerald-500 font-semibold mt-0.5">1st Installment</p>
                   </div>
-                  <div className="bg-gradient-to-br from-rose-50 to-rose-100/50 border border-rose-100 rounded-2xl p-5 shadow-sm">
-                    <p className="text-[10px] text-rose-600 uppercase tracking-widest font-black">Total Pending</p>
-                    <p className="text-lg font-black text-rose-600 mt-1">₹{totalPending.toLocaleString('en-IN')}</p>
+                  {/* Row 2: Pending */}
+                  <div className="bg-gradient-to-br from-rose-50 to-rose-100/50 border border-rose-100 rounded-2xl p-4 sm:p-5 shadow-sm">
+                    <p className="text-[10px] text-rose-600 uppercase tracking-widest font-black mb-1">Total Pending</p>
+                    <p className="text-2xl font-black text-rose-600">₹{totalPending.toLocaleString('en-IN')}</p>
+                    <p className="text-[10px] text-rose-400 font-semibold mt-0.5">Balance due</p>
                   </div>
                 </div>
 
-                {/* Accounts Table */}
                 <div className="mx-2 sm:mx-0 overflow-hidden rounded-2xl border border-slate-100 shadow-lg bg-white/95 backdrop-blur-md animate-slide-up print:shadow-none print:border-slate-300">
                   <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                       <thead>
                         <tr className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white text-xs uppercase tracking-wider">
-                          <th className="px-3 sm:px-6 py-4 font-black">Name</th>
-                          <th className="px-3 sm:px-6 py-4 font-black">Room</th>
-                          <th className="px-3 sm:px-6 py-4 font-black text-right">Paid</th>
-                          <th className="px-3 sm:px-6 py-4 font-black text-right">Pending</th>
+                          <th className="px-3 sm:px-5 py-4 font-black">Name</th>
+                          <th className="px-3 sm:px-5 py-4 font-black">Room</th>
+                          <th className="px-3 sm:px-5 py-4 font-black text-right">Paid</th>
+                          <th className="px-3 sm:px-5 py-4 font-black text-right">Pending</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100">
@@ -352,33 +360,37 @@ function AccountsContent() {
                           const inst = parseFloat(row['1st Installment']) || 0;
                           const pend = parseFloat(row['Pending']) || 0;
                           return (
-                            <tr key={idx} className="hover:bg-indigo-50/10 transition-colors">
-                              <td className="px-3 sm:px-6 py-4 font-bold text-slate-800 text-sm">{name}</td>
-                              <td className="px-3 sm:px-6 py-4">
-                                <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs font-bold ${
-                                  room.toLowerCase().includes('non ac')
-                                    ? 'bg-amber-100 text-amber-800 border border-amber-200/50'
-                                    : 'bg-indigo-100 text-indigo-800 border border-indigo-200/50'
+                            <tr key={idx} className={`transition-colors hover:bg-indigo-50/20 ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
+                              <td className="px-3 sm:px-5 py-3.5 font-bold text-slate-800 text-sm">{name}</td>
+                              <td className="px-3 sm:px-5 py-3.5">
+                                <span className={`inline-flex items-center px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-xs font-bold ${
+                                  room.toLowerCase().includes('non ac') || room.toLowerCase().includes('non-ac')
+                                    ? 'bg-amber-100 text-amber-800 border border-amber-200/60'
+                                    : 'bg-indigo-100 text-indigo-800 border border-indigo-200/60'
                                 }`}>
                                   {room}
                                 </span>
                               </td>
-                              <td className="px-3 sm:px-6 py-4 text-right font-semibold text-slate-700 text-sm">
+                              <td className="px-3 sm:px-5 py-3.5 text-right font-semibold text-emerald-700 text-sm">
                                 ₹{inst.toLocaleString('en-IN')}
                               </td>
-                              <td className="px-3 sm:px-6 py-4 text-right font-black text-slate-900 text-sm">
-                                ₹{pend.toLocaleString('en-IN')}
+                              <td className={`px-3 sm:px-5 py-3.5 text-right font-black text-sm ${
+                                pend > 0 ? 'text-rose-600' : 'text-emerald-600'
+                              }`}>
+                                {pend > 0 ? '₹' + pend.toLocaleString('en-IN') : '✓ Cleared'}
                               </td>
                             </tr>
                           );
                         })}
                         {/* Total Pending Row - Highlighted */}
-                        <tr className="bg-gradient-to-r from-rose-50 to-rose-100/60 font-bold border-t-2 border-rose-300">
-                          <td colSpan="3" className="px-3 sm:px-6 py-4 text-right text-rose-900 font-extrabold uppercase tracking-wider text-xs">
-                            Total Pending Amount
+                        <tr className="bg-gradient-to-r from-rose-50 to-rose-100/60 font-bold border-t-2 border-rose-200">
+                          <td colSpan="3" className="px-3 sm:px-5 py-4 text-right text-rose-900 font-extrabold uppercase tracking-wider text-xs">
+                            Total Pending
                           </td>
-                          <td className="px-3 sm:px-6 py-4 text-right text-rose-700 font-black text-lg">
-                            ₹{totalPending.toLocaleString('en-IN')}
+                          <td className={`px-3 sm:px-5 py-4 text-right font-black text-lg ${
+                            totalPending > 0 ? 'text-rose-700' : 'text-emerald-600'
+                          }`}>
+                            {totalPending > 0 ? '₹' + totalPending.toLocaleString('en-IN') : '✓ All Clear'}
                           </td>
                         </tr>
                       </tbody>
@@ -399,8 +411,17 @@ function AccountsContent() {
         )}
 
         {/* Footer */}
-        <footer className="text-center text-slate-400 text-xs mt-12 print:mt-6 pb-20">
-          <p>© 2026 GNH Community · For help/clarification regarding Accounts, contact <strong className="text-slate-500 font-bold">Gopalkrishna Prabhu at <a href="tel:8277487290" className="hover:underline">8277487290</a></strong></p>
+        <footer className="text-center text-slate-400 text-sm mt-12 print:mt-6 pb-20">
+          <p className="mt-1">For clarification regarding Accounts, contact <strong className="text-slate-600">Gopal Prabhu</strong></p>
+          <a
+            href="tel:8277487290"
+            className="inline-flex items-center gap-1.5 mt-2 bg-emerald-50 text-emerald-700 border border-emerald-200 px-4 py-1.5 rounded-full font-bold text-sm hover:bg-emerald-100 transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            </svg>
+            8277487290
+          </a>
         </footer>
       </main>
       <BottomNavigation currentSearchTerm={input} />

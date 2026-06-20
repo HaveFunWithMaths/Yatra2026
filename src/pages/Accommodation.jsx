@@ -59,7 +59,7 @@ function AccommodationContent() {
       }
 
       setDevoteeName(groupResult.devoteeName);
-      
+
       // Save valid lookup in localStorage
       localStorage.setItem('gnh_yatra_accom_input', term);
 
@@ -114,7 +114,7 @@ function AccommodationContent() {
     setDevoteeName('');
     setError('');
     localStorage.removeItem('gnh_yatra_accom_input');
-    
+
     // Clear query parameter from browser history
     const url = new URL(window.location);
     url.searchParams.delete('q');
@@ -148,15 +148,19 @@ function AccommodationContent() {
 
   return (
     <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #fdf6ec 0%, #f5f0ff 50%, #ecf0ff 100%)' }}>
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-40 border-b border-amber-100 print:hidden">
+      {/* Header — Accommodation accent: Indigo/Violet */}
+      <header className="bg-white/85 backdrop-blur-md shadow-sm sticky top-0 z-40 print:hidden" style={{ borderBottom: '1px solid rgba(99,102,241,0.15)' }}>
+        {/* Animated gradient accent line at top */}
+        <div className="h-0.5 bg-gradient-to-r from-indigo-400 via-violet-500 to-purple-400" style={{ backgroundSize: '200% 100%', animation: 'headerGradient 4s ease infinite' }} />
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-center gap-3">
           <img src="/assets/GNHLogo.png" alt="GNH Logo" className="h-8 w-auto shrink-0" />
           <div className="text-center">
             <h1 className="text-base md:text-xl font-black text-slate-800 leading-none">
               GNH Yatra 2026
             </h1>
-            <p className="text-xs md:text-sm text-amber-600 font-bold tracking-wider mt-0.5 uppercase">Accommodation Lookup</p>
+            <p className="text-xs md:text-sm font-bold tracking-wider mt-0.5 uppercase flex items-center justify-center gap-1" style={{ color: '#6366f1' }}>
+              <span>🏨</span> Accommodation Lookup
+            </p>
           </div>
         </div>
       </header>
@@ -227,7 +231,7 @@ function AccommodationContent() {
               <div className="w-48 h-6 bg-slate-200 rounded-lg skeleton-shimmer"></div>
               <div className="w-24 h-8 bg-slate-200 rounded-lg skeleton-shimmer"></div>
             </div>
-            
+
             {/* Shimmer Card Box */}
             <div className="bg-white rounded-2xl border border-slate-100 shadow-md p-6 space-y-6">
               <div className="w-full h-24 bg-slate-100 rounded-2xl skeleton-shimmer"></div>
@@ -283,7 +287,7 @@ function AccommodationContent() {
                     Search Again
                   </button>
                 </div>
-                
+
                 {/* Custom animated warm gradient "not assigned" box */}
                 <div className="bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-amber-500/10 border-l-4 border-amber-500 rounded-2xl px-6 py-8 text-center shadow-md shadow-amber-500/5 relative overflow-hidden">
                   <div className="absolute top-2 right-2 flex items-center justify-center text-amber-500/20">
@@ -438,7 +442,16 @@ function AccommodationContent() {
 
         {/* Footer */}
         <footer className="text-center text-slate-400 text-sm mt-12 print:mt-6 pb-20">
-          <p>© 2026 GNH Community · For help regarding Accommodation, contact <strong className="text-slate-500 font-bold">Akash Prabhu at <a href="tel:9381301587" className="hover:underline">9381301587</a></strong></p>
+          <p>For help regarding Accommodation, contact <strong className="text-slate-600">Akash Prabhu</strong></p>
+          <a
+            href="tel:9381301587"
+            className="inline-flex items-center gap-1.5 mt-2 bg-indigo-50 text-indigo-700 border border-indigo-200 px-4 py-1.5 rounded-full font-bold text-sm hover:bg-indigo-100 transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            </svg>
+            9381301587
+          </a>
         </footer>
       </main>
       <BottomNavigation currentSearchTerm={input} />

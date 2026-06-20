@@ -43,9 +43,11 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
 
   return (
     <div
-      className="bg-white rounded-2xl mx-2 sm:mx-0 shadow-lg border-2 border-indigo-200 overflow-hidden animate-fade-in hover:shadow-xl transition-all duration-300 relative print:shadow-none print:border-slate-300"
+      className="bg-white rounded-2xl mx-2 sm:mx-0 shadow-lg border-2 border-indigo-200 overflow-hidden animate-fade-in card-lift print:shadow-none print:border-slate-300"
       style={{ animationDelay: `${index * 150}ms`, animationFillMode: 'both' }}
     >
+      {/* Top accent stripe */}
+      <div className="h-1.5 bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 print:hidden" />
       {/* Redesigned Card Header - Hotel Name Prominent, Room Metadata Stacked on Right */}
       <div className="relative pt-6 pb-5 px-5 sm:px-6 bg-gradient-to-br from-slate-50 via-indigo-50/20 to-slate-50 border-b border-indigo-100/50">
         <div className="flex flex-row justify-between items-start gap-4">
@@ -66,7 +68,7 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
                 <span className="font-semibold">{distance} from Hall</span>
               </p>
             )}
-            
+
             {/* Map Link */}
             {mapLink && (
               <a
@@ -94,11 +96,10 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
                 Room: TBD
               </span>
             )}
-            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs sm:text-sm font-black uppercase tracking-wider border ${
-              acLabel.toLowerCase().includes('non')
+            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs sm:text-sm font-black uppercase tracking-wider border ${acLabel.toLowerCase().includes('non')
                 ? 'bg-orange-50/80 text-orange-800 border-orange-200/60'
                 : 'bg-cyan-50 text-cyan-800 border-cyan-200/60'
-            }`}>
+              }`}>
               {acLabel}
             </span>
           </div>
@@ -231,35 +232,31 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
         <h4 className="text-slate-400 text-sm font-bold uppercase tracking-wider mb-3 leading-none">
           Your Roommates · {devotees.filter(Boolean).length} People
         </h4>
-        <div className="grid grid-cols-1 gap-2.5">
+        <div className="grid grid-cols-1 gap-1.5">
           {devotees.filter(d => d && d.trim() !== '').map((name, rIdx) => {
             const isYou = matchedSet.has(name.trim().toLowerCase());
             return (
               <div
                 key={rIdx}
-                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-300 ${isYou
-                  ? 'bg-indigo-50/70 border-2 border-indigo-500 shadow-md shadow-indigo-500/10'
-                  : 'bg-slate-50/80 border border-slate-100 hover:bg-slate-100/50'
+                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-200 cursor-default ${
+                  isYou
+                    ? 'bg-indigo-100/60'
+                    : 'bg-slate-50/80 hover:bg-indigo-50/30 hover:scale-[1.01]'
                 }`}
               >
-                {/* Initials with a gorgeous gradient avatar circle */}
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-black shrink-0 shadow-sm ${isYou
-                  ? 'bg-gradient-to-br from-indigo-500 to-purple-600 text-white'
-                  : 'bg-gradient-to-br from-slate-200 to-slate-300 text-slate-600'
+                {/* Avatar circle */}
+                <div className={`w-9 h-9 rounded-full flex items-center justify-center text-base font-black shrink-0 shadow-sm ${
+                  isYou
+                    ? 'bg-gradient-to-br from-indigo-500 to-purple-600 text-white'
+                    : 'bg-gradient-to-br from-slate-200 to-slate-300 text-slate-600'
                 }`}>
                   {name.trim().charAt(0).toUpperCase()}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className={`text-base font-bold truncate ${isYou ? 'text-indigo-900' : 'text-slate-700'}`}>
-                    {name.trim()}
-                  </p>
-                </div>
-                {isYou && (
-                  <span className="flex items-center gap-0.5 text-xs bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-2 py-0.5 rounded-full font-black uppercase tracking-wider shrink-0 shadow-sm">
-                    <span>✓</span>
-                    <span>You</span>
-                  </span>
-                )}
+                <p className={`text-lg font-bold truncate ${
+                  isYou ? 'text-indigo-900' : 'text-slate-700'
+                }`}>
+                  {name.trim()}
+                </p>
               </div>
             );
           })}

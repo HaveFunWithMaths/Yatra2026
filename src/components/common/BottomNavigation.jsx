@@ -19,11 +19,10 @@ export default function BottomNavigation({ currentSearchTerm }) {
       <div className="max-w-2xl mx-auto flex items-center justify-around py-2.5 px-6">
         <button
           onClick={() => handleTabClick('/accommodation')}
-          className={`flex flex-col items-center gap-1 py-1 px-6 rounded-xl transition-all duration-300 ${
-            isAccommodation
+          className={`flex flex-col items-center gap-1 py-1 px-6 rounded-xl transition-all duration-300 ${isAccommodation
               ? 'text-indigo-600 font-extrabold scale-105 bg-indigo-50/80'
               : 'text-slate-400 hover:text-slate-700 font-semibold'
-          }`}
+            }`}
         >
           <Bed className={`w-5 h-5 transition-transform ${isAccommodation ? 'scale-110' : ''}`} />
           <span className="text-[10px] tracking-wider uppercase">Accommodation</span>
@@ -31,11 +30,10 @@ export default function BottomNavigation({ currentSearchTerm }) {
 
         <button
           onClick={() => handleTabClick('/accounts')}
-          className={`flex flex-col items-center gap-1 py-1 px-6 rounded-xl transition-all duration-300 ${
-            isAccounts
+          className={`flex flex-col items-center gap-1 py-1 px-6 rounded-xl transition-all duration-300 ${isAccounts
               ? 'text-indigo-600 font-extrabold scale-105 bg-indigo-50/80'
               : 'text-slate-400 hover:text-slate-700 font-semibold'
-          }`}
+            }`}
         >
           <Wallet className={`w-5 h-5 transition-transform ${isAccounts ? 'scale-110' : ''}`} />
           <span className="text-[10px] tracking-wider uppercase">Accounts</span>
