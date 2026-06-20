@@ -43,126 +43,96 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
 
   return (
     <div
-      className="bg-white rounded-none sm:rounded-2xl shadow-lg border-y sm:border border-amber-100/70 overflow-hidden animate-fade-in hover:shadow-xl transition-all duration-300 relative print:shadow-none print:border-slate-300"
+      className="bg-white rounded-2xl mx-2 sm:mx-0 shadow-lg border-2 border-indigo-200 overflow-hidden animate-fade-in hover:shadow-xl transition-all duration-300 relative print:shadow-none print:border-slate-300"
       style={{ animationDelay: `${index * 150}ms`, animationFillMode: 'both' }}
     >
-      {/* Premium Card Header */}
-      {hasRoomNo ? (
-        <div className="relative pt-8 pb-7 px-6 text-center bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 border-b border-indigo-500/20 overflow-hidden">
-          {/* Subtle gold grid pattern */}
-          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#f59e0b_1px,transparent_1px)] [background-size:16px_16px]"></div>
-          
-          {/* Centered Brass/Gold plaque for room number */}
-          <div className="relative inline-flex flex-col items-center justify-center bg-gradient-to-b from-amber-300 via-amber-400 to-yellow-600 px-7 py-3.5 rounded-2xl shadow-xl border border-yellow-200/50 transform hover:scale-105 transition-transform duration-300 min-w-[120px]">
-            <span className="text-xs text-amber-950 font-extrabold uppercase tracking-widest leading-none mb-1">Room</span>
-            <span className="text-4xl font-black text-amber-950 leading-none filter drop-shadow-sm">{roomNo}</span>
-          </div>
-
-          <div className="mt-4">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-bold bg-white/10 text-indigo-200 backdrop-blur-md border border-white/10">
-              <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse"></span>
-              {acLabel}
-            </span>
-          </div>
-          
-          {/* Wave Curve Divider */}
-          <div className="absolute bottom-0 left-0 right-0 w-full overflow-hidden leading-[0] transform rotate-180">
-            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-[12px] fill-white">
-              <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z"></path>
-            </svg>
-          </div>
-        </div>
-      ) : (
-        <div className="relative pt-8 pb-7 px-6 text-center bg-gradient-to-br from-amber-900 via-orange-950 to-amber-900 border-b border-amber-500/20 overflow-hidden">
-          {/* Subtle gold grid pattern */}
-          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#f59e0b_1px,transparent_1px)] [background-size:16px_16px]"></div>
-          
-          {/* Status Plaque */}
-          <div className="relative inline-flex flex-col items-center justify-center bg-gradient-to-b from-slate-700 via-slate-800 to-slate-900 px-6 py-3 rounded-2xl shadow-xl border border-slate-600/50 min-w-[150px]">
-            <span className="text-xs text-slate-400 font-bold uppercase tracking-widest leading-none mb-1">Status</span>
-            <span className="text-base font-bold text-white leading-none">To be assigned</span>
-          </div>
-
-          <div className="mt-4">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-bold bg-white/10 text-amber-200 backdrop-blur-md border border-white/10">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
-              {acLabel}
-            </span>
-          </div>
-          
-          {/* Wave Curve Divider */}
-          <div className="absolute bottom-0 left-0 right-0 w-full overflow-hidden leading-[0] transform rotate-180">
-            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-[12px] fill-white">
-              <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z"></path>
-            </svg>
-          </div>
-        </div>
-      )}
-
-      {/* Hotel & Dates Info Grid */}
-      <div className="px-3 sm:px-5 py-4 grid grid-cols-1 sm:grid-cols-3 gap-3 border-b border-slate-100">
-        <div className="flex items-start gap-3">
-          <div className="w-9 h-9 bg-indigo-50 rounded-xl flex items-center justify-center shrink-0 mt-0.5 print:bg-slate-100">
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-            </svg>
-          </div>
+      {/* Redesigned Card Header - Hotel Name Prominent, Room Metadata Stacked on Right */}
+      <div className="relative pt-6 pb-5 px-5 sm:px-6 bg-gradient-to-br from-slate-50 via-indigo-50/20 to-slate-50 border-b border-indigo-100/50">
+        <div className="flex flex-row justify-between items-start gap-4">
+          {/* Left side: Hotel assigned details */}
           <div className="flex-1 min-w-0">
-            <p className="text-slate-400 text-sm font-bold uppercase tracking-wider">Hotel</p>
-            <p className="text-slate-800 font-bold text-lg truncate">{formatHotelName(hotel)}</p>
+            <span className="text-[10px] text-indigo-600 uppercase tracking-widest font-black block mb-0.5 print:text-slate-500">
+              Hotel Assigned
+            </span>
+            <h3 className="text-2xl sm:text-3xl font-black text-slate-800 tracking-tight leading-tight">
+              {formatHotelName(hotel)}
+            </h3>
             {distance && (
-              <p className="text-slate-500 text-sm mt-0.5 flex items-center gap-1">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+              <p className="text-slate-500 text-xs sm:text-sm mt-1 flex items-center gap-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5 text-indigo-500 shrink-0 print:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                <span>{distance} from Hall</span>
+                <span className="font-semibold">{distance} from Hall</span>
               </p>
             )}
             
-            {/* Explicit Map Button under hotel */}
+            {/* Map Link */}
             {mapLink && (
               <a
                 href={mapLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 hover:text-indigo-900 text-sm font-bold rounded-lg border border-indigo-100 transition-colors duration-200 print:hidden"
+                className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 hover:text-indigo-900 text-xs font-bold rounded-lg border border-indigo-100 transition-colors duration-200 print:hidden"
               >
-                <span>📍 Open in Maps</span>
+                <span>📍 Open Maps</span>
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 text-indigo-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                 </svg>
               </a>
             )}
           </div>
-        </div>
 
-        <div className="flex items-start gap-3">
-          <div className="w-9 h-9 bg-emerald-50 rounded-xl flex items-center justify-center shrink-0 mt-0.5 print:bg-slate-100">
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-          </div>
-          <div>
-            <p className="text-slate-400 text-sm font-bold uppercase tracking-wider">Check-In</p>
-            <p className="text-slate-800 font-bold text-base whitespace-pre-line leading-snug">{begin || '—'}</p>
-          </div>
-        </div>
-
-        <div className="flex items-start gap-3">
-          <div className="w-9 h-9 bg-rose-50 rounded-xl flex items-center justify-center shrink-0 mt-0.5 print:bg-slate-100">
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-          </div>
-          <div>
-            <p className="text-slate-400 text-sm font-bold uppercase tracking-wider">Check-Out</p>
-            <p className="text-slate-800 font-bold text-base whitespace-pre-line leading-snug">{end || '—'}</p>
+          {/* Right side: Room details stacked one below another */}
+          <div className="flex flex-col items-end gap-1.5 shrink-0 text-right">
+            {hasRoomNo ? (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-sm sm:text-base font-black bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-sm border border-indigo-500/20">
+                Room {roomNo}
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-sm sm:text-base font-black bg-amber-50 text-amber-800 border border-amber-200/50">
+                Room: TBD
+              </span>
+            )}
+            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs sm:text-sm font-black uppercase tracking-wider border ${
+              acLabel.toLowerCase().includes('non')
+                ? 'bg-orange-50/80 text-orange-800 border-orange-200/60'
+                : 'bg-cyan-50 text-cyan-800 border-cyan-200/60'
+            }`}>
+              {acLabel}
+            </span>
           </div>
         </div>
       </div>
 
-      {/* Additional details: Floor, Cost, Room Type, Extra Bed, Days Rented, Bathroom */}
-      <div className="px-3 sm:px-5 py-4 grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-4 border-b border-slate-100 bg-slate-50/40 text-slate-700">
+      {/* Main info grid including: Check-In, Check-Out, Floor, Room Type, Bathroom, Cost, Days Rented, Extra Bed */}
+      <div className="px-3 sm:px-5 py-4 grid grid-cols-2 gap-y-4 gap-x-4 border-b border-slate-100 bg-slate-50/40 text-slate-700">
+        {/* Check-In */}
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 bg-emerald-50 rounded-xl flex items-center justify-center shrink-0 print:bg-slate-100">
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4.5 h-4.5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div>
+            <p className="text-slate-400 text-xs font-bold uppercase tracking-wider leading-none">Check-In</p>
+            <p className="text-slate-800 font-extrabold text-base leading-snug mt-1">{begin || '—'}</p>
+          </div>
+        </div>
+
+        {/* Check-Out */}
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 bg-rose-50 rounded-xl flex items-center justify-center shrink-0 print:bg-slate-100">
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4.5 h-4.5 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div>
+            <p className="text-slate-400 text-xs font-bold uppercase tracking-wider leading-none">Check-Out</p>
+            <p className="text-slate-800 font-extrabold text-base leading-snug mt-1">{end || '—'}</p>
+          </div>
+        </div>
+
         {/* Floor */}
         {floor ? (
           <div className="flex items-center gap-2.5">
@@ -172,8 +142,8 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
               </svg>
             </div>
             <div>
-              <p className="text-slate-400 text-sm font-bold uppercase tracking-wider leading-none">Floor</p>
-              <p className="text-slate-800 font-bold text-base mt-0.5">
+              <p className="text-slate-400 text-xs font-bold uppercase tracking-wider leading-none">Floor</p>
+              <p className="text-slate-800 font-bold text-base mt-1">
                 {floor}{/^\d+$/.test(floor.trim()) ? getFloorSuffix(floor.trim()) : ''} Floor
               </p>
             </div>
@@ -189,8 +159,8 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
               </svg>
             </div>
             <div>
-              <p className="text-slate-400 text-sm font-bold uppercase tracking-wider leading-none">Room Type</p>
-              <p className="text-slate-800 font-bold text-base capitalize mt-0.5">{roomType}</p>
+              <p className="text-slate-400 text-xs font-bold uppercase tracking-wider leading-none">Room Type</p>
+              <p className="text-slate-800 font-black text-base sm:text-lg capitalize mt-1">{roomType}</p>
             </div>
           </div>
         ) : null}
@@ -203,8 +173,8 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
             </svg>
           </div>
           <div>
-            <p className="text-slate-400 text-sm font-bold uppercase tracking-wider leading-none">Bathroom</p>
-            <p className="text-slate-800 font-bold text-base mt-0.5">Western</p>
+            <p className="text-slate-400 text-xs font-bold uppercase tracking-wider leading-none">Bathroom</p>
+            <p className="text-slate-800 font-bold text-base mt-1">Western</p>
           </div>
         </div>
 
@@ -215,8 +185,8 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
               <span className="text-emerald-600 font-extrabold text-sm">₹</span>
             </div>
             <div>
-              <p className="text-slate-400 text-sm font-bold uppercase tracking-wider leading-none">Cost per Day</p>
-              <p className="text-slate-800 font-bold text-base mt-0.5">
+              <p className="text-slate-400 text-xs font-bold uppercase tracking-wider leading-none">Cost per Day</p>
+              <p className="text-slate-800 font-bold text-base mt-1">
                 ₹{isNaN(cost) ? cost : Number(cost).toLocaleString('en-IN')}
               </p>
             </div>
@@ -232,8 +202,8 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
               </svg>
             </div>
             <div>
-              <p className="text-slate-400 text-sm font-bold uppercase tracking-wider leading-none">Days Rented</p>
-              <p className="text-slate-800 font-bold text-base mt-0.5">
+              <p className="text-slate-400 text-xs font-bold uppercase tracking-wider leading-none">Days Rented</p>
+              <p className="text-slate-800 font-bold text-base mt-1">
                 {daysRented} Day{parseInt(daysRented) !== 1 ? 's' : ''}
               </p>
             </div>
@@ -249,8 +219,8 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
               </svg>
             </div>
             <div>
-              <p className="text-slate-400 text-sm font-bold uppercase tracking-wider leading-none">Extra Bed</p>
-              <p className="text-slate-800 font-bold text-base capitalize mt-0.5">{extraBed}</p>
+              <p className="text-slate-400 text-xs font-bold uppercase tracking-wider leading-none">Extra Bed</p>
+              <p className="text-slate-800 font-bold text-base capitalize mt-1">{extraBed}</p>
             </div>
           </div>
         ) : null}
@@ -261,7 +231,7 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
         <h4 className="text-slate-400 text-sm font-bold uppercase tracking-wider mb-3 leading-none">
           Your Roommates · {devotees.filter(Boolean).length} People
         </h4>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+        <div className="grid grid-cols-1 gap-2.5">
           {devotees.filter(d => d && d.trim() !== '').map((name, rIdx) => {
             const isYou = matchedSet.has(name.trim().toLowerCase());
             return (
