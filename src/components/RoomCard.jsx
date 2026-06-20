@@ -138,8 +138,26 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
         {floor ? (
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 bg-amber-50 rounded-xl flex items-center justify-center shrink-0 print:bg-slate-100">
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-4.5 h-4.5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              {/* Elevator / Lift Icon matching user's image design (wider & thinner lines) */}
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-4.5 h-4.5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.3}>
+                {/* Top indicator display box */}
+                <rect x="5" y="2" width="14" height="3" rx="0.5" />
+                {/* 3 indicator lights */}
+                <circle cx="8.5" cy="3.5" r="0.4" fill="currentColor" />
+                <circle cx="12" cy="3.5" r="0.4" fill="currentColor" />
+                <circle cx="15.5" cy="3.5" r="0.4" fill="currentColor" />
+                
+                {/* Outer cabin frame */}
+                <rect x="3" y="6" width="18" height="16" rx="1" />
+                {/* Inner door frame */}
+                <rect x="4.5" y="7.5" width="15" height="14.5" />
+                {/* Center split line */}
+                <line x1="12" y1="7.5" x2="12" y2="22" />
+                
+                {/* Up Arrow (Left Door) */}
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 17v-5.5 M6.75 13.5l1.5-1.5 1.5 1.5" />
+                {/* Down Arrow (Right Door) */}
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 11.5v5.5 M14.25 15l1.5 1.5 1.5-1.5" />
               </svg>
             </div>
             <div>
@@ -156,7 +174,7 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 bg-indigo-50 rounded-xl flex items-center justify-center shrink-0 print:bg-slate-100">
               <svg xmlns="http://www.w3.org/2000/svg" className="w-4.5 h-4.5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12h18M3 12V8a4 4 0 014-4h10a4 4 0 014 4v4M3 12v6h18v-6" />
               </svg>
             </div>
             <div>
@@ -169,12 +187,13 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
         {/* Bathroom */}
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 bg-sky-50 rounded-xl flex items-center justify-center shrink-0 print:bg-slate-100">
+            {/* Water drop icon */}
             <svg xmlns="http://www.w3.org/2000/svg" className="w-4.5 h-4.5 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3C12 3 6 10 6 14a6 6 0 0012 0c0-4-6-11-6-11z" />
             </svg>
           </div>
           <div>
-            <p className="text-slate-400 text-xs font-bold uppercase tracking-wider leading-none">Bathroom</p>
+            <p className="text-slate-400 text-xs font-bold uppercase tracking-wider leading-none">Toilet</p>
             <p className="text-slate-800 font-bold text-base mt-1">Western</p>
           </div>
         </div>
@@ -182,8 +201,8 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
         {/* Cost per Day */}
         {cost ? (
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 bg-emerald-50 rounded-xl flex items-center justify-center shrink-0 print:bg-slate-100">
-              <span className="text-emerald-600 font-extrabold text-sm">₹</span>
+            <div className="w-9 h-9 bg-emerald-50 rounded-xl flex items-center justify-center shrink-0 print:bg-slate-100">
+              <span className="text-emerald-600 font-extrabold text-xl leading-none">₹</span>
             </div>
             <div>
               <p className="text-slate-400 text-xs font-bold uppercase tracking-wider leading-none">Cost per Day</p>
@@ -216,7 +235,7 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 bg-purple-50 rounded-xl flex items-center justify-center shrink-0 print:bg-slate-100">
               <svg xmlns="http://www.w3.org/2000/svg" className="w-4.5 h-4.5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M3 10V8a4 4 0 014-4h10a4 4 0 014 4v2M3 10v8h18v-8M12 4v4m0 0H9m3 0h3" />
               </svg>
             </div>
             <div>

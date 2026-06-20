@@ -186,8 +186,8 @@ function AccountsContent() {
             <h1 className="text-base md:text-xl font-black text-slate-800 leading-none">
               GNH Yatra 2026
             </h1>
-            <p className="text-[10px] md:text-xs font-bold tracking-wider mt-0.5 uppercase flex items-center justify-center gap-1" style={{ color: '#059669' }}>
-              <span>💰</span> Accounts Lookup
+            <p className="text-[12px] md:text-xs font-bold tracking-wider mt-0.5 uppercase flex items-center justify-center gap-1" style={{ color: '#059669' }}>
+              Accounts
             </p>
           </div>
         </div>
@@ -361,7 +361,7 @@ function AccountsContent() {
                           const pend = parseFloat(row['Pending']) || 0;
                           return (
                             <tr key={idx} className={`transition-colors hover:bg-indigo-50/20 ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
-                              <td className="px-3 sm:px-5 py-3.5 font-bold text-slate-800 text-sm">{name}</td>
+                              <td className="px-3 sm:px-5 py-3.5 font-extrabold text-slate-800 text-base">{name}</td>
                               <td className="px-3 sm:px-5 py-3.5">
                                 <span className={`inline-flex items-center px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-xs font-bold ${
                                   room.toLowerCase().includes('non ac') || room.toLowerCase().includes('non-ac')
@@ -371,10 +371,10 @@ function AccountsContent() {
                                   {room}
                                 </span>
                               </td>
-                              <td className="px-3 sm:px-5 py-3.5 text-right font-semibold text-emerald-700 text-sm">
+                              <td className="px-3 sm:px-5 py-3.5 text-right font-extrabold text-emerald-700 text-base">
                                 ₹{inst.toLocaleString('en-IN')}
                               </td>
-                              <td className={`px-3 sm:px-5 py-3.5 text-right font-black text-sm ${
+                              <td className={`px-3 sm:px-5 py-3.5 text-right font-black text-base ${
                                 pend > 0 ? 'text-rose-600' : 'text-emerald-600'
                               }`}>
                                 {pend > 0 ? '₹' + pend.toLocaleString('en-IN') : '✓ Cleared'}

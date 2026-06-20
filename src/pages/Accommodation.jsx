@@ -159,7 +159,7 @@ function AccommodationContent() {
               GNH Yatra 2026
             </h1>
             <p className="text-xs md:text-sm font-bold tracking-wider mt-0.5 uppercase flex items-center justify-center gap-1" style={{ color: '#6366f1' }}>
-              <span>🏨</span> Accommodation Lookup
+              Accommodation
             </p>
           </div>
         </div>
