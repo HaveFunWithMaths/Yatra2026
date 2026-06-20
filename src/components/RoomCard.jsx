@@ -54,12 +54,12 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
           
           {/* Centered Brass/Gold plaque for room number */}
           <div className="relative inline-flex flex-col items-center justify-center bg-gradient-to-b from-amber-300 via-amber-400 to-yellow-600 px-7 py-3.5 rounded-2xl shadow-xl border border-yellow-200/50 transform hover:scale-105 transition-transform duration-300 min-w-[120px]">
-            <span className="text-[10px] text-amber-950 font-extrabold uppercase tracking-widest leading-none mb-1">Room</span>
-            <span className="text-3xl font-black text-amber-950 leading-none filter drop-shadow-sm">{roomNo}</span>
+            <span className="text-xs text-amber-950 font-extrabold uppercase tracking-widest leading-none mb-1">Room</span>
+            <span className="text-4xl font-black text-amber-950 leading-none filter drop-shadow-sm">{roomNo}</span>
           </div>
 
           <div className="mt-4">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white/10 text-indigo-200 backdrop-blur-md border border-white/10">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-bold bg-white/10 text-indigo-200 backdrop-blur-md border border-white/10">
               <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse"></span>
               {acLabel}
             </span>
@@ -79,12 +79,12 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
           
           {/* Status Plaque */}
           <div className="relative inline-flex flex-col items-center justify-center bg-gradient-to-b from-slate-700 via-slate-800 to-slate-900 px-6 py-3 rounded-2xl shadow-xl border border-slate-600/50 min-w-[150px]">
-            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-none mb-1">Status</span>
-            <span className="text-sm font-bold text-white leading-none">To be assigned</span>
+            <span className="text-xs text-slate-400 font-bold uppercase tracking-widest leading-none mb-1">Status</span>
+            <span className="text-base font-bold text-white leading-none">To be assigned</span>
           </div>
 
           <div className="mt-4">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white/10 text-amber-200 backdrop-blur-md border border-white/10">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-bold bg-white/10 text-amber-200 backdrop-blur-md border border-white/10">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
               {acLabel}
             </span>
@@ -108,10 +108,10 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
             </svg>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-slate-400 text-xs font-bold uppercase tracking-wider">Hotel</p>
-            <p className="text-slate-800 font-bold text-base truncate">{formatHotelName(hotel)}</p>
+            <p className="text-slate-400 text-sm font-bold uppercase tracking-wider">Hotel</p>
+            <p className="text-slate-800 font-bold text-lg truncate">{formatHotelName(hotel)}</p>
             {distance && (
-              <p className="text-slate-500 text-xs mt-0.5 flex items-center gap-1">
+              <p className="text-slate-500 text-sm mt-0.5 flex items-center gap-1">
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
                 </svg>
@@ -125,7 +125,7 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
                 href={mapLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 hover:text-indigo-900 text-xs font-bold rounded-lg border border-indigo-100 transition-colors duration-200 print:hidden"
+                className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 hover:text-indigo-900 text-sm font-bold rounded-lg border border-indigo-100 transition-colors duration-200 print:hidden"
               >
                 <span>📍 Open in Maps</span>
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 text-indigo-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -143,8 +143,8 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
             </svg>
           </div>
           <div>
-            <p className="text-slate-400 text-xs font-bold uppercase tracking-wider">Check-In</p>
-            <p className="text-slate-800 font-bold text-sm whitespace-pre-line leading-snug">{begin || '—'}</p>
+            <p className="text-slate-400 text-sm font-bold uppercase tracking-wider">Check-In</p>
+            <p className="text-slate-800 font-bold text-base whitespace-pre-line leading-snug">{begin || '—'}</p>
           </div>
         </div>
 
@@ -155,8 +155,8 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
             </svg>
           </div>
           <div>
-            <p className="text-slate-400 text-xs font-bold uppercase tracking-wider">Check-Out</p>
-            <p className="text-slate-800 font-bold text-sm whitespace-pre-line leading-snug">{end || '—'}</p>
+            <p className="text-slate-400 text-sm font-bold uppercase tracking-wider">Check-Out</p>
+            <p className="text-slate-800 font-bold text-base whitespace-pre-line leading-snug">{end || '—'}</p>
           </div>
         </div>
       </div>
@@ -172,8 +172,8 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
               </svg>
             </div>
             <div>
-              <p className="text-slate-400 text-xs font-bold uppercase tracking-wider leading-none">Floor</p>
-              <p className="text-slate-800 font-bold text-sm mt-0.5">
+              <p className="text-slate-400 text-sm font-bold uppercase tracking-wider leading-none">Floor</p>
+              <p className="text-slate-800 font-bold text-base mt-0.5">
                 {floor}{/^\d+$/.test(floor.trim()) ? getFloorSuffix(floor.trim()) : ''} Floor
               </p>
             </div>
@@ -189,8 +189,8 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
               </svg>
             </div>
             <div>
-              <p className="text-slate-400 text-xs font-bold uppercase tracking-wider leading-none">Room Type</p>
-              <p className="text-slate-800 font-bold text-sm capitalize mt-0.5">{roomType}</p>
+              <p className="text-slate-400 text-sm font-bold uppercase tracking-wider leading-none">Room Type</p>
+              <p className="text-slate-800 font-bold text-base capitalize mt-0.5">{roomType}</p>
             </div>
           </div>
         ) : null}
@@ -203,8 +203,8 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
             </svg>
           </div>
           <div>
-            <p className="text-slate-400 text-xs font-bold uppercase tracking-wider leading-none">Bathroom</p>
-            <p className="text-slate-800 font-bold text-sm mt-0.5">Western</p>
+            <p className="text-slate-400 text-sm font-bold uppercase tracking-wider leading-none">Bathroom</p>
+            <p className="text-slate-800 font-bold text-base mt-0.5">Western</p>
           </div>
         </div>
 
@@ -212,11 +212,11 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
         {cost ? (
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 bg-emerald-50 rounded-xl flex items-center justify-center shrink-0 print:bg-slate-100">
-              <span className="text-emerald-600 font-extrabold text-xs">₹</span>
+              <span className="text-emerald-600 font-extrabold text-sm">₹</span>
             </div>
             <div>
-              <p className="text-slate-400 text-xs font-bold uppercase tracking-wider leading-none">Cost per Day</p>
-              <p className="text-slate-800 font-bold text-sm mt-0.5">
+              <p className="text-slate-400 text-sm font-bold uppercase tracking-wider leading-none">Cost per Day</p>
+              <p className="text-slate-800 font-bold text-base mt-0.5">
                 ₹{isNaN(cost) ? cost : Number(cost).toLocaleString('en-IN')}
               </p>
             </div>
@@ -232,8 +232,8 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
               </svg>
             </div>
             <div>
-              <p className="text-slate-400 text-xs font-bold uppercase tracking-wider leading-none">Days Rented</p>
-              <p className="text-slate-800 font-bold text-sm mt-0.5">
+              <p className="text-slate-400 text-sm font-bold uppercase tracking-wider leading-none">Days Rented</p>
+              <p className="text-slate-800 font-bold text-base mt-0.5">
                 {daysRented} Day{parseInt(daysRented) !== 1 ? 's' : ''}
               </p>
             </div>
@@ -249,8 +249,8 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
               </svg>
             </div>
             <div>
-              <p className="text-slate-400 text-xs font-bold uppercase tracking-wider leading-none">Extra Bed</p>
-              <p className="text-slate-800 font-bold text-sm capitalize mt-0.5">{extraBed}</p>
+              <p className="text-slate-400 text-sm font-bold uppercase tracking-wider leading-none">Extra Bed</p>
+              <p className="text-slate-800 font-bold text-base capitalize mt-0.5">{extraBed}</p>
             </div>
           </div>
         ) : null}
@@ -258,7 +258,7 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
 
       {/* Roommates */}
       <div className="px-3 sm:px-5 py-4">
-        <h4 className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-3 leading-none">
+        <h4 className="text-slate-400 text-sm font-bold uppercase tracking-wider mb-3 leading-none">
           Your Roommates · {devotees.filter(Boolean).length} People
         </h4>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -273,19 +273,19 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
                 }`}
               >
                 {/* Initials with a gorgeous gradient avatar circle */}
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black shrink-0 shadow-sm ${isYou
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-black shrink-0 shadow-sm ${isYou
                   ? 'bg-gradient-to-br from-indigo-500 to-purple-600 text-white'
                   : 'bg-gradient-to-br from-slate-200 to-slate-300 text-slate-600'
                 }`}>
                   {name.trim().charAt(0).toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className={`text-sm font-bold truncate ${isYou ? 'text-indigo-900' : 'text-slate-700'}`}>
+                  <p className={`text-base font-bold truncate ${isYou ? 'text-indigo-900' : 'text-slate-700'}`}>
                     {name.trim()}
                   </p>
                 </div>
                 {isYou && (
-                  <span className="flex items-center gap-0.5 text-[10px] bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-2 py-0.5 rounded-full font-black uppercase tracking-wider shrink-0 shadow-sm">
+                  <span className="flex items-center gap-0.5 text-xs bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-2 py-0.5 rounded-full font-black uppercase tracking-wider shrink-0 shadow-sm">
                     <span>✓</span>
                     <span>You</span>
                   </span>

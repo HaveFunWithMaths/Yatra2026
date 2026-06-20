@@ -4,6 +4,7 @@ import RoomCard from '../components/RoomCard';
 import ErrorBoundary from '../components/ErrorBoundary';
 import { NOTICES } from '../utils/hotelConfig';
 import { findGroupNames, findRooms } from '../utils/accommodationUtils';
+import BottomNavigation from '../components/common/BottomNavigation';
 
 // Public CSV export URLs
 const REGISTRATION_CSV_URL =
@@ -22,7 +23,7 @@ function AccommodationContent() {
   const [noRoomsYet, setNoRoomsYet] = useState(false);
 
   const handleSearch = useCallback(async (searchValue) => {
-    const term = (typeof searchValue === 'string' ? searchValue : input).trim();
+    const term = (searchValue || '').trim();
     if (!term) {
       setError('Please enter your phone number or email address.');
       return;
@@ -79,7 +80,7 @@ function AccommodationContent() {
     } finally {
       setLoading(false);
     }
-  }, [input]);
+  }, []);
 
   // Auto-lookup on mount if saved or via URL query parameter
   useEffect(() => {
@@ -98,10 +99,10 @@ function AccommodationContent() {
       setInput(saved);
       handleSearch(saved);
     }
-  }, [handleSearch]);
+  }, []); // Run only on mount
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') handleSearch();
+    if (e.key === 'Enter') handleSearch(input);
   };
 
   const handleReset = () => {
@@ -155,7 +156,7 @@ function AccommodationContent() {
             <h1 className="text-base md:text-xl font-black text-slate-800 leading-none">
               GNH Yatra 2026
             </h1>
-            <p className="text-[10px] md:text-xs text-amber-600 font-bold tracking-wider mt-0.5 uppercase">Accommodation Lookup</p>
+            <p className="text-xs md:text-sm text-amber-600 font-bold tracking-wider mt-0.5 uppercase">Accommodation Lookup</p>
           </div>
         </div>
       </header>
@@ -164,22 +165,22 @@ function AccommodationContent() {
 
         {/* Hero Section */}
         <div className="text-center mb-4 sm:mb-8 animate-fade-in print:hidden">
-          <h2 className="text-2xl sm:text-2xl md:text-3xl font-black text-slate-800 mb-2">Your Accommodation</h2>
-          <p className="text-slate-500 text-sm md:text-sm max-w-sm mx-auto leading-relaxed">
+          <h2 className="text-3xl sm:text-3xl md:text-4xl font-black text-slate-800 mb-2">Your Accommodation</h2>
+          <p className="text-slate-500 text-base md:text-lg max-w-md mx-auto leading-relaxed">
             Enter the phone number or email you used during registration to view your room assignment.
           </p>
         </div>
 
         {/* Search Card */}
         <div className="card mx-2 sm:mx-0 px-3 sm:px-6 py-4 sm:py-7 mb-4 animate-slide-up print:hidden">
-          <label className="form-label font-bold text-xs uppercase tracking-wider text-slate-500" htmlFor="accom-search-input">
+          <label className="form-label font-bold text-sm uppercase tracking-wider text-slate-500" htmlFor="accom-search-input">
             Phone Number or Email Address
           </label>
           <div className="flex flex-col sm:flex-row gap-3">
             <input
               id="accom-search-input"
               type="text"
-              className="form-input flex-1 font-semibold"
+              className="form-input flex-1 font-semibold text-lg"
               placeholder="e.g. 9876543210 or name@email.com"
               value={input}
               onChange={e => { setInput(e.target.value); setError(''); }}
@@ -190,9 +191,9 @@ function AccommodationContent() {
             />
             <button
               id="accom-search-btn"
-              onClick={() => handleSearch()}
+              onClick={() => handleSearch(input)}
               disabled={loading || !input.trim()}
-              className="btn-primary whitespace-nowrap flex items-center justify-center gap-2 px-5 py-3 sm:py-2"
+              className="btn-primary whitespace-nowrap flex items-center justify-center gap-2 px-6 py-3 sm:py-2.5 text-base"
             >
               {loading ? (
                 <>
@@ -210,7 +211,7 @@ function AccommodationContent() {
             </button>
           </div>
           {error && (
-            <p className="mt-2.5 text-xs text-red-600 font-bold flex items-center gap-1.5 animate-fade-in">
+            <p className="mt-2.5 text-sm text-red-600 font-bold flex items-center gap-1.5 animate-fade-in">
               <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -259,12 +260,12 @@ function AccommodationContent() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold text-slate-700 mb-2">No registration found</h3>
-                <p className="text-slate-500 text-xs max-w-sm mx-auto mb-5 leading-relaxed">
+                <h3 className="text-xl font-bold text-slate-700 mb-2">No registration found</h3>
+                <p className="text-slate-500 text-sm max-w-md mx-auto mb-5 leading-relaxed">
                   We couldn't find anyone registered with <span className="font-bold text-slate-700 break-all">{input.trim()}</span>.
                   Please double-check and try again, or contact Akash Prabhu at <a href="tel:9381301587" className="font-bold text-indigo-600 hover:underline">9381301587</a>
                 </p>
-                <button onClick={handleReset} className="btn-secondary text-sm">
+                <button onClick={handleReset} className="btn-secondary text-base">
                   Try Again
                 </button>
               </div>
@@ -275,10 +276,10 @@ function AccommodationContent() {
               <div className="space-y-4 mx-2 sm:mx-0">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-1">
                   <div>
-                    <p className="text-[10px] text-slate-500 uppercase tracking-widest font-black">Found registration for</p>
-                    <h3 className="text-2xl font-black text-slate-800 leading-tight">{devoteeName}</h3>
+                    <p className="text-xs text-slate-500 uppercase tracking-widest font-black">Found registration for</p>
+                    <h3 className="text-3xl font-black text-slate-800 leading-tight">{devoteeName}</h3>
                   </div>
-                  <button onClick={handleReset} className="btn-secondary text-xs py-1.5 px-3 self-start sm:self-auto print:hidden">
+                  <button onClick={handleReset} className="btn-secondary text-sm py-1.5 px-3.5 self-start sm:self-auto print:hidden">
                     Search Again
                   </button>
                 </div>
@@ -296,8 +297,8 @@ function AccommodationContent() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                     </div>
-                    <h3 className="text-lg font-black text-amber-800 mb-2">Room Not Assigned Yet</h3>
-                    <p className="text-slate-600 text-sm max-w-sm mx-auto leading-relaxed">
+                    <h3 className="text-xl font-black text-amber-800 mb-2">Room Not Assigned Yet</h3>
+                    <p className="text-slate-600 text-base max-w-md mx-auto leading-relaxed">
                       We'll notify this page once rooms are assigned
                     </p>
                   </div>
@@ -311,13 +312,13 @@ function AccommodationContent() {
                 {/* Result Header */}
                 <div className="flex flex-col gap-3 mx-2 sm:mx-0">
                   <div>
-                    <p className="text-[10px] text-slate-500 uppercase tracking-widest font-black">Accommodation for</p>
-                    <h3 className="text-xl sm:text-2xl font-black text-slate-800 leading-tight">{devoteeName}'s Group</h3>
+                    <p className="text-xs text-slate-500 uppercase tracking-widest font-black">Accommodation for</p>
+                    <h3 className="text-2xl sm:text-3xl font-black text-slate-800 leading-tight">{devoteeName}'s Group</h3>
                   </div>
                   <div className="flex flex-wrap gap-2 print:hidden">
                     <button
                       onClick={handleShare}
-                      className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5 hover:bg-slate-50"
+                      className="btn-secondary text-sm py-1.5 px-4 flex items-center gap-1.5 hover:bg-slate-50"
                       title="Share link to these details"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -327,12 +328,12 @@ function AccommodationContent() {
                     </button>
                     <button
                       onClick={() => window.print()}
-                      className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5 hover:bg-slate-50"
+                      className="btn-secondary text-sm py-1.5 px-4 flex items-center gap-1.5 hover:bg-slate-50"
                     >
                       <span>🖨️</span>
                       Print / PDF
                     </button>
-                    <button onClick={handleReset} className="btn-secondary text-xs py-1.5 px-3">
+                    <button onClick={handleReset} className="btn-secondary text-sm py-1.5 px-4">
                       Search Again
                     </button>
                   </div>
@@ -346,10 +347,10 @@ function AccommodationContent() {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-indigo-900 text-xs font-bold leading-normal">
+                    <p className="text-indigo-900 text-sm font-bold leading-normal">
                       Found <span className="font-extrabold text-indigo-700">{roomResults.length}</span> room{roomResults.length !== 1 ? 's' : ''} for your group.
                     </p>
-                    <p className="text-[11px] text-indigo-800/80 font-medium mt-0.5">
+                    <p className="text-xs text-indigo-800/80 font-medium mt-0.5">
                       Your registered members are highlighted in indigo.
                     </p>
                   </div>
@@ -366,13 +367,13 @@ function AccommodationContent() {
                         </svg>
                       </div>
                       <div>
-                        <h4 className="text-slate-800 font-extrabold text-sm">Yatra Hall Location</h4>
-                        <p className="text-slate-500 text-xs mt-0.5">Main gathering & prasadam hall</p>
+                        <h4 className="text-slate-800 font-extrabold text-base">Yatra Hall Location</h4>
+                        <p className="text-slate-500 text-sm mt-0.5">Main gathering & prasadam hall</p>
                         <a
                           href="https://maps.app.goo.gl/SCp7SALucDA5ELLc9"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-indigo-600 hover:text-indigo-800 text-xs font-bold inline-flex items-center gap-1 hover:underline mt-1.5 print:hidden"
+                          className="text-indigo-600 hover:text-indigo-800 text-sm font-bold inline-flex items-center gap-1 hover:underline mt-1.5 print:hidden"
                         >
                           Open Hall in Google Maps →
                         </a>
@@ -386,13 +387,13 @@ function AccommodationContent() {
                         </svg>
                       </div>
                       <div>
-                        <h4 className="text-slate-800 font-extrabold text-sm">Sample Rooms Picture</h4>
-                        <p className="text-slate-500 text-xs mt-0.5">View reference photos of rooms</p>
+                        <h4 className="text-slate-800 font-extrabold text-base">Sample Rooms Picture</h4>
+                        <p className="text-slate-500 text-sm mt-0.5">View reference photos of rooms</p>
                         <a
                           href="https://docs.google.com/document/d/10lcnCl56xsLGMz2agLA9dk2ZvyEQNVdEm1R25EK28QE/edit?tab=t.0"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-indigo-600 hover:text-indigo-800 text-xs font-bold inline-flex items-center gap-1 hover:underline mt-1.5 print:hidden"
+                          className="text-indigo-600 hover:text-indigo-800 text-sm font-bold inline-flex items-center gap-1 hover:underline mt-1.5 print:hidden"
                         >
                           View Sample Photos →
                         </a>
@@ -416,7 +417,7 @@ function AccommodationContent() {
                 {NOTICES.length > 0 && (
                   <div className="space-y-1.5 mx-2 sm:mx-0">
                     {NOTICES.map((notice, nIdx) => (
-                      <p key={nIdx} className="text-center text-xs text-slate-400 font-medium">
+                      <p key={nIdx} className="text-center text-sm text-slate-400 font-medium">
                         {notice}
                       </p>
                     ))}
@@ -425,7 +426,7 @@ function AccommodationContent() {
 
                 {/* Important Warning Notice */}
                 <div className="bg-amber-50 border border-amber-200/80 rounded-2xl p-4 text-center shadow-sm mx-2 sm:mx-0 print:border-slate-300 animate-fade-in">
-                  <p className="text-amber-800 text-sm font-black leading-relaxed">
+                  <p className="text-amber-800 text-base font-black leading-relaxed">
                     ⚠️ These details may change. Please recheck this site before checking in.
                   </p>
                 </div>
@@ -436,10 +437,11 @@ function AccommodationContent() {
         )}
 
         {/* Footer */}
-        <footer className="text-center text-slate-400 text-xs mt-12 print:mt-6">
+        <footer className="text-center text-slate-400 text-sm mt-12 print:mt-6 pb-20">
           <p>© 2026 GNH Community · For help regarding Accommodation, contact <strong className="text-slate-500 font-bold">Akash Prabhu at <a href="tel:9381301587" className="hover:underline">9381301587</a></strong></p>
         </footer>
       </main>
+      <BottomNavigation currentSearchTerm={input} />
     </div>
   );
 }
