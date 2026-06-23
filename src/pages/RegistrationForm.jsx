@@ -270,7 +270,7 @@ function RegistrationForm() {
         }
 
         if (!devoteeData.accommodation) {
-            errors.accommodation = 'Please select accommodation preference';
+            errors.accommodation = 'Please select accommodation preference (AC/Non-AC)';
         }
 
         if (!devoteeData.prasadPreference) {
