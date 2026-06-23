@@ -12,13 +12,13 @@ const ACCOMMODATION_CSV_URL =
 
 const cleanName = (name) => (name || '').trim().toLowerCase().replace(/\s+/g, ' ');
 
-function AccountsContent() {
+function PaymentsContent() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
   const [error, setError] = useState('');
   const [devoteeName, setDevoteeName] = useState('');
-  const [accountResults, setAccountResults] = useState([]); // [row]
+  const [paymentResults, setPaymentResults] = useState([]); // [row]
   const [notFound, setNotFound] = useState(false);
 
   const handleSearch = useCallback(async (searchValue) => {
@@ -31,33 +31,33 @@ function AccountsContent() {
     setLoading(true);
     setSearched(false);
     setNotFound(false);
-    setAccountResults([]);
+    setPaymentResults([]);
     setDevoteeName('');
 
     try {
       // Fetch both sheets in parallel
-      const [regText, accountsRawText] = await Promise.all([
+      const [regText, paymentsRawText] = await Promise.all([
         fetch(REGISTRATION_CSV_URL).then(r => r.text()),
         fetch(ACCOMMODATION_CSV_URL).then(r => r.text()),
       ]);
 
       const regParsed = Papa.parse(regText, { header: true, skipEmptyLines: true });
 
-      // Clean Accounts CSV by skipping the first line
-      const firstNewlineIndex = accountsRawText.indexOf('\n');
-      const cleanedAccountsText = firstNewlineIndex !== -1
-        ? accountsRawText.substring(firstNewlineIndex + 1)
-        : accountsRawText;
+      // Clean Payments CSV by skipping the first line
+      const firstNewlineIndex = paymentsRawText.indexOf('\n');
+      const cleanedPaymentsText = firstNewlineIndex !== -1
+        ? paymentsRawText.substring(firstNewlineIndex + 1)
+        : paymentsRawText;
 
-      const accountsParsed = Papa.parse(cleanedAccountsText, { header: true, skipEmptyLines: true });
+      const paymentsParsed = Papa.parse(cleanedPaymentsText, { header: true, skipEmptyLines: true });
 
       const regRows = regParsed.data;
-      const accountsRows = accountsParsed.data;
+      const paymentsRows = paymentsParsed.data;
 
-      // 1. Process Accounts rows to forward-fill merged Devotee Name and Number (phone)
+      // 1. Process Payments rows to forward-fill merged Devotee Name and Number (phone)
       let lastDevName = '';
       let lastPhone = '';
-      const processedAccounts = accountsRows.map(row => {
+      const processedPayments = paymentsRows.map(row => {
         const colA = row['Devotee Name']?.trim();
         const colB = row['Number']?.trim();
         if (colA) lastDevName = colA;
@@ -77,14 +77,14 @@ function AccountsContent() {
       if (groupResult) {
         targetDevoteeName = groupResult.devoteeName;
         const normTarget = cleanName(targetDevoteeName);
-        matchedRows = processedAccounts.filter(row => cleanName(row._devName) === normTarget);
+        matchedRows = processedPayments.filter(row => cleanName(row._devName) === normTarget);
       } else {
-        // Fallback: search phone number directly in Accounts sheet
-        const rowWithPhone = processedAccounts.find(row => matchPhoneOrEmail(row._phone, term));
+        // Fallback: search phone number directly in Payments sheet
+        const rowWithPhone = processedPayments.find(row => matchPhoneOrEmail(row._phone, term));
         if (rowWithPhone) {
           targetDevoteeName = rowWithPhone._devName;
           const normTarget = cleanName(targetDevoteeName);
-          matchedRows = processedAccounts.filter(row => cleanName(row._devName) === normTarget);
+          matchedRows = processedPayments.filter(row => cleanName(row._devName) === normTarget);
         }
       }
 
@@ -96,13 +96,13 @@ function AccountsContent() {
       }
 
       setDevoteeName(targetDevoteeName);
-      setAccountResults(matchedRows);
+      setPaymentResults(matchedRows);
 
       // Save valid lookup in localStorage
       localStorage.setItem('gnh_yatra_accom_input', term);
       setSearched(true);
     } catch (err) {
-      console.error('Accounts lookup error:', err);
+      console.error('Payments lookup error:', err);
       setError('Something went wrong while fetching data. Please try again in a moment.');
     } finally {
       setLoading(false);
@@ -135,7 +135,7 @@ function AccountsContent() {
     setInput('');
     setSearched(false);
     setNotFound(false);
-    setAccountResults([]);
+    setPaymentResults([]);
     setDevoteeName('');
     setError('');
     localStorage.removeItem('gnh_yatra_accom_input');
@@ -153,8 +153,8 @@ function AccountsContent() {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'GNH Yatra 2026 Accounts',
-          text: `Check out the GNH Yatra 2026 Accounts details for ${devoteeName}`,
+          title: 'GNH Yatra 2026 Payments',
+          text: `Check out the GNH Yatra 2026 Payments details for ${devoteeName}`,
           url: shareUrl,
         });
       } catch (err) {
@@ -171,12 +171,12 @@ function AccountsContent() {
   };
 
   // Calculations
-  const totalPaid = accountResults.reduce((sum, row) => sum + (parseFloat(row['1st Installment']) || 0), 0);
-  const totalPending = accountResults.reduce((sum, row) => sum + (parseFloat(row['Pending']) || 0), 0);
+  const totalPaid = paymentResults.reduce((sum, row) => sum + (parseFloat(row['1st Installment']) || 0), 0);
+  const totalPending = paymentResults.reduce((sum, row) => sum + (parseFloat(row['Pending']) || 0), 0);
 
   return (
     <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #fdf6ec 0%, #f5f0ff 50%, #ecf0ff 100%)' }}>
-      {/* Header — Accounts accent: Emerald/Teal */}
+      {/* Header — Payments accent: Emerald/Teal */}
       <header className="bg-white/85 backdrop-blur-md shadow-sm sticky top-0 z-40 print:hidden" style={{ borderBottom: '1px solid rgba(16,185,129,0.15)' }}>
         {/* Animated gradient accent line at top */}
         <div className="h-0.5 bg-gradient-to-r from-emerald-400 via-teal-500 to-emerald-400" style={{ backgroundSize: '200% 100%', animation: 'headerGradient 4s ease infinite' }} />
@@ -187,7 +187,7 @@ function AccountsContent() {
               GNH Yatra 2026
             </h1>
             <p className="text-[12px] md:text-xs font-bold tracking-wider mt-0.5 uppercase flex items-center justify-center gap-1" style={{ color: '#059669' }}>
-              Accounts
+              Payments
             </p>
           </div>
         </div>
@@ -197,7 +197,7 @@ function AccountsContent() {
 
         {/* Hero Section */}
         <div className="text-center mb-4 sm:mb-8 animate-fade-in print:hidden">
-          <h2 className="text-2xl sm:text-2xl md:text-3xl font-black text-slate-800 mb-2">Your Accounts</h2>
+          <h2 className="text-2xl sm:text-2xl md:text-3xl font-black text-slate-800 mb-2">Your Payments</h2>
           <p className="text-slate-500 text-base max-w-sm mx-auto leading-relaxed">
             Enter the phone number or email you used during registration to view your payment details.
           </p>
@@ -280,7 +280,7 @@ function AccountsContent() {
                 </div>
                 <h3 className="text-lg font-bold text-slate-700 mb-2">No registration found</h3>
                 <p className="text-slate-500 text-xs max-w-sm mx-auto mb-5 leading-relaxed">
-                  We couldn't find any account record associated with <span className="font-bold text-slate-700 break-all">{input.trim()}</span>.
+                  We couldn't find any payment record associated with <span className="font-bold text-slate-700 break-all">{input.trim()}</span>.
                   Please double-check and try again, or contact Gopalkrishna Prabhu at <a href="tel:8277487290" className="font-bold text-indigo-600 hover:underline">8277487290</a>
                 </p>
                 <button onClick={handleReset} className="btn-secondary text-sm">
@@ -289,14 +289,14 @@ function AccountsContent() {
               </div>
             )}
 
-            {/* Found Accounts */}
-            {!notFound && accountResults.length > 0 && (
+            {/* Found Payments */}
+            {!notFound && paymentResults.length > 0 && (
               <div className="space-y-6">
                 {/* Result Header */}
                 <div className="flex flex-col gap-3 mx-2 sm:mx-0">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <p className="text-[10px] text-slate-500 uppercase tracking-widest font-black">Account Details for</p>
+                      <p className="text-[10px] text-slate-500 uppercase tracking-widest font-black">Payment Details for</p>
                       <h3 className="text-xl sm:text-2xl font-black text-slate-800 leading-tight">{devoteeName}'s Group</h3>
                     </div>
                     <div className="flex gap-2 print:hidden">
@@ -354,7 +354,7 @@ function AccountsContent() {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100">
-                        {accountResults.map((row, idx) => {
+                        {paymentResults.map((row, idx) => {
                           const name = row['Individual Name'] || '';
                           const room = row['Room'] || 'Not specified';
                           const inst = parseFloat(row['1st Installment']) || 0;
@@ -412,7 +412,7 @@ function AccountsContent() {
 
         {/* Footer */}
         <footer className="text-center text-slate-400 text-sm mt-12 print:mt-6 pb-20">
-          <p className="mt-1">For clarification regarding Accounts, contact <strong className="text-slate-600">Gopal Prabhu</strong></p>
+          <p className="mt-1">For clarification regarding Payments, contact <strong className="text-slate-600">Gopal Prabhu</strong></p>
           <a
             href="tel:8277487290"
             className="inline-flex items-center gap-1.5 mt-2 bg-emerald-50 text-emerald-700 border border-emerald-200 px-4 py-1.5 rounded-full font-bold text-sm hover:bg-emerald-100 transition-colors"
@@ -429,10 +429,10 @@ function AccountsContent() {
   );
 }
 
-export default function Accounts() {
+export default function Payments() {
   return (
     <ErrorBoundary>
-      <AccountsContent />
+      <PaymentsContent />
     </ErrorBoundary>
   );
 }

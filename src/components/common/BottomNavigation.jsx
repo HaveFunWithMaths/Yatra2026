@@ -7,7 +7,7 @@ export default function BottomNavigation({ currentSearchTerm }) {
   const location = useLocation();
 
   const isAccommodation = location.pathname.toLowerCase().includes('/accommodation');
-  const isAccounts = location.pathname.toLowerCase().includes('/accounts');
+  const isPayments = location.pathname.toLowerCase().includes('/payments');
 
   const handleTabClick = (path) => {
     const qParam = currentSearchTerm ? `?q=${encodeURIComponent(currentSearchTerm)}` : '';
@@ -29,14 +29,14 @@ export default function BottomNavigation({ currentSearchTerm }) {
         </button>
 
         <button
-          onClick={() => handleTabClick('/accounts')}
-          className={`flex flex-col items-center gap-1 py-1 px-6 rounded-xl transition-all duration-300 ${isAccounts
+          onClick={() => handleTabClick('/payments')}
+          className={`flex flex-col items-center gap-1 py-1 px-6 rounded-xl transition-all duration-300 ${isPayments
               ? 'text-indigo-600 font-extrabold scale-105 bg-indigo-50/80'
               : 'text-slate-400 hover:text-slate-700 font-semibold'
             }`}
         >
-          <Wallet className={`w-5 h-5 transition-transform ${isAccounts ? 'scale-110' : ''}`} />
-          <span className="text-[10px] tracking-wider uppercase">Accounts</span>
+          <Wallet className={`w-5 h-5 transition-transform ${isPayments ? 'scale-110' : ''}`} />
+          <span className="text-[10px] tracking-wider uppercase">Payments</span>
         </button>
       </div>
     </div>
