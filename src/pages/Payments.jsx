@@ -401,8 +401,7 @@ function PaymentsContent() {
                 {/* Important Disclaimer / Notice */}
                 <div className="bg-amber-50 border border-amber-200/80 rounded-2xl p-4 text-center shadow-sm mx-2 sm:mx-0 print:border-slate-300">
                   <p className="text-amber-800 text-sm font-black leading-relaxed">
-                    ⚠️ These details may change. Please recheck this site before Registering.
-                  </p>
+⚠️ Estimated Details: Subject to change. Please verify this page before registering. Final costs will be reconciled post-yatra.                  </p>
                 </div>
 
               </div>
