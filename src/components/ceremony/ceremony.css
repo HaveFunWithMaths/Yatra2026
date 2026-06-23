@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Cinzel:wght@400;600;700&family=Lato:wght@300;400;700&display=swap');
 
 /* Ceremony variables */
 :root {
@@ -10,7 +10,7 @@
   --ceremony-pink: #f5cfd7;
   --ceremony-text: #faf5eb;
   --ceremony-text-muted: #c8b9d6;
-  --ceremony-font-title: 'Playfair Display', Georgia, serif;
+  --ceremony-font-title: 'Cormorant Garamond', Georgia, serif;
   --ceremony-font-body: 'Lato', system-ui, sans-serif;
   --ceremony-card-bg: rgba(26, 20, 64, 0.45);
   --ceremony-border: rgba(226, 180, 59, 0.15);
@@ -29,6 +29,18 @@
   align-items: center;
   justify-content: center;
   user-select: none;
+}
+
+.ceremony-fullscreen-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, rgba(226, 180, 59, 0.08) 0%, rgba(15, 10, 36, 0) 70%);
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* Slide Wrapper matching 16:9 ratio */
@@ -58,7 +70,7 @@
 }
 
 .ceremony-logo-overlay img {
-  height: 70px;
+  height: 80px;
   width: auto;
   object-fit: contain;
 }
@@ -233,13 +245,14 @@
 
 .ceremony-title-decorative {
   color: var(--ceremony-gold);
-  font-size: 1.2rem;
-  text-transform: uppercase;
-  letter-spacing: 5px;
+  font-size: 2.5rem;
+  text-transform: none;
+  letter-spacing: 2px;
   font-weight: 700;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.2rem;
+  font-family: var(--ceremony-font-title);
 }
 
 .ceremony-title-decorative::before,
@@ -253,10 +266,10 @@
 
 .ceremony-main-title {
   font-family: var(--ceremony-font-title);
-  font-size: 4.8rem;
+  font-size: 5.6rem;
   font-weight: 700;
   line-height: 1.1;
-  background: linear-gradient(to bottom, #ffffff 30%, var(--ceremony-pink) 100%);
+  background: linear-gradient(160deg, #fffbe6 0%, #f4c842 50%, #d4981e 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 4px 15px rgba(0,0,0,0.4));
@@ -265,10 +278,10 @@
 
 .ceremony-subtitle {
   font-family: var(--ceremony-font-body);
-  font-size: 1.6rem;
-  font-weight: 300;
+  font-size: 2.2rem;
+  font-weight: 400;
   color: var(--ceremony-text-muted);
-  max-width: 600px;
+  max-width: 800px;
   margin-top: 1rem;
 }
 
@@ -292,6 +305,7 @@
   letter-spacing: 6px;
   margin-bottom: 1.5rem;
   font-weight: 400;
+  font-family: 'Cinzel', serif;
 }
 
 .ceremony-divider-title {
@@ -419,24 +433,29 @@
 }
 
 .ceremony-participant-name {
-  font-size: 1.45rem;
-  font-weight: 400;
+  font-family: var(--ceremony-font-title);
+  font-size: 1.75rem;
+  font-weight: 600;
   letter-spacing: 0.5px;
   flex-grow: 1;
 }
 
 .ceremony-participant-rounds-badge {
-  background: rgba(226, 180, 59, 0.12);
-  border: 1px solid rgba(226, 180, 59, 0.3);
-  color: var(--ceremony-gold);
-  padding: 0.4rem 1rem;
+  background: rgba(244, 166, 35, 0.12);
+  border: 1px solid rgba(244, 166, 35, 0.4);
+  color: #ffcc66;
+  padding: 0.4rem 1.2rem;
   border-radius: 30px;
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   font-weight: 700;
   letter-spacing: 0.5px;
-  min-width: 120px;
+  min-width: 140px;
   text-align: center;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
 }
 
 /* Help text overlay */

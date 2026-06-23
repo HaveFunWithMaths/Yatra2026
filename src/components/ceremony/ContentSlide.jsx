@@ -24,23 +24,23 @@ export default function ContentSlide({ section, image, participants, direction }
 
   const slideVariants = {
     enter: (dir) => ({
-      x: dir > 0 ? '100vw' : '-100vw',
-      opacity: 0.5
+      y: dir > 0 ? 25 : -25,
+      opacity: 0
     }),
     center: {
-      x: 0,
+      y: 0,
       opacity: 1,
       transition: {
-        x: { type: "spring", stiffness: 120, damping: 18 },
-        opacity: { duration: 0.4 }
+        y: { type: "spring", stiffness: 100, damping: 20 },
+        opacity: { duration: 0.5, ease: "easeOut" }
       }
     },
     exit: (dir) => ({
-      x: dir > 0 ? '-100vw' : '100vw',
-      opacity: 0.5,
+      y: dir > 0 ? -25 : 25,
+      opacity: 0,
       transition: {
-        x: { type: "spring", stiffness: 120, damping: 18 },
-        opacity: { duration: 0.4 }
+        y: { type: "spring", stiffness: 100, damping: 20 },
+        opacity: { duration: 0.4, ease: "easeIn" }
       }
     })
   };
@@ -76,7 +76,9 @@ export default function ContentSlide({ section, image, participants, direction }
               >
                 <span className="ceremony-participant-bullet">❀</span>
                 <span className="ceremony-participant-name">{p.name}</span>
-                <span className="ceremony-participant-rounds-badge">{p.rounds}</span>
+                <span className="ceremony-participant-rounds-badge">
+                  {p.rounds}
+                </span>
               </motion.li>
             ))}
           </motion.ul>
