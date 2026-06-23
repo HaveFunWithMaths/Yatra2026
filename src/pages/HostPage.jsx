@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 
 function HostPage() {
@@ -68,13 +69,13 @@ function HostPage() {
               </p>
 
               {/* Action Button */}
-              <div className="mt-6 sm:mt-8">
+              <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3 justify-center items-center">
                 <a
                   href={whatsappUrl}
-                  className="inline-flex items-center justify-center gap-2.5 w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg shadow-emerald-600/30 hover:shadow-xl hover:shadow-emerald-600/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
+                  className="inline-flex items-center justify-center gap-2.5 w-full sm:w-auto px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg shadow-emerald-600/30 hover:shadow-xl hover:shadow-emerald-600/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
                 >
                   <svg
-                    className="w-6 h-6 fill-current"
+                    className="w-5 h-5 fill-current"
                     viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg"
                   >
@@ -82,6 +83,12 @@ function HostPage() {
                   </svg>
                   <span>Chat on WhatsApp</span>
                 </a>
+                <Link
+                  to="/commitment"
+                  className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-amber-950 font-bold rounded-xl shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
+                >
+                  <span>Commitment Slideshow</span>
+                </Link>
               </div>
             </div>
 

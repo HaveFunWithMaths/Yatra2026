@@ -5,6 +5,7 @@ import RegistrationForm from './pages/RegistrationForm';
 import Dashboard from './pages/Dashboard';
 import Accommodation from './pages/Accommodation';
 import Accounts from './pages/Accounts';
+import CommitmentCeremony from './pages/CommitmentCeremony';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/accommodation" element={<Accommodation />} />
         <Route path="/accounts" element={<Accounts />} />
         <Route path="/Accounts" element={<Accounts />} />
+        <Route path="/commitment" element={<CommitmentCeremony />} />
       </Routes>
     </BrowserRouter>
   );
