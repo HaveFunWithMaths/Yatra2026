@@ -11,6 +11,7 @@ const ACCOMMODATION_CSV_URL =
   'https://docs.google.com/spreadsheets/d/1KqLzcSY92zccRQdBSHeNWXzll2ryE-Mpn9iWHkDRoHk/export?format=csv';
 
 const cleanName = (name) => (name || '').trim().toLowerCase().replace(/\s+/g, ' ');
+const isTBD = (val) => (val || '').trim().toUpperCase() === 'TBD';
 
 function PaymentsContent() {
   const [input, setInput] = useState('');
@@ -171,8 +172,11 @@ function PaymentsContent() {
   };
 
   // Calculations
-  const totalPaid = paymentResults.reduce((sum, row) => sum + (parseFloat(row['1st Installment']) || 0), 0);
-  const totalPending = paymentResults.reduce((sum, row) => sum + (parseFloat(row['Pending']) || 0), 0);
+  const hasTBDInstallment = paymentResults.some(row => isTBD(row['1st Installment']));
+  const hasTBDPending = paymentResults.some(row => isTBD(row['Pending']));
+
+  const totalPaid = hasTBDInstallment ? 'TBD' : paymentResults.reduce((sum, row) => sum + (parseFloat(row['1st Installment']) || 0), 0);
+  const totalPending = hasTBDPending ? 'TBD' : paymentResults.reduce((sum, row) => sum + (parseFloat(row['Pending']) || 0), 0);
 
   return (
     <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #fdf6ec 0%, #f5f0ff 50%, #ecf0ff 100%)' }}>
@@ -331,13 +335,17 @@ function PaymentsContent() {
                   {/* Row 2: Paid */}
                   <div className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-100 rounded-2xl p-4 sm:p-5 shadow-sm">
                     <p className="text-[10px] text-emerald-600 uppercase tracking-widest font-black mb-1">Total Paid</p>
-                    <p className="text-2xl font-black text-slate-800">₹{totalPaid.toLocaleString('en-IN')}</p>
+                    <p className="text-2xl font-black text-slate-800">
+                      {totalPaid === 'TBD' ? 'TBD' : '₹' + totalPaid.toLocaleString('en-IN')}
+                    </p>
                     <p className="text-[10px] text-emerald-500 font-semibold mt-0.5">1st Installment</p>
                   </div>
                   {/* Row 2: Pending */}
                   <div className="bg-gradient-to-br from-rose-50 to-rose-100/50 border border-rose-100 rounded-2xl p-4 sm:p-5 shadow-sm">
                     <p className="text-[10px] text-rose-600 uppercase tracking-widest font-black mb-1">Total Pending</p>
-                    <p className="text-2xl font-black text-rose-600">₹{totalPending.toLocaleString('en-IN')}</p>
+                    <p className="text-2xl font-black text-rose-600">
+                      {totalPending === 'TBD' ? 'TBD' : '₹' + totalPending.toLocaleString('en-IN')}
+                    </p>
                     <p className="text-[10px] text-rose-400 font-semibold mt-0.5">Balance due</p>
                   </div>
                 </div>
@@ -357,8 +365,12 @@ function PaymentsContent() {
                         {paymentResults.map((row, idx) => {
                           const name = row['Individual Name'] || '';
                           const room = row['Room'] || 'Not specified';
-                          const inst = parseFloat(row['1st Installment']) || 0;
-                          const pend = parseFloat(row['Pending']) || 0;
+                          const instVal = row['1st Installment'];
+                          const pendVal = row['Pending'];
+                          const isInstTBD = isTBD(instVal);
+                          const isPendTBD = isTBD(pendVal);
+                          const inst = isInstTBD ? 0 : parseFloat(instVal) || 0;
+                          const pend = isPendTBD ? 0 : parseFloat(pendVal) || 0;
                           return (
                             <tr key={idx} className={`transition-colors hover:bg-indigo-50/20 ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
                               <td className="px-3 sm:px-5 py-3.5 font-extrabold text-slate-800 text-base">{name}</td>
@@ -372,12 +384,12 @@ function PaymentsContent() {
                                 </span>
                               </td>
                               <td className="px-3 sm:px-5 py-3.5 text-right font-extrabold text-emerald-700 text-base">
-                                ₹{inst.toLocaleString('en-IN')}
+                                {isInstTBD ? 'TBD' : '₹' + inst.toLocaleString('en-IN')}
                               </td>
                               <td className={`px-3 sm:px-5 py-3.5 text-right font-black text-base ${
-                                pend > 0 ? 'text-rose-600' : 'text-emerald-600'
+                                isPendTBD ? 'text-slate-500' : pend > 0 ? 'text-rose-600' : 'text-emerald-600'
                               }`}>
-                                {pend > 0 ? '₹' + pend.toLocaleString('en-IN') : '✓ Cleared'}
+                                {isPendTBD ? 'TBD' : pend > 0 ? '₹' + pend.toLocaleString('en-IN') : '✓ Cleared'}
                               </td>
                             </tr>
                           );
@@ -388,9 +400,9 @@ function PaymentsContent() {
                             Total Pending
                           </td>
                           <td className={`px-3 sm:px-5 py-4 text-right font-black text-lg ${
-                            totalPending > 0 ? 'text-rose-700' : 'text-emerald-600'
+                            totalPending === 'TBD' ? 'text-slate-600' : totalPending > 0 ? 'text-rose-700' : 'text-emerald-600'
                           }`}>
-                            {totalPending > 0 ? '₹' + totalPending.toLocaleString('en-IN') : '✓ All Clear'}
+                            {totalPending === 'TBD' ? 'TBD' : totalPending > 0 ? '₹' + totalPending.toLocaleString('en-IN') : '✓ All Clear'}
                           </td>
                         </tr>
                       </tbody>
