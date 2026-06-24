@@ -237,10 +237,10 @@ export default function RoomCard({ room, matchedNames, index = 0 }) {
               <span className="text-emerald-600 font-extrabold text-xl leading-none">₹</span>
             </div>
             <div>
-              <p className="text-slate-400 text-xs font-bold uppercase tracking-wider leading-none">Cost per Day</p>
+              <p className="text-slate-400 text-xs font-bold uppercase tracking-wider leading-none">Daily Room Rate</p>
               <p className="text-slate-800 font-bold text-base mt-1">
                 ₹{isNaN(cost) ? cost : Number(cost).toLocaleString('en-IN')}
-                {extraBed && extraBed.toString().trim().toLowerCase().startsWith('yes') ? ' (inlcudes extra bed)' : ''}
+                {extraBed && extraBed.toString().trim().toLowerCase().startsWith('yes') ? ' (Includes extra bed)' : ''}
               </p>
             </div>
           </div>

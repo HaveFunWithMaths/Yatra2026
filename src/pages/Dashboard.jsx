@@ -203,10 +203,28 @@ export default function Dashboard() {
   }, [data, searchTerm, sortConfig]);
 
   const kpis = useMemo(() => {
-    const uniqueGroups = new Set(data.filter(d => d['Devotee Name']).map(d => d['Devotee Name']));
+    let toddlers = 0;
+    let children = 0;
+    let adults = 0;
+
+    data.forEach(row => {
+      const ageStr = row['Age'] || '';
+      const age = parseInt(ageStr, 10);
+      if (!isNaN(age)) {
+        if (age >= 0 && age <= 5) {
+          toddlers++;
+        } else if (age >= 6 && age <= 10) {
+          children++;
+        } else if (age >= 11) {
+          adults++;
+        }
+      }
+    });
+
     return {
-      groups: uniqueGroups.size,
-      total: data.length
+      toddlers,
+      children,
+      adults
     };
   }, [data]);
 
@@ -345,17 +363,17 @@ export default function Dashboard() {
         
         {/* KPIs */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-center">
-            <span className="text-sm text-slate-500 font-medium">Families / Groups</span>
-            <span className="text-2xl font-bold text-slate-800">{kpis.groups}</span>
+          <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-center transition-all hover:shadow-md hover:border-indigo-100">
+            <span className="text-sm text-slate-500 font-semibold uppercase tracking-wider">Toddlers (0-5)</span>
+            <span className="text-3xl font-extrabold text-indigo-600 mt-1">{kpis.toddlers}</span>
           </div>
-          <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-center">
-            <span className="text-sm text-slate-500 font-medium">Total Registrations</span>
-            <span className="text-2xl font-bold text-rose-600">{kpis.total}</span>
+          <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-center transition-all hover:shadow-md hover:border-pink-100">
+            <span className="text-sm text-slate-500 font-semibold uppercase tracking-wider">Child (6-10)</span>
+            <span className="text-3xl font-extrabold text-pink-600 mt-1">{kpis.children}</span>
           </div>
-          <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-center">
-            <span className="text-sm text-slate-500 font-medium">Currently Showing</span>
-            <span className="text-2xl font-bold text-indigo-600">{processedData.length}</span>
+          <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-center transition-all hover:shadow-md hover:border-emerald-100">
+            <span className="text-sm text-slate-500 font-semibold uppercase tracking-wider">Adults (11+)</span>
+            <span className="text-3xl font-extrabold text-emerald-600 mt-1">{kpis.adults}</span>
           </div>
         </div>
 
