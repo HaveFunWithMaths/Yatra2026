@@ -77,8 +77,8 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                                 Overall Total Yatra cost estimate per devotee (excluding the travel to Hampi from your home) is:
                             </p>
                             <ul className="text-sm space-y-1 mb-2 text-indigo-900">
-                                <li className="flex justify-between border-b border-indigo-200 pb-1"><span>Non AC room option</span> <span className="font-semibold">₹5500 to ₹6000</span></li>
-                                <li className="flex justify-between pt-1"><span>AC room option</span> <span className="font-semibold">₹6500 to ₹7000</span></li>
+                                <li className="flex justify-between border-b border-indigo-200 pb-1"><span>Non AC room option</span> <span className="font-semibold">₹6500</span></li>
+                                <li className="flex justify-between pt-1"><span>AC room option</span> <span className="font-semibold">₹7300</span></li>
                             </ul>
                             <p className="text-xs text-indigo-700 italic mt-2 opacity-90">
                                 Please note: Actual price will be informed once the rooms, prasadam, internal travels etc.. is done..
@@ -128,7 +128,7 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                                 WhatsApp Number <span className="text-red-500">*</span>
                             </label>
                             <div className={`flex rounded-xl shadow-sm border focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500 bg-white ${errors.whatsapp ? 'border-red-400' : 'border-slate-200'}`}>
-                                <input 
+                                <input
                                     type="text"
                                     className="w-16 md:w-20 pl-3 py-3 bg-slate-50 border-r border-slate-200 text-slate-700 focus:outline-none rounded-l-xl text-sm font-medium"
                                     value={data.countryCode || ''}
@@ -264,7 +264,7 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                 <h3 className="text-xl font-bold text-slate-800 mb-4 flex items-center">
                     <span className="bg-blue-100 text-blue-600 p-2 rounded-lg mr-3">
                         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                         </svg>
                     </span>
                     Accommodation Preference
@@ -283,7 +283,7 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                                         <h4 className={`text-base font-bold ${data.accommodation === 'AC' ? 'text-indigo-900' : 'text-slate-800'}`}>AC Room</h4>
                                     </div>
                                     {data.accommodation === 'AC' && (
-                                        <div className="bg-indigo-600 text-white p-1 rounded-full"><CheckIcon className="w-4 h-4"/></div>
+                                        <div className="bg-indigo-600 text-white p-1 rounded-full"><CheckIcon className="w-4 h-4" /></div>
                                     )}
                                 </div>
                             </div>
@@ -297,7 +297,7 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                                         <h4 className={`text-base font-bold ${data.accommodation === 'Non AC' ? 'text-amber-900' : 'text-slate-800'}`}>Non AC Room</h4>
                                     </div>
                                     {data.accommodation === 'Non AC' && (
-                                        <div className="bg-amber-500 text-white p-1 rounded-full"><CheckIcon className="w-4 h-4"/></div>
+                                        <div className="bg-amber-500 text-white p-1 rounded-full"><CheckIcon className="w-4 h-4" /></div>
                                     )}
                                 </div>
                             </div>
@@ -338,8 +338,8 @@ const DevoteeForm = ({ data, onChange, isAlone, setIsAlone, onNext, onSubmit, er
                     {/* Option: Alone - Horizontal Layout */}
                     <div
                         onClick={() => { if (!isAutopopulated) { setIsAlone(true); setSelectionKey(k => k + 1); } }}
-                        className={`relative p-5 rounded-2xl border-2 transition-all duration-300 ${isAutopopulated 
-                            ? 'opacity-50 cursor-not-allowed border-slate-200 bg-slate-50' 
+                        className={`relative p-5 rounded-2xl border-2 transition-all duration-300 ${isAutopopulated
+                            ? 'opacity-50 cursor-not-allowed border-slate-200 bg-slate-50'
                             : 'cursor-pointer hover:shadow-md card-hover ' + (isAlone === true
                                 ? 'border-indigo-600 bg-indigo-50 ring-2 ring-indigo-200 ring-offset-2 animate-selection'
                                 : 'border-slate-200 bg-white hover:border-indigo-300'
