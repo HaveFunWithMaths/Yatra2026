@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Papa from 'papaparse';
 import RoomCard from '../components/RoomCard';
 import ErrorBoundary from '../components/ErrorBoundary';
-import { NOTICES } from '../utils/hotelConfig';
+import { NOTICES, getHotelTab } from '../utils/hotelConfig';
 import { findGroupNames, findRooms } from '../utils/accommodationUtils';
 import BottomNavigation from '../components/common/BottomNavigation';
 
@@ -13,6 +14,7 @@ const ACCOMMODATION_CSV_URL =
   'https://docs.google.com/spreadsheets/d/1qbw2uXcD4Nezswp6igIXeqB3MrGW_4YRYeamzOggY2A/export?format=csv';
 
 function AccommodationContent() {
+  const navigate = useNavigate();
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
@@ -393,14 +395,18 @@ function AccommodationContent() {
                       <div>
                         <h4 className="text-slate-800 font-extrabold text-base">Sample Rooms Picture</h4>
                         <p className="text-slate-500 text-sm mt-0.5">View reference photos of rooms</p>
-                        <a
-                          href="https://docs.google.com/document/d/10lcnCl56xsLGMz2agLA9dk2ZvyEQNVdEm1R25EK28QE/edit?tab=t.0"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-indigo-600 hover:text-indigo-800 text-sm font-bold inline-flex items-center gap-1 hover:underline mt-1.5 print:hidden"
+                        <button
+                          onClick={() => {
+                            const firstHotel = roomResults[0]?.room?.hotel;
+                            const tabName = getHotelTab(firstHotel);
+                            const savedInput = localStorage.getItem('gnh_yatra_accom_input') || input;
+                            const qParam = savedInput ? `&q=${encodeURIComponent(savedInput)}` : '';
+                            navigate(`/hotel?tab=${encodeURIComponent(tabName)}${qParam}`);
+                          }}
+                          className="text-indigo-600 hover:text-indigo-800 text-sm font-bold inline-flex items-center gap-1 hover:underline mt-1.5 print:hidden text-left"
                         >
                           View Sample Photos →
-                        </a>
+                        </button>
                       </div>
                     </div>
                   </div>

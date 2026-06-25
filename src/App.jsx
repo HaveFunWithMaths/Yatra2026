@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import Accommodation from './pages/Accommodation';
 import Payments from './pages/Payments';
 import CommitmentCeremony from './pages/CommitmentCeremony';
+import HotelPage from './pages/HotelPage';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/payments" element={<Payments />} />
         <Route path="/Payments" element={<Payments />} />
         <Route path="/commitment" element={<CommitmentCeremony />} />
+        <Route path="/hotel" element={<HotelPage />} />
       </Routes>
     </BrowserRouter>
   );

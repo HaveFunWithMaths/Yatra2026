@@ -40,6 +40,20 @@ export function resolveHotelConfig(hotelName) {
 }
 
 /**
+ * Maps a hotel name string to the user-facing tab name.
+ * @param {string} hotelName
+ * @returns {string}
+ */
+export function getHotelTab(hotelName) {
+  if (!hotelName) return 'Amrutha Residency';
+  const lower = hotelName.trim().toLowerCase();
+  if (lower.includes('amrutha')) return 'Amrutha Residency';
+  if (lower.includes('brindavan') || lower.includes('vrindavan')) return 'Brindavan Residency';
+  if (lower.includes('shivananda') || lower.includes('sivananda')) return 'Hotel Shivananda';
+  return 'Amrutha Residency'; // Default fallback
+}
+
+/**
  * NOTICES — General info banners shown after a successful room lookup.
  * Edit this array without touching component render logic.
  */
