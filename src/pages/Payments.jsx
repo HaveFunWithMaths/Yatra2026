@@ -410,6 +410,38 @@ function PaymentsContent() {
                   </div>
                 </div>
 
+                {/* Yatra Contribution Coverage Details */}
+                <div className="bg-white/95 border border-slate-100 rounded-2xl p-5 sm:p-6 shadow-md mx-2 sm:mx-0 animate-slide-up space-y-4 print:border-slate-300 print:shadow-none">
+                  <p className="text-slate-700 text-sm sm:text-base font-semibold leading-relaxed">
+                    This amount covers the entire yatra, starting from your arrival in Hampi until your departure from Hampi.
+                  </p>
+                  <div className="space-y-2.5">
+                    <p className="text-xs font-black text-slate-500 uppercase tracking-wider">The contribution includes:</p>
+                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-slate-600 font-bold">
+                      <li className="flex items-start gap-2">
+                        <span className="shrink-0 text-emerald-600">✅</span>
+                        <span>3 time Prasadam throughout the yatra</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="shrink-0 text-emerald-600">✅</span>
+                        <span>Accommodation</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="shrink-0 text-emerald-600">✅</span>
+                        <span>Transportation to all the holy places</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="shrink-0 text-emerald-600">✅</span>
+                        <span>Hall arrangements</span>
+                      </li>
+                      <li className="flex items-start gap-2 sm:col-span-2">
+                        <span className="shrink-0 text-emerald-600">✅</span>
+                        <span>All other yatra-related expenses</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
                 {/* Important Disclaimer / Notice */}
                 <div className="bg-amber-50 border border-amber-200/80 rounded-2xl p-4 text-center shadow-sm mx-2 sm:mx-0 print:border-slate-300">
                   <p className="text-amber-800 text-sm font-black leading-relaxed">
