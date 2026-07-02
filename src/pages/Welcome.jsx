@@ -381,6 +381,24 @@ export default function Welcome() {
         const cleanColor = textColor.replace('#', '');
         const cleanFont = fontFamily.pptValue;
 
+        // Slide Header alignment and coords to avoid logo collision
+        const isLogoLeft = logoPosition.value === 'top-left';
+        const headerX = isLogoLeft ? 8.5 : 0.5;
+        const headerW = isLogoLeft ? 4.5 : 8.0;
+        const headerAlign = isLogoLeft ? 'right' : 'left';
+
+        pptSlide.addText('GNH Hampi Yatra', {
+          x: headerX,
+          y: 0.3,
+          w: headerW,
+          h: 0.4,
+          align: headerAlign,
+          fontSize: 14,
+          fontFace: cleanFont,
+          color: cleanColor,
+          bold: true
+        });
+
         if (slide.type === 'intro') {
           // Title
           pptSlide.addText(slide.title, {
@@ -928,6 +946,21 @@ export default function Welcome() {
                   alt="GNH Logo" 
                   className={`object-contain pointer-events-none filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)] ${isFullscreen ? 'h-24 w-24' : 'h-12 w-12 md:h-16 md:w-16'}`}
                 />
+              </div>
+
+              {/* Slide Header */}
+              <div 
+                style={{ 
+                  fontFamily: fontFamily.value, 
+                  color: textColor 
+                }}
+                className={`absolute z-10 font-bold uppercase tracking-widest opacity-80 filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] transition-all duration-300 ${
+                  isFullscreen ? 'top-6 text-base md:text-lg' : 'top-4 text-[10px] md:text-xs'
+                } ${
+                  logoPosition.value === 'top-left' ? 'right-6 md:right-8' : 'left-6 md:left-8'
+                }`}
+              >
+                GNH Hampi Yatra
               </div>
 
               {/* SLIDESHOW CONTENT RENDER WITH ANIMATION */}
