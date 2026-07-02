@@ -1,14 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import Papa from 'papaparse';
 import ErrorBoundary from '../components/ErrorBoundary';
 import { findGroupNames, matchPhoneOrEmail } from '../utils/accommodationUtils';
 import BottomNavigation from '../components/common/BottomNavigation';
-
-// Public CSV export URLs
-const REGISTRATION_CSV_URL =
-  'https://docs.google.com/spreadsheets/d/1GIEPXnjsjw7RClGwgOFVOrZemhlqY7jAMl7t2FNkvos/export?format=csv';
-const ACCOMMODATION_CSV_URL =
-  'https://docs.google.com/spreadsheets/d/1KqLzcSY92zccRQdBSHeNWXzll2ryE-Mpn9iWHkDRoHk/export?format=csv';
+import { fetchRegistrationData, fetchPaymentsData } from '../utils/csvCache';
 
 const cleanName = (name) => (name || '').trim().toLowerCase().replace(/\s+/g, ' ');
 const isTBD = (val) => (val || '').trim().toUpperCase() === 'TBD';
@@ -21,6 +15,12 @@ function PaymentsContent() {
   const [devoteeName, setDevoteeName] = useState('');
   const [paymentResults, setPaymentResults] = useState([]); // [row]
   const [notFound, setNotFound] = useState(false);
+
+  // Parallel prefetching on mount
+  useEffect(() => {
+    fetchRegistrationData().catch(err => console.error("Prefetch error:", err));
+    fetchPaymentsData().catch(err => console.error("Prefetch error:", err));
+  }, []);
 
   const handleSearch = useCallback(async (searchValue) => {
     const term = (searchValue || '').trim();
@@ -36,24 +36,11 @@ function PaymentsContent() {
     setDevoteeName('');
 
     try {
-      // Fetch both sheets in parallel
-      const [regText, paymentsRawText] = await Promise.all([
-        fetch(REGISTRATION_CSV_URL).then(r => r.text()),
-        fetch(ACCOMMODATION_CSV_URL).then(r => r.text()),
+      // Fetch both sheets in parallel from cache
+      const [regRows, paymentsRows] = await Promise.all([
+        fetchRegistrationData(),
+        fetchPaymentsData(),
       ]);
-
-      const regParsed = Papa.parse(regText, { header: true, skipEmptyLines: true });
-
-      // Clean Payments CSV by skipping the first line
-      const firstNewlineIndex = paymentsRawText.indexOf('\n');
-      const cleanedPaymentsText = firstNewlineIndex !== -1
-        ? paymentsRawText.substring(firstNewlineIndex + 1)
-        : paymentsRawText;
-
-      const paymentsParsed = Papa.parse(cleanedPaymentsText, { header: true, skipEmptyLines: true });
-
-      const regRows = regParsed.data;
-      const paymentsRows = paymentsParsed.data;
 
       // 1. Process Payments rows to forward-fill merged Devotee Name and Number (phone)
       let lastDevName = '';
@@ -172,11 +159,19 @@ function PaymentsContent() {
   };
 
   // Calculations
-  const hasTBDInstallment = paymentResults.some(row => isTBD(row['1st Installment']));
+  const hasTBDPaid = paymentResults.some(row => isTBD(row['1st Installment']) || isTBD(row['Cash']));
   const hasTBDPending = paymentResults.some(row => isTBD(row['Pending']));
+  const hasTBDAdvance = paymentResults.some(row => isTBD(row['Advance']));
 
-  const totalPaid = hasTBDInstallment ? 'TBD' : paymentResults.reduce((sum, row) => sum + (parseFloat(row['1st Installment']) || 0), 0);
+  const totalPaid = hasTBDPaid ? 'TBD' : paymentResults.reduce((sum, row) => sum + (parseFloat(row['1st Installment']) || 0) + (parseFloat(row['Cash']) || 0), 0);
   const totalPending = hasTBDPending ? 'TBD' : paymentResults.reduce((sum, row) => sum + (parseFloat(row['Pending']) || 0), 0);
+  const totalAdvance = hasTBDAdvance ? 'TBD' : paymentResults.reduce((sum, row) => sum + (parseFloat(row['Advance']) || 0), 0);
+
+  // Check if Advance is non-zero for any group member
+  const showAdvance = paymentResults.some(row => {
+    const val = parseFloat(row['Advance']);
+    return !isNaN(val) && val !== 0;
+  });
 
   return (
     <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #fdf6ec 0%, #f5f0ff 50%, #ecf0ff 100%)' }}>
@@ -338,7 +333,7 @@ function PaymentsContent() {
                     <p className="text-2xl font-black text-slate-800">
                       {totalPaid === 'TBD' ? 'TBD' : '₹' + totalPaid.toLocaleString('en-IN')}
                     </p>
-                    <p className="text-[10px] text-emerald-500 font-semibold mt-0.5">1st Installment</p>
+                    <p className="text-[10px] text-emerald-500 font-semibold mt-0.5">1st Inst + Cash</p>
                   </div>
                   {/* Row 2: Pending */}
                   <div className="bg-gradient-to-br from-rose-50 to-rose-100/50 border border-rose-100 rounded-2xl p-4 sm:p-5 shadow-sm">
@@ -355,10 +350,15 @@ function PaymentsContent() {
                     <table className="w-full text-left border-collapse">
                       <thead>
                         <tr className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white text-xs uppercase tracking-wider">
-                          <th className="px-3 sm:px-5 py-4 font-black">Name</th>
+                          <th className="px-3 sm:px-5 py-4 font-black">
+                            <div className={showAdvance ? "max-w-[100px] sm:max-w-none truncate" : ""}>
+                              Name
+                            </div>
+                          </th>
                           <th className="px-3 sm:px-5 py-4 font-black">Room</th>
                           <th className="px-3 sm:px-5 py-4 font-black text-right">Paid</th>
                           <th className="px-3 sm:px-5 py-4 font-black text-right">Pending</th>
+                          {showAdvance && <th className="px-3 sm:px-5 py-4 font-black text-right">Advance</th>}
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100">
@@ -366,14 +366,28 @@ function PaymentsContent() {
                           const name = row['Individual Name'] || '';
                           const room = row['Room'] || 'Not specified';
                           const instVal = row['1st Installment'];
+                          const cashVal = row['Cash'];
                           const pendVal = row['Pending'];
+                          const advVal = row['Advance'];
+
                           const isInstTBD = isTBD(instVal);
+                          const isCashTBD = isTBD(cashVal);
                           const isPendTBD = isTBD(pendVal);
+                          const isAdvTBD = isTBD(advVal);
+
                           const inst = isInstTBD ? 0 : parseFloat(instVal) || 0;
+                          const cash = isCashTBD ? 0 : parseFloat(cashVal) || 0;
+                          const paidAmount = (isInstTBD || isCashTBD) ? 'TBD' : (inst + cash);
                           const pend = isPendTBD ? 0 : parseFloat(pendVal) || 0;
+                          const adv = isAdvTBD ? 0 : parseFloat(advVal) || 0;
+
                           return (
                             <tr key={idx} className={`transition-colors hover:bg-indigo-50/20 ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
-                              <td className="px-3 sm:px-5 py-3.5 font-extrabold text-slate-800 text-base">{name}</td>
+                              <td className="px-3 sm:px-5 py-3.5 font-extrabold text-slate-800 text-base">
+                                <div className={showAdvance ? "max-w-[100px] sm:max-w-none truncate" : ""}>
+                                  {name}
+                                </div>
+                              </td>
                               <td className="px-3 sm:px-5 py-3.5">
                                 <span className={`inline-flex items-center px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-xs font-bold ${
                                   room.toLowerCase().includes('non ac') || room.toLowerCase().includes('non-ac')
@@ -384,13 +398,18 @@ function PaymentsContent() {
                                 </span>
                               </td>
                               <td className="px-3 sm:px-5 py-3.5 text-right font-extrabold text-emerald-700 text-base">
-                                {isInstTBD ? 'TBD' : '₹' + inst.toLocaleString('en-IN')}
+                                {paidAmount === 'TBD' ? 'TBD' : '₹' + paidAmount.toLocaleString('en-IN')}
                               </td>
                               <td className={`px-3 sm:px-5 py-3.5 text-right font-black text-base ${
                                 isPendTBD ? 'text-slate-500' : pend > 0 ? 'text-rose-600' : 'text-emerald-600'
                               }`}>
                                 {isPendTBD ? 'TBD' : pend > 0 ? '₹' + pend.toLocaleString('en-IN') : '✓ Cleared'}
                               </td>
+                              {showAdvance && (
+                                <td className="px-3 sm:px-5 py-3.5 text-right font-extrabold text-indigo-700 text-base">
+                                  {isAdvTBD ? 'TBD' : '₹' + adv.toLocaleString('en-IN')}
+                                </td>
+                              )}
                             </tr>
                           );
                         })}
@@ -404,6 +423,11 @@ function PaymentsContent() {
                           }`}>
                             {totalPending === 'TBD' ? 'TBD' : totalPending > 0 ? '₹' + totalPending.toLocaleString('en-IN') : '✓ All Clear'}
                           </td>
+                          {showAdvance && (
+                            <td className="px-3 sm:px-5 py-4 text-right font-black text-lg text-indigo-700">
+                              {totalAdvance === 'TBD' ? 'TBD' : '₹' + totalAdvance.toLocaleString('en-IN')}
+                            </td>
+                          )}
                         </tr>
                       </tbody>
                     </table>

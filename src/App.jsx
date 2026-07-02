@@ -7,6 +7,9 @@ import Accommodation from './pages/Accommodation';
 import Payments from './pages/Payments';
 import CommitmentCeremony from './pages/CommitmentCeremony';
 import HotelPage from './pages/HotelPage';
+import Admin from './pages/Admin';
+import DevoteeDetails from './pages/DevoteeDetails';
+import Welcome from './pages/Welcome';
 
 function App() {
   return (
@@ -21,6 +24,9 @@ function App() {
         <Route path="/Payments" element={<Payments />} />
         <Route path="/commitment" element={<CommitmentCeremony />} />
         <Route path="/hotel" element={<HotelPage />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/devotee-details" element={<DevoteeDetails />} />
+        <Route path="/welcome" element={<Welcome />} />
       </Routes>
     </BrowserRouter>
   );

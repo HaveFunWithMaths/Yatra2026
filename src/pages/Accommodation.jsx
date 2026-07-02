@@ -1,17 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Papa from 'papaparse';
 import RoomCard from '../components/RoomCard';
 import ErrorBoundary from '../components/ErrorBoundary';
 import { NOTICES, getHotelTab } from '../utils/hotelConfig';
 import { findGroupNames, findRooms } from '../utils/accommodationUtils';
 import BottomNavigation from '../components/common/BottomNavigation';
-
-// Public CSV export URLs
-const REGISTRATION_CSV_URL =
-  'https://docs.google.com/spreadsheets/d/1GIEPXnjsjw7RClGwgOFVOrZemhlqY7jAMl7t2FNkvos/export?format=csv';
-const ACCOMMODATION_CSV_URL =
-  'https://docs.google.com/spreadsheets/d/1qbw2uXcD4Nezswp6igIXeqB3MrGW_4YRYeamzOggY2A/export?format=csv';
+import { fetchRegistrationData, fetchAccommodationData } from '../utils/csvCache';
 
 function AccommodationContent() {
   const navigate = useNavigate();
@@ -23,6 +17,12 @@ function AccommodationContent() {
   const [roomResults, setRoomResults] = useState([]); // [{ room, matchedNames }]
   const [notFound, setNotFound] = useState(false);
   const [noRoomsYet, setNoRoomsYet] = useState(false);
+
+  // Parallel prefetching on mount
+  useEffect(() => {
+    fetchRegistrationData().catch(err => console.error("Prefetch error:", err));
+    fetchAccommodationData().catch(err => console.error("Prefetch error:", err));
+  }, []);
 
   const handleSearch = useCallback(async (searchValue) => {
     const term = (searchValue || '').trim();
@@ -39,17 +39,11 @@ function AccommodationContent() {
     setDevoteeName('');
 
     try {
-      // Fetch both sheets in parallel
-      const [regText, accomText] = await Promise.all([
-        fetch(REGISTRATION_CSV_URL).then(r => r.text()),
-        fetch(ACCOMMODATION_CSV_URL).then(r => r.text()),
+      // Fetch both sheets in parallel from cache
+      const [regRows, accomRows] = await Promise.all([
+        fetchRegistrationData(),
+        fetchAccommodationData(),
       ]);
-
-      const regParsed = Papa.parse(regText, { header: true, skipEmptyLines: true });
-      const accomParsed = Papa.parse(accomText, { header: true, skipEmptyLines: true });
-
-      const regRows = regParsed.data;
-      const accomRows = accomParsed.data;
 
       // Step 1: Find group
       const groupResult = findGroupNames(regRows, term);

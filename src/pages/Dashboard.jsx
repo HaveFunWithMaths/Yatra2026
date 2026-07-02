@@ -213,9 +213,9 @@ export default function Dashboard() {
       if (!isNaN(age)) {
         if (age >= 0 && age <= 5) {
           toddlers++;
-        } else if (age >= 6 && age <= 10) {
+        } else if (age >= 6 && age <= 12) {
           children++;
-        } else if (age >= 11) {
+        } else if (age >= 13) {
           adults++;
         }
       }
@@ -368,11 +368,11 @@ export default function Dashboard() {
             <span className="text-3xl font-extrabold text-indigo-600 mt-1">{kpis.toddlers}</span>
           </div>
           <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-center transition-all hover:shadow-md hover:border-pink-100">
-            <span className="text-sm text-slate-500 font-semibold uppercase tracking-wider">Child (6-10)</span>
+            <span className="text-sm text-slate-500 font-semibold uppercase tracking-wider">Child (6-12)</span>
             <span className="text-3xl font-extrabold text-pink-600 mt-1">{kpis.children}</span>
           </div>
           <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-center transition-all hover:shadow-md hover:border-emerald-100">
-            <span className="text-sm text-slate-500 font-semibold uppercase tracking-wider">Adults (11+)</span>
+            <span className="text-sm text-slate-500 font-semibold uppercase tracking-wider">Adults (13+)</span>
             <span className="text-3xl font-extrabold text-emerald-600 mt-1">{kpis.adults}</span>
           </div>
         </div>
